@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -117,9 +118,12 @@ input[type="text"] {
     text-align: center;
     font-size: 24px;
     padding: 11px;
+
     transition:
         background-color .2s,
         border-color .2s;
+
+    touch-action: manipulation;
 }
 
 #answer.correct {
@@ -171,10 +175,23 @@ button:hover {
 
 
 /* ============================================================
-   MOBILE / LANDSCAPE
+   MOBILE
    ============================================================ */
 
 @media (max-width: 700px) {
+
+    html,
+    body {
+        width: 100%;
+        min-height: 100%;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow-x: hidden;
+    }
 
     .app {
         width: calc(100% - 16px);
@@ -203,41 +220,146 @@ button:hover {
         font-size: 15px;
     }
 
+    /*
+     * Smaller display so there is more room for
+     * the answer box on mobile.
+     */
+
     .display {
-        margin: 14px 0 12px;
-        height: 175px;
-        min-height: 175px;
-        padding: 12px;
+        margin: 10px 0 10px;
+        height: 150px;
+        min-height: 150px;
+        padding: 10px;
     }
 
+    /*
+     * Smaller Japanese character.
+     */
+
     #character {
-        font-size: 62px;
+        font-size: 54px;
     }
 
     #correctAnswer {
-        font-size: 22px;
-        margin-top: 8px;
+        font-size: 20px;
+        margin-top: 6px;
+        min-height: 26px;
     }
 
     #translation {
-        font-size: 16px;
+        font-size: 15px;
+        min-height: 22px;
+    }
+
+    #inputArea {
+        margin-bottom: 12px;
+
+        scroll-margin-top: 10px;
+        scroll-margin-bottom: 10px;
     }
 
     #answer {
-        font-size: 22px;
+        font-size: 20px;
         padding: 9px;
+        min-height: 46px;
+    }
+
+    .buttons {
+        margin-top: 8px;
     }
 
     .status {
         margin-top: 12px;
         padding: 9px;
     }
-
 }
 
 
+/* ============================================================
+   MOBILE KEYBOARD OPEN
+   ============================================================ */
+
+@media (max-width: 700px) and (max-height: 500px) {
+
+    /*
+     * The keyboard makes the viewport much shorter.
+     * Reduce the overall layout so the textbox remains
+     * visible instead of being pushed below the keyboard.
+     */
+
+    .app {
+        margin: 3px auto;
+        padding: 8px;
+    }
+
+    /*
+     * These aren't necessary while typing and take up
+     * valuable vertical space.
+     */
+
+    h1,
+    .settings {
+        display: none;
+    }
+
+    /*
+     * Smaller display area.
+     */
+
+    .display {
+        margin: 3px 0 6px;
+        height: 105px;
+        min-height: 105px;
+        padding: 6px;
+    }
+
+    /*
+     * Smaller Japanese character.
+     */
+
+    #character {
+        font-size: 46px;
+    }
+
+    #correctAnswer {
+        font-size: 18px;
+        margin-top: 3px;
+        min-height: 22px;
+    }
+
+    #translation {
+        font-size: 13px;
+        min-height: 18px;
+    }
+
+    #inputArea {
+        margin-bottom: 7px;
+    }
+
+    /*
+     * Keep textbox compact but still easy to tap.
+     */
+
+    #answer {
+        font-size: 20px;
+        min-height: 46px;
+        padding: 9px;
+    }
+
+    .buttons {
+        margin-top: 3px;
+    }
+
+    .status {
+        margin-top: 5px;
+        padding: 6px;
+        font-size: 14px;
+    }
+}
+
 </style>
 </head>
+
 
 <body>
 
@@ -256,6 +378,7 @@ button:hover {
             <label for="mode">Mode</label>
 
             <select id="mode">
+
                 <option value="Text Flashing">
                     Text Flashing
                 </option>
@@ -263,6 +386,7 @@ button:hover {
                 <option value="Typing">
                     Typing
                 </option>
+
             </select>
         </div>
 
@@ -715,65 +839,35 @@ const vocab2 = [
 const vocab3 = [
 
     { c:"ビジネス", a:["bijinesu"], t:"Business" },
-
     { c:"えいが", a:["eiga"], t:"Movie" },
-
     { c:"おんがく", a:["ongaku"], t:"Music" },
-
     { c:"スポーツ", a:["supootsu"], t:"Sports" },
-
     { c:"はなす", a:["hanasu"], t:"To speak; to talk" },
-
     { c:"テレビ", a:["terebi"], t:"TV" },
-
     { c:"あさごはん", a:["asagohan"], t:"Breakfast" },
-
     { c:"さけ", a:["sake"], t:"Sake; alcohol" },
-
     { c:"おちゃ", a:["ocha"], t:"Green Tea" },
-
     { c:"コーヒー", a:["koohii"], t:"Coffee" },
-
     { c:"ひるごはん", a:["hirugohan"], t:"Lunch" },
-
     { c:"ばんごはん", a:["bangohan"], t:"Dinner" },
-
     { c:"みず", a:["mizu"], t:"Water" },
-
     { c:"いえ", a:["ie"], t:"Home; house" },
-
     { c:"きょう", a:["kyou"], t:"Today" },
-
     { c:"あした", a:["ashita"], t:"Tomorrow" },
-
     { c:"こんばん", a:["konban"], t:"Tonight" },
-
     { c:"まいにち", a:["mainichi"], t:"Every day" },
-
     { c:"いく", a:["iku"], t:"To go" },
-
     { c:"かえる", a:["kaeru"], t:"To go back; to return" },
-
     { c:"きく", a:["kiku"], t:"To listen; to hear" },
-
     { c:"おきる", a:["okiru"], t:"To get up" },
-
     { c:"たべる", a:["taberu"], t:"To eat" },
-
     { c:"ねる", a:["neru"], t:"To sleep; to go to sleep" },
-
     { c:"みる", a:["miru"], t:"To see; to look at; to watch" },
-
     { c:"べんきょうする", a:["benkyou suru"], t:"To study" },
-
     { c:"ぜんぜん", a:["zenzen"], t:"Not at all" },
-
     { c:"ときどき", a:["tokidoki"], t:"Sometimes" },
-
     { c:"よく", a:["yoku"], t:"Often; much" },
-
     { c:"する", a:["suru"], t:"To do" },
-
     { c:"よむ", a:["yomu"], t:"To read" }
 
 ];
@@ -860,10 +954,6 @@ function start() {
     let timer =
         parseInt(timerElement.value);
 
-
-    /*
-     * Timer only applies to Text Flashing.
-     */
 
     if (
         modeElement.value === "Text Flashing"
@@ -1199,12 +1289,16 @@ function showNext() {
     inputArea.style.display = "block";
 
 
+    answerElement.focus();
+
+
     /*
-     * Focus input so the mobile keyboard
-     * can immediately be used.
+     * Give the mobile browser a moment to
+     * open the keyboard before positioning
+     * the input area.
      */
 
-    answerElement.focus();
+    keepTypingAreaVisible();
 
 
     characterTimer =
@@ -1284,7 +1378,6 @@ function showFlashingAnswer() {
     }
 
 
-
     feedbackTimer =
         setTimeout(
             () => {
@@ -1314,11 +1407,6 @@ function checkAnswer() {
     }
 
 
-    /*
-     * If the answer has already been
-     * revealed, do nothing.
-     */
-
     if (waitingForNext) {
         return;
     }
@@ -1332,11 +1420,6 @@ function checkAnswer() {
             .trim()
             .toLowerCase();
 
-
-    /*
-     * Don't count a manually submitted
-     * empty answer.
-     */
 
     if (answer === "") {
         return;
@@ -1413,10 +1496,6 @@ function revealTypingAnswer(
     }
 
 
-    /*
-     * Show correct answer.
-     */
-
     correctAnswerElement.textContent =
         currentCharacter.a[0];
 
@@ -1424,10 +1503,6 @@ function revealTypingAnswer(
     correctAnswerElement.style.color =
         "#22a447";
 
-
-    /*
-     * Show vocabulary translation.
-     */
 
     if (
         typeElement.value === "Vocab 1" ||
@@ -1448,13 +1523,6 @@ function revealTypingAnswer(
 
 
     updateScore();
-
-
-    /*
-     * There is NO automatic advance.
-     *
-     * The user must press Enter.
-     */
 }
 
 
@@ -1628,11 +1696,6 @@ function resetForSelectionChange() {
     }
 
 
-    /*
-     * Clear all timers again just to make
-     * sure no previous round remains.
-     */
-
     clearTimeout(characterTimer);
     clearTimeout(feedbackTimer);
     clearTimeout(sessionStopTimer);
@@ -1672,6 +1735,7 @@ function resetForSelectionChange() {
         "correct",
         "incorrect"
     );
+
 
     /*
      * Update mode-specific layout.
@@ -1805,6 +1869,77 @@ typeElement.addEventListener(
         resetForSelectionChange();
     }
 );
+
+
+/* ============================================================
+   MOBILE KEYBOARD POSITIONING
+   ============================================================ */
+
+/*
+ * Keep the answer area visible when the keyboard
+ * opens on a mobile device.
+ */
+
+function keepTypingAreaVisible() {
+
+    if (
+        window.innerWidth <= 700 &&
+        modeElement.value === "Typing" &&
+        running
+    ) {
+
+        setTimeout(() => {
+
+            if (!running) {
+                return;
+            }
+
+
+            inputArea.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+        }, 150);
+    }
+}
+
+
+/*
+ * Also reposition when the browser's visual
+ * viewport changes because of the keyboard.
+ */
+
+if (window.visualViewport) {
+
+    window.visualViewport.addEventListener(
+        "resize",
+        function() {
+
+            if (
+                window.innerWidth <= 700 &&
+                modeElement.value === "Typing" &&
+                running
+            ) {
+
+                setTimeout(() => {
+
+                    if (!running) {
+                        return;
+                    }
+
+
+                    inputArea.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
+
+                }, 100);
+            }
+        }
+    );
+
+}
 
 
 /* ============================================================
