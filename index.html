@@ -9,8 +9,7 @@
       content="width=device-width,
                initial-scale=1.0,
                maximum-scale=1.0,
-               user-scalable=no,
-               viewport-fit=cover">
+               user-scalable=no">
 
 <title>Japanese Reading Practice</title>
 
@@ -29,9 +28,7 @@ html,
 body {
     margin: 0;
     padding: 0;
-    width: 100%;
     min-height: 100%;
-    overflow-x: hidden;
 }
 
 body {
@@ -40,9 +37,12 @@ body {
     color: #222;
 
     /*
-     * Prevent Android browser overscroll/bounce behavior.
+     * Allow normal scrolling.
+     *
+     * We deliberately do NOT use overflow:hidden here,
+     * because the user should still be able to scroll.
      */
-    overscroll-behavior: none;
+    overscroll-behavior-y: auto;
 }
 
 
@@ -57,15 +57,11 @@ body {
 
     background: white;
     border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0,0,0,.12);
+
+    box-shadow:
+        0 4px 20px rgba(0,0,0,.12);
 
     text-align: center;
-
-    /*
-     * Prevent content inside the app from creating
-     * accidental scrolling.
-     */
-    overflow: hidden;
 }
 
 
@@ -87,6 +83,7 @@ h1 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 14px;
+
     text-align: left;
 }
 
@@ -100,6 +97,7 @@ select,
 input[type="number"],
 input[type="text"] {
     width: 100%;
+
     padding: 10px;
 
     font-size: 16px;
@@ -108,12 +106,6 @@ input[type="text"] {
     border-radius: 8px;
 
     background: white;
-
-    /*
-     * Prevent Android from changing the appearance
-     * of the controls.
-     */
-    appearance: none;
 }
 
 
@@ -150,7 +142,6 @@ input[type="text"] {
     max-width: 100%;
 
     white-space: nowrap;
-
     text-align: center;
 }
 
@@ -199,19 +190,9 @@ input[type="text"] {
         border-color .2s;
 
     /*
-     * Prevent Android from adding unwanted styling.
+     * Helps Android treat this as a normal touch input.
      */
-    appearance: none;
-
-    /*
-     * Keep text input behavior predictable.
-     */
-    -webkit-appearance: none;
-
-    /*
-     * Prevent accidental horizontal scrolling.
-     */
-    max-width: 100%;
+    touch-action: manipulation;
 }
 
 #answer.correct {
@@ -245,10 +226,6 @@ button {
 
     cursor: pointer;
 
-    /*
-     * Prevent Android from doing anything unexpected
-     * with the button.
-     */
     touch-action: manipulation;
 }
 
@@ -291,24 +268,6 @@ button:hover {
 
 @media (max-width: 700px) {
 
-    /*
-     * Prevent the document itself from scrolling.
-     *
-     * This is especially useful on Android Chrome when
-     * the virtual keyboard opens.
-     */
-
-    html,
-    body {
-        width: 100%;
-        height: 100%;
-
-        overflow: hidden;
-
-        overscroll-behavior: none;
-    }
-
-
     .app {
         width: calc(100% - 16px);
 
@@ -317,23 +276,19 @@ button:hover {
         padding: 15px;
     }
 
-
     h1 {
         font-size: 23px;
         margin-bottom: 15px;
     }
 
-
     .settings {
         gap: 9px;
     }
-
 
     label {
         font-size: 14px;
         margin-bottom: 4px;
     }
-
 
     select,
     input[type="number"],
@@ -341,7 +296,6 @@ button:hover {
         padding: 8px;
         font-size: 15px;
     }
-
 
     .display {
         margin: 14px 0 12px;
@@ -352,33 +306,25 @@ button:hover {
         padding: 12px;
     }
 
-
     #character {
         font-size: 62px;
     }
-
 
     #correctAnswer {
         font-size: 22px;
         margin-top: 8px;
     }
 
-
     #translation {
         font-size: 16px;
     }
-
 
     #answer {
         font-size: 22px;
         padding: 9px;
 
-        /*
-         * Make sure the input remains easy to tap.
-         */
         min-height: 44px;
     }
-
 
     .status {
         margin-top: 12px;
@@ -389,7 +335,7 @@ button:hover {
 
 
 /* ============================================================
-   VERY SHORT ANDROID SCREENS
+   SHORT MOBILE SCREENS
    ============================================================ */
 
 @media (max-width: 700px) and (max-height: 600px) {
@@ -418,7 +364,9 @@ button:hover {
 
     #correctAnswer {
         font-size: 19px;
+
         min-height: 24px;
+
         margin-top: 5px;
     }
 
@@ -434,6 +382,7 @@ button:hover {
     .status {
         margin-top: 8px;
     }
+
 }
 
 </style>
@@ -445,7 +394,9 @@ button:hover {
 
 <div class="app">
 
-    <h1>Japanese Reading Practice</h1>
+    <h1>
+        Japanese Reading Practice
+    </h1>
 
 
     <!-- ======================================================
@@ -1032,6 +983,73 @@ let waitingForNext = false;
 
 
 /* ============================================================
+   SCROLL POSITION HELPER
+   ============================================================ */
+
+/*
+ * Get the current page scroll position.
+ *
+ * We use this instead of disabling scrolling.
+ */
+
+function getScrollPosition() {
+
+    return {
+        x: window.scrollX,
+        y: window.scrollY
+    };
+
+}
+
+
+/*
+ * Restore a previously saved scroll position.
+ *
+ * Multiple animation frames are used because Android Chrome
+ * can perform its own viewport adjustment immediately after
+ * Enter/focus events.
+ */
+
+function restoreScrollPosition(position) {
+
+    if (!position) {
+        return;
+    }
+
+
+    window.scrollTo(
+        position.x,
+        position.y
+    );
+
+
+    requestAnimationFrame(
+        () => {
+
+            window.scrollTo(
+                position.x,
+                position.y
+            );
+
+
+            requestAnimationFrame(
+                () => {
+
+                    window.scrollTo(
+                        position.x,
+                        position.y
+                    );
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
    START
    ============================================================ */
 
@@ -1049,6 +1067,10 @@ function start() {
         parseInt(timerElement.value);
 
 
+    /*
+     * Timer only applies to Text Flashing.
+     */
+
     if (
         modeElement.value === "Text Flashing"
     ) {
@@ -1061,6 +1083,7 @@ function start() {
 
             return;
         }
+
     }
 
 
@@ -1084,9 +1107,9 @@ function start() {
     updateScore();
 
 
-    /* ========================================================
-       TYPING MODE
-       ======================================================== */
+    /*
+     * TYPING MODE
+     */
 
     if (
         modeElement.value === "Typing"
@@ -1099,9 +1122,9 @@ function start() {
     }
 
 
-    /* ========================================================
-       TEXT FLASHING MODE
-       ======================================================== */
+    /*
+     * TEXT FLASHING MODE
+     */
 
     else {
 
@@ -1114,6 +1137,10 @@ function start() {
 
     showNext();
 
+
+    /*
+     * Text Flashing gets a session timer.
+     */
 
     if (
         modeElement.value === "Text Flashing"
@@ -1353,9 +1380,9 @@ function showNext() {
     );
 
 
-    /* ========================================================
-       TEXT FLASHING
-       ======================================================== */
+    /*
+     * TEXT FLASHING
+     */
 
     if (
         modeElement.value === "Text Flashing"
@@ -1379,18 +1406,26 @@ function showNext() {
     }
 
 
-    /* ========================================================
-       TYPING
-       ======================================================== */
+    /*
+     * TYPING
+     */
 
     inputArea.style.display = "block";
 
 
     /*
-     * IMPORTANT FOR ANDROID:
-     *
-     * preventScroll prevents Android Chrome from
-     * moving the entire page when the input receives focus.
+     * Save the user's current scroll position
+     * before focusing the input.
+     */
+
+    const scrollPosition =
+        getScrollPosition();
+
+
+    /*
+     * preventScroll is supported by modern Android
+     * browsers and prevents focus() from deliberately
+     * moving the page.
      */
 
     answerElement.focus({
@@ -1398,12 +1433,24 @@ function showNext() {
     });
 
 
+    /*
+     * Android can still adjust the page after focus.
+     * Restore the user's position after the browser
+     * has had a chance to perform that adjustment.
+     */
+
+    restoreScrollPosition(
+        scrollPosition
+    );
+
+
     characterTimer =
         setTimeout(
             () => {
 
                 /*
-                 * Nothing entered before SPEED expired.
+                 * Nothing entered before
+                 * SPEED expired.
                  */
 
                 if (
@@ -1425,7 +1472,8 @@ function showNext() {
 
 
                 /*
-                 * Automatically check entered answer.
+                 * Automatically check
+                 * entered answer.
                  */
 
                 checkAnswer();
@@ -1505,6 +1553,11 @@ function checkAnswer() {
     }
 
 
+    /*
+     * If the answer has already been revealed,
+     * do nothing.
+     */
+
     if (waitingForNext) {
         return;
     }
@@ -1518,6 +1571,10 @@ function checkAnswer() {
             .trim()
             .toLowerCase();
 
+
+    /*
+     * Don't count an empty answer.
+     */
 
     if (answer === "") {
         return;
@@ -1595,6 +1652,10 @@ function revealTypingAnswer(
     }
 
 
+    /*
+     * Show correct answer.
+     */
+
     correctAnswerElement.textContent =
         currentCharacter.a[0];
 
@@ -1602,6 +1663,10 @@ function revealTypingAnswer(
     correctAnswerElement.style.color =
         "#22a447";
 
+
+    /*
+     * Show vocabulary translation.
+     */
 
     if (
         typeElement.value === "Vocab 1" ||
@@ -1636,66 +1701,83 @@ answerElement.addEventListener(
     function(event) {
 
         /*
-         * Android keyboards can generate different
-         * Enter-like keys.
+         * Android keyboards can report Enter in
+         * slightly different ways.
          */
 
-        if (
+        const isEnter =
             event.key === "Enter" ||
             event.key === "Done" ||
-            event.keyCode === 13
-        ) {
-
-            /*
-             * VERY IMPORTANT:
-             *
-             * Prevent Android Chrome from performing
-             * its default Enter action.
-             */
-
-            event.preventDefault();
-            event.stopPropagation();
+            event.keyCode === 13;
 
 
-            /*
-             * Once the answer is revealed,
-             * Enter moves to the next question.
-             */
-
-            if (waitingForNext) {
-
-                showNext();
-
-
-                /*
-                 * Keep the keyboard open and keep focus
-                 * without allowing Android to scroll.
-                 */
-
-                setTimeout(
-                    () => {
-
-                        answerElement.focus({
-                            preventScroll: true
-                        });
-
-                    },
-                    0
-                );
-
-
-                return;
-            }
-
-
-            /*
-             * Before the answer is revealed,
-             * Enter submits the answer.
-             */
-
-            checkAnswer();
-
+        if (!isEnter) {
+            return;
         }
+
+
+        /*
+         * Save the exact position BEFORE doing anything.
+         */
+
+        const savedScrollPosition =
+            getScrollPosition();
+
+
+        /*
+         * Stop Android Chrome's default Enter behavior.
+         */
+
+        event.preventDefault();
+        event.stopPropagation();
+
+
+        /*
+         * Answer has already been revealed.
+         *
+         * Enter = next question.
+         */
+
+        if (waitingForNext) {
+
+            showNext();
+
+
+            /*
+             * showNext() focuses the input again.
+             *
+             * Restore the user's original page position
+             * after Android processes that focus.
+             */
+
+            restoreScrollPosition(
+                savedScrollPosition
+            );
+
+
+            return;
+        }
+
+
+        /*
+         * Answer has not been revealed.
+         *
+         * Enter = submit answer.
+         */
+
+        checkAnswer();
+
+
+        /*
+         * checkAnswer() changes the input and may cause
+         * Android Chrome to reposition the viewport.
+         *
+         * Restore the user's position.
+         */
+
+        restoreScrollPosition(
+            savedScrollPosition
+        );
 
     }
 );
@@ -1745,6 +1827,10 @@ function getSpeed() {
 
 function updateSession() {
 
+    /*
+     * Only Text Flashing uses TIMER.
+     */
+
     if (
         !running ||
         modeElement.value !== "Text Flashing"
@@ -1783,6 +1869,10 @@ function updateSession() {
 
 function updateScore() {
 
+    /*
+     * Text Flashing has no score.
+     */
+
     if (
         modeElement.value === "Text Flashing"
     ) {
@@ -1790,9 +1880,12 @@ function updateScore() {
         scoreElement.textContent = "—";
 
         return;
-
     }
 
+
+    /*
+     * Typing mode.
+     */
 
     scoreElement.textContent =
         `${correct} / ${total}`;
@@ -1806,10 +1899,19 @@ function updateScore() {
 
 function resetForSelectionChange() {
 
+    /*
+     * Changing Mode or Type ALWAYS stops
+     * the current game.
+     */
+
     if (running) {
         stop();
     }
 
+
+    /*
+     * Clear all timers again.
+     */
 
     clearTimeout(characterTimer);
     clearTimeout(feedbackTimer);
@@ -1829,14 +1931,21 @@ function resetForSelectionChange() {
     waitingForNext = false;
 
 
+    /*
+     * Reset score.
+     */
+
     correct = 0;
     total = 0;
 
 
+    /*
+     * Clear answer UI.
+     */
+
     correctAnswerElement.textContent = "";
 
     translationElement.textContent = "";
-
 
     answerElement.value = "";
 
@@ -1845,6 +1954,10 @@ function resetForSelectionChange() {
         "incorrect"
     );
 
+
+    /*
+     * Update mode-specific layout.
+     */
 
     if (
         modeElement.value === "Typing"
@@ -1865,8 +1978,17 @@ function resetForSelectionChange() {
     }
 
 
+    /*
+     * Update score.
+     */
+
     updateScore();
 
+
+    /*
+     * Update starting character based
+     * on selected Type.
+     */
 
     updatePreviewCharacter();
 
@@ -1970,98 +2092,6 @@ typeElement.addEventListener(
         resetForSelectionChange();
 
     }
-);
-
-
-/* ============================================================
-   ANDROID KEYBOARD / VIEWPORT HANDLING
-   ============================================================ */
-
-/*
- * Remember the page's scroll position.
- *
- * Android Chrome can sometimes attempt to scroll the
- * document when the virtual keyboard opens or closes.
- */
-
-let lockedScrollX = 0;
-let lockedScrollY = 0;
-
-
-/*
- * Keep the document at the top.
- */
-
-function lockPageScroll() {
-
-    window.scrollTo(
-        lockedScrollX,
-        lockedScrollY
-    );
-
-}
-
-
-/*
- * Detect viewport changes caused by the
- * Android virtual keyboard.
- */
-
-if (window.visualViewport) {
-
-    window.visualViewport.addEventListener(
-        "resize",
-        function() {
-
-            /*
-             * Do not allow the keyboard resize event
-             * to move the document.
-             */
-
-            requestAnimationFrame(
-                lockPageScroll
-            );
-
-        }
-    );
-
-
-    window.visualViewport.addEventListener(
-        "scroll",
-        function() {
-
-            requestAnimationFrame(
-                lockPageScroll
-            );
-
-        }
-    );
-
-}
-
-
-/*
- * Also catch normal window scrolling.
- */
-
-window.addEventListener(
-    "scroll",
-    function() {
-
-        if (
-            window.scrollX !== lockedScrollX ||
-            window.scrollY !== lockedScrollY
-        ) {
-
-            window.scrollTo(
-                lockedScrollX,
-                lockedScrollY
-            );
-
-        }
-
-    },
-    { passive: true }
 );
 
 
