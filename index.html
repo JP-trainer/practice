@@ -1,0 +1,1965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Japanese Reading Practice</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+}
+
+.app {
+    width: min(600px, calc(100% - 20px));
+    margin: 20px auto;
+    padding: 22px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.12);
+    text-align: center;
+}
+
+h1 {
+    margin: 0 0 22px;
+    font-size: 28px;
+}
+
+.settings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    text-align: left;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+}
+
+select,
+input[type="number"],
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    background: white;
+}
+
+.display {
+    margin: 25px 0 15px;
+    min-height: 220px;
+    height: 220px;
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background: #fafafa;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+
+    overflow: hidden;
+}
+
+#character {
+    font-size: 75px;
+    font-weight: bold;
+    line-height: 1.1;
+    max-width: 100%;
+    white-space: nowrap;
+    text-align: center;
+}
+
+#correctAnswer {
+    min-height: 30px;
+    margin-top: 12px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #22a447;
+}
+
+#translation {
+    min-height: 25px;
+    margin-top: 5px;
+    font-size: 18px;
+    color: #555;
+}
+
+#inputArea {
+    display: none;
+    margin-bottom: 18px;
+}
+
+#answer {
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    padding: 11px;
+    transition:
+        background-color .2s,
+        border-color .2s;
+}
+
+#answer.correct {
+    background-color: #8be28b;
+    border-color: #38a838;
+}
+
+#answer.incorrect {
+    background-color: #ff9b9b;
+    border-color: #d33;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+button {
+    padding: 12px 30px;
+    font-size: 17px;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#startButton {
+    background: #2878e3;
+    color: white;
+}
+
+#startButton.stop {
+    background: #d83b3b;
+}
+
+button:hover {
+    opacity: .85;
+}
+
+.status {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 12px;
+    background: #f0f0f0;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+
+/* ============================================================
+   MOBILE / LANDSCAPE
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+    .app {
+        width: calc(100% - 16px);
+        margin: 8px auto;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 23px;
+        margin-bottom: 15px;
+    }
+
+    .settings {
+        gap: 9px;
+    }
+
+    label {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    select,
+    input[type="number"],
+    input[type="text"] {
+        padding: 8px;
+        font-size: 15px;
+    }
+
+    .display {
+        margin: 14px 0 12px;
+        height: 175px;
+        min-height: 175px;
+        padding: 12px;
+    }
+
+    #character {
+        font-size: 62px;
+    }
+
+    #correctAnswer {
+        font-size: 22px;
+        margin-top: 8px;
+    }
+
+    #translation {
+        font-size: 16px;
+    }
+
+    #answer {
+        font-size: 22px;
+        padding: 9px;
+    }
+
+    .status {
+        margin-top: 12px;
+        padding: 9px;
+    }
+
+}
+
+
+/* ============================================================
+   VERY SHORT LANDSCAPE SCREENS
+   ============================================================ */
+
+@media (orientation: landscape) and (max-height: 500px) {
+
+    .app {
+        width: calc(100% - 16px);
+        max-width: 900px;
+        margin: 6px auto;
+        padding: 10px 16px;
+    }
+
+    h1 {
+        font-size: 20px;
+        margin-bottom: 9px;
+    }
+
+    .settings {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+
+    label {
+        font-size: 12px;
+        margin-bottom: 3px;
+    }
+
+    select,
+    input[type="number"],
+    input[type="text"] {
+        padding: 6px;
+        font-size: 14px;
+    }
+
+    .display {
+        margin: 10px 0 8px;
+        height: 130px;
+        min-height: 130px;
+        padding: 8px;
+    }
+
+    #character {
+        font-size: 55px;
+    }
+
+    #correctAnswer {
+        font-size: 20px;
+        min-height: 24px;
+        margin-top: 4px;
+    }
+
+    #translation {
+        font-size: 14px;
+        min-height: 20px;
+        margin-top: 2px;
+    }
+
+    #inputArea {
+        margin-bottom: 8px;
+    }
+
+    #answer {
+        font-size: 20px;
+        padding: 7px;
+    }
+
+    .status {
+        margin-top: 8px;
+        padding: 7px;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 8px 25px;
+        font-size: 15px;
+    }
+}
+
+
+/* ============================================================
+   EXTRA SMALL LANDSCAPE DEVICES
+   ============================================================ */
+
+@media (orientation: landscape) and (max-height: 380px) {
+
+    .app {
+        margin: 3px auto;
+        padding: 7px 12px;
+    }
+
+    h1 {
+        font-size: 17px;
+        margin-bottom: 6px;
+    }
+
+    .settings {
+        gap: 6px;
+    }
+
+    select,
+    input[type="number"],
+    input[type="text"] {
+        padding: 4px;
+        font-size: 13px;
+    }
+
+    .display {
+        margin: 6px 0;
+        height: 105px;
+        min-height: 105px;
+    }
+
+    #character {
+        font-size: 45px;
+    }
+
+    #correctAnswer {
+        font-size: 18px;
+        min-height: 20px;
+    }
+
+    #translation {
+        font-size: 13px;
+        min-height: 17px;
+    }
+
+    #answer {
+        font-size: 18px;
+        padding: 5px;
+    }
+
+    .status {
+        margin-top: 5px;
+        padding: 5px;
+        font-size: 12px;
+    }
+
+    button {
+        padding: 6px 22px;
+        font-size: 14px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <h1>Japanese Reading Practice</h1>
+
+
+    <!-- ======================================================
+         SETTINGS
+         ====================================================== -->
+
+    <div class="settings">
+
+        <div>
+            <label for="mode">Mode</label>
+
+            <select id="mode">
+                <option value="Text Flashing">
+                    Text Flashing
+                </option>
+
+                <option value="Typing">
+                    Typing
+                </option>
+            </select>
+        </div>
+
+
+        <div>
+            <label for="type">Type</label>
+
+            <select id="type">
+
+                <option value="All Alphabets">
+                    All Alphabets
+                </option>
+
+                <option value="Hiragana">
+                    Hiragana
+                </option>
+
+                <option value="Katakana">
+                    Katakana
+                </option>
+
+                <option value="Vocab 1">
+                    Vocab 1
+                </option>
+
+                <option value="Vocab 2">
+                    Vocab 2
+                </option>
+
+                <option value="Vocab 3">
+                    Vocab 3
+                </option>
+
+                <option value="All Vocabs">
+                    All Vocabs
+                </option>
+
+            </select>
+        </div>
+
+
+        <div>
+            <label for="speed">
+                Speed (seconds)
+            </label>
+
+            <input
+                id="speed"
+                type="number"
+                value="3"
+                min="0.5"
+                step="0.5"
+            >
+        </div>
+
+
+        <div>
+            <label for="timer">
+                Timer (seconds)
+            </label>
+
+            <input
+                id="timer"
+                type="number"
+                value="60"
+                min="1"
+            >
+        </div>
+
+    </div>
+
+
+    <!-- ======================================================
+         DISPLAY
+         ====================================================== -->
+
+    <div class="display">
+
+        <div id="character">あ</div>
+
+        <div id="correctAnswer"></div>
+
+        <div id="translation"></div>
+
+    </div>
+
+
+    <!-- ======================================================
+         TYPING INPUT
+         ====================================================== -->
+
+    <div id="inputArea">
+
+        <input
+            id="answer"
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            enterkeyhint="done"
+            placeholder="Type the reading..."
+        >
+
+    </div>
+
+
+    <!-- ======================================================
+         START / STOP
+         ====================================================== -->
+
+    <div class="buttons">
+
+        <button id="startButton">
+            Start
+        </button>
+
+    </div>
+
+
+    <!-- ======================================================
+         STATUS
+         ====================================================== -->
+
+    <div class="status">
+
+        <span>
+            Time:
+            <strong id="time">0</strong>
+        </span>
+
+        <span>
+            Score:
+            <strong id="score">—</strong>
+        </span>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+/* ============================================================
+   HIRAGANA
+   ============================================================ */
+
+const hiragana = [
+
+    { c:"あ", a:["a"] },
+    { c:"い", a:["i"] },
+    { c:"う", a:["u"] },
+    { c:"え", a:["e"] },
+    { c:"お", a:["o"] },
+
+    { c:"か", a:["ka"] },
+    { c:"き", a:["ki"] },
+    { c:"く", a:["ku"] },
+    { c:"け", a:["ke"] },
+    { c:"こ", a:["ko"] },
+
+    { c:"さ", a:["sa"] },
+    { c:"し", a:["shi","si"] },
+    { c:"す", a:["su"] },
+    { c:"せ", a:["se"] },
+    { c:"そ", a:["so"] },
+
+    { c:"た", a:["ta"] },
+    { c:"ち", a:["chi","ti"] },
+    { c:"つ", a:["tsu","tu"] },
+    { c:"て", a:["te"] },
+    { c:"と", a:["to"] },
+
+    { c:"な", a:["na"] },
+    { c:"に", a:["ni"] },
+    { c:"ぬ", a:["nu"] },
+    { c:"ね", a:["ne"] },
+    { c:"の", a:["no"] },
+
+    { c:"は", a:["ha"] },
+    { c:"ひ", a:["hi"] },
+    { c:"ふ", a:["fu","hu"] },
+    { c:"へ", a:["he"] },
+    { c:"ほ", a:["ho"] },
+
+    { c:"ま", a:["ma"] },
+    { c:"み", a:["mi"] },
+    { c:"む", a:["mu"] },
+    { c:"め", a:["me"] },
+    { c:"も", a:["mo"] },
+
+    { c:"や", a:["ya"] },
+    { c:"ゆ", a:["yu"] },
+    { c:"よ", a:["yo"] },
+
+    { c:"ら", a:["ra"] },
+    { c:"り", a:["ri"] },
+    { c:"る", a:["ru"] },
+    { c:"れ", a:["re"] },
+    { c:"ろ", a:["ro"] },
+
+    { c:"わ", a:["wa"] },
+    { c:"を", a:["wo","o"] },
+    { c:"ん", a:["n","nn"] },
+
+    { c:"が", a:["ga"] },
+    { c:"ぎ", a:["gi"] },
+    { c:"ぐ", a:["gu"] },
+    { c:"げ", a:["ge"] },
+    { c:"ご", a:["go"] },
+
+    { c:"ざ", a:["za"] },
+    { c:"じ", a:["ji","zi"] },
+    { c:"ず", a:["zu"] },
+    { c:"ぜ", a:["ze"] },
+    { c:"ぞ", a:["zo"] },
+
+    { c:"だ", a:["da"] },
+    { c:"ぢ", a:["ji","di"] },
+    { c:"づ", a:["zu","du"] },
+    { c:"で", a:["de"] },
+    { c:"ど", a:["do"] },
+
+    { c:"ば", a:["ba"] },
+    { c:"び", a:["bi"] },
+    { c:"ぶ", a:["bu"] },
+    { c:"べ", a:["be"] },
+    { c:"ぼ", a:["bo"] },
+
+    { c:"ぱ", a:["pa"] },
+    { c:"ぴ", a:["pi"] },
+    { c:"ぷ", a:["pu"] },
+    { c:"ぺ", a:["pe"] },
+    { c:"ぽ", a:["po"] }
+
+];
+
+
+/* ============================================================
+   KATAKANA
+   ============================================================ */
+
+const katakana = [
+
+    { c:"ア", a:["a"] },
+    { c:"イ", a:["i"] },
+    { c:"ウ", a:["u"] },
+    { c:"エ", a:["e"] },
+    { c:"オ", a:["o"] },
+
+    { c:"カ", a:["ka"] },
+    { c:"キ", a:["ki"] },
+    { c:"ク", a:["ku"] },
+    { c:"ケ", a:["ke"] },
+    { c:"コ", a:["ko"] },
+
+    { c:"サ", a:["sa"] },
+    { c:"シ", a:["shi","si"] },
+    { c:"ス", a:["su"] },
+    { c:"セ", a:["se"] },
+    { c:"ソ", a:["so"] },
+
+    { c:"タ", a:["ta"] },
+    { c:"チ", a:["chi","ti"] },
+    { c:"ツ", a:["tsu","tu"] },
+    { c:"テ", a:["te"] },
+    { c:"ト", a:["to"] },
+
+    { c:"ナ", a:["na"] },
+    { c:"ニ", a:["ni"] },
+    { c:"ヌ", a:["nu"] },
+    { c:"ネ", a:["ne"] },
+    { c:"ノ", a:["no"] },
+
+    { c:"ハ", a:["ha"] },
+    { c:"ヒ", a:["hi"] },
+    { c:"フ", a:["fu","hu"] },
+    { c:"ヘ", a:["he"] },
+    { c:"ホ", a:["ho"] },
+
+    { c:"マ", a:["ma"] },
+    { c:"ミ", a:["mi"] },
+    { c:"ム", a:["mu"] },
+    { c:"メ", a:["me"] },
+    { c:"モ", a:["mo"] },
+
+    { c:"ヤ", a:["ya"] },
+    { c:"ユ", a:["yu"] },
+    { c:"ヨ", a:["yo"] },
+
+    { c:"ラ", a:["ra"] },
+    { c:"リ", a:["ri"] },
+    { c:"ル", a:["ru"] },
+    { c:"レ", a:["re"] },
+    { c:"ロ", a:["ro"] },
+
+    { c:"ワ", a:["wa"] },
+    { c:"ヲ", a:["wo","o"] },
+    { c:"ン", a:["n","nn"] },
+
+    { c:"ガ", a:["ga"] },
+    { c:"ギ", a:["gi"] },
+    { c:"グ", a:["gu"] },
+    { c:"ゲ", a:["ge"] },
+    { c:"ゴ", a:["go"] },
+
+    { c:"ザ", a:["za"] },
+    { c:"ジ", a:["ji","zi"] },
+    { c:"ズ", a:["zu"] },
+    { c:"ゼ", a:["ze"] },
+    { c:"ゾ", a:["zo"] },
+
+    { c:"ダ", a:["da"] },
+    { c:"ヂ", a:["ji","di"] },
+    { c:"ヅ", a:["zu","du"] },
+    { c:"デ", a:["de"] },
+    { c:"ド", a:["do"] },
+
+    { c:"バ", a:["ba"] },
+    { c:"ビ", a:["bi"] },
+    { c:"ブ", a:["bu"] },
+    { c:"ベ", a:["be"] },
+    { c:"ボ", a:["bo"] },
+
+    { c:"パ", a:["pa"] },
+    { c:"ピ", a:["pi"] },
+    { c:"プ", a:["pu"] },
+    { c:"ペ", a:["pe"] },
+    { c:"ポ", a:["po"] }
+
+];
+
+
+/* ============================================================
+   VOCAB 1
+   ============================================================ */
+
+const vocab1 = [
+
+    { c:"あの", a:["ano"], t:"um..." },
+    { c:"いま", a:["ima"], t:"now" },
+    { c:"えいご", a:["eigo"], t:"English (language)" },
+    { c:"ええ、はい", a:["ee, hai","ee hai"], t:"yes" },
+    { c:"がくせい", a:["gakusei"], t:"student" },
+    { c:"ご", a:["go"], t:"...language" },
+    { c:"こうこう", a:["koukou"], t:"high school" },
+    { c:"ごご", a:["gogo"], t:"P.M." },
+    { c:"ごぜん", a:["gozen"], t:"A.M." },
+    { c:"さい", a:["sai"], t:"...years old" },
+    { c:"さん", a:["san"], t:"Mr. or Mrs...." },
+    { c:"じ", a:["ji"], t:"time; o'clock" },
+    { c:"じん", a:["jin"], t:"...people" },
+    { c:"せんこう", a:["senkou"], t:"major" },
+    { c:"せんせい", a:["sensei"], t:"teacher; Professor..." },
+    { c:"そうです", a:["sou desu"], t:"That's right." },
+    { c:"だいがく", a:["daigaku"], t:"college; university" },
+    { c:"でんわ", a:["denwa"], t:"phone" },
+    { c:"ともだち", a:["tomodachi"], t:"friend" },
+    { c:"なまえ", a:["namae"], t:"name" },
+    { c:"なん、なに", a:["nan, nani","nan nani"], t:"what" },
+    { c:"にほん", a:["nihon"], t:"Japan" },
+    { c:"ねんせい", a:["nensei"], t:"...year student" },
+    { c:"はん", a:["han"], t:"half" },
+    { c:"ばんごう", a:["bangou"], t:"number" },
+    { c:"りゅうがくせい", a:["ryuugakusei"], t:"international student" },
+    { c:"わたし", a:["watashi"], t:"I; me; myself" }
+
+];
+
+
+/* ============================================================
+   VOCAB 2
+   ============================================================ */
+
+const vocab2 = [
+
+    { c:"これ", a:["kore"], t:"this one" },
+    { c:"それ", a:["sore"], t:"that one" },
+    { c:"あれ", a:["are"], t:"that one (over there)" },
+    { c:"どれ", a:["dore"], t:"which one" },
+
+    { c:"この", a:["kono"], t:"this..." },
+    { c:"その", a:["sono"], t:"that..." },
+    { c:"あの", a:["ano"], t:"that... (over there)" },
+    { c:"どの", a:["dono"], t:"which..." },
+
+    { c:"あそこ", a:["asoko"], t:"over there" },
+    { c:"どこ", a:["doko"], t:"where" },
+    { c:"だれ", a:["dare"], t:"who" },
+
+    { c:"おいしい", a:["oishii"], t:"delicious" },
+    { c:"さかな", a:["sakana"], t:"fish" },
+    { c:"とんかつ", a:["tonkatsu"], t:"pork cutlet" },
+    { c:"にく", a:["niku"], t:"meat" },
+    { c:"メニュー", a:["menyuu"], t:"menu" },
+    { c:"やさい", a:["yasai"], t:"vegetable" },
+
+    { c:"えんぴつ", a:["enpitsu"], t:"pencil" },
+    { c:"かさ", a:["kasa"], t:"umbrella" },
+    { c:"かばん", a:["kaban"], t:"bag" },
+    { c:"くつ", a:["kutsu"], t:"shoes" },
+    { c:"さいふ", a:["saifu"], t:"wallet" },
+    { c:"ジーンズ", a:["jiinzu"], t:"jeans" },
+    { c:"じしょ", a:["jisho"], t:"dictionary" },
+    { c:"じてんしゃ", a:["jitensha"], t:"bicycle" },
+    { c:"しんぶん", a:["shinbun"], t:"newspaper" },
+    { c:"テープ", a:["teepu"], t:"tape" },
+    { c:"トレーナー", a:["toreenaa"], t:"sweat shirt" },
+
+    { c:"ノート", a:["nooto"], t:"notebook" },
+    { c:"ペン", a:["pen"], t:"pen" },
+    { c:"ぼうし", a:["booshi"], t:"hat" },
+    { c:"ほん", a:["hon"], t:"book" },
+
+    { c:"おてあらい", a:["otearai"], t:"restroom" },
+    { c:"ぎんこう", a:["ginkoo"], t:"bank" },
+    { c:"としょかん", a:["toshokan"], t:"library" },
+    { c:"ゆうびんきょく", a:["yuubinkyoku"], t:"post office" },
+
+    { c:"アメリカ", a:["amerika"], t:"USA" },
+    { c:"イギリス", a:["igirisu"], t:"Britain" },
+    { c:"かんこく", a:["kankoku"], t:"Korea" },
+    { c:"ちゅうごく", a:["chuugoku"], t:"China" },
+
+    { c:"けいざい", a:["keezai"], t:"economics" },
+    { c:"コンピューター", a:["konpyuutaa"], t:"computer" },
+    { c:"ビジネス", a:["bijinesu"], t:"business" },
+    { c:"れきし", a:["rekishi"], t:"history" },
+
+    { c:"おかあさん", a:["okaasan"], t:"mother" },
+    { c:"おとうさん", a:["otoosan"], t:"father" },
+
+    { c:"いくら", a:["ikura"], t:"how much" },
+    { c:"えん", a:["en"], t:"yen" },
+    { c:"たかい", a:["takai"], t:"expensive" },
+
+    { c:"いらっしゃいませ", a:["irasshaimase"], t:"welcome" },
+    { c:"おねがいします", a:["onegaishimasu"], t:"please" },
+    { c:"ください", a:["kudasai"], t:"please" },
+    { c:"きっさてん", a:["kissaten"], t:"cafe" }
+
+];
+
+
+/* ============================================================
+   VOCAB 3
+   ============================================================ */
+
+const vocab3 = [
+
+    { c:"ビジネス", a:["bijinesu"], t:"Business" },
+
+    { c:"えいが", a:["eiga"], t:"Movie" },
+
+    { c:"おんがく", a:["ongaku"], t:"Music" },
+
+    { c:"スポーツ", a:["supootsu"], t:"Sports" },
+
+    { c:"はなす", a:["hanasu"], t:"To speak; to talk" },
+
+    { c:"テレビ", a:["terebi"], t:"TV" },
+
+    { c:"あさごはん", a:["asagohan"], t:"Breakfast" },
+
+    { c:"さけ", a:["sake"], t:"Sake; alcohol" },
+
+    { c:"おちゃ", a:["ocha"], t:"Green Tea" },
+
+    { c:"コーヒー", a:["koohii"], t:"Coffee" },
+
+    { c:"ひるごはん", a:["hirugohan"], t:"Lunch" },
+
+    { c:"ばんごはん", a:["bangohan"], t:"Dinner" },
+
+    { c:"みず", a:["mizu"], t:"Water" },
+
+    { c:"いえ", a:["ie"], t:"Home; house" },
+
+    { c:"きょう", a:["kyou"], t:"Today" },
+
+    { c:"あした", a:["ashita"], t:"Tomorrow" },
+
+    { c:"こんばん", a:["konban"], t:"Tonight" },
+
+    { c:"まいにち", a:["mainichi"], t:"Every day" },
+
+    { c:"いく", a:["iku"], t:"To go" },
+
+    { c:"かえる", a:["kaeru"], t:"To go back; to return" },
+
+    { c:"きく", a:["kiku"], t:"To listen; to hear" },
+
+    { c:"おきる", a:["okiru"], t:"To get up" },
+
+    { c:"たべる", a:["taberu"], t:"To eat" },
+
+    { c:"ねる", a:["neru"], t:"To sleep; to go to sleep" },
+
+    { c:"みる", a:["miru"], t:"To see; to look at; to watch" },
+
+    { c:"べんきょうする", a:["benkyou suru"], t:"To study" },
+
+    { c:"ぜんぜん", a:["zenzen"], t:"Not at all" },
+
+    { c:"ときどき", a:["tokidoki"], t:"Sometimes" },
+
+    { c:"よく", a:["yoku"], t:"Often; much" },
+
+    { c:"する", a:["suru"], t:"To do" },
+
+    { c:"よむ", a:["yomu"], t:"To read" }
+
+];
+
+
+/* ============================================================
+   ELEMENTS
+   ============================================================ */
+
+const modeElement =
+    document.getElementById("mode");
+
+const typeElement =
+    document.getElementById("type");
+
+const speedElement =
+    document.getElementById("speed");
+
+const timerElement =
+    document.getElementById("timer");
+
+const characterElement =
+    document.getElementById("character");
+
+const correctAnswerElement =
+    document.getElementById("correctAnswer");
+
+const translationElement =
+    document.getElementById("translation");
+
+const inputArea =
+    document.getElementById("inputArea");
+
+const answerElement =
+    document.getElementById("answer");
+
+const startButton =
+    document.getElementById("startButton");
+
+const timeElement =
+    document.getElementById("time");
+
+const scoreElement =
+    document.getElementById("score");
+
+
+/* ============================================================
+   VARIABLES
+   ============================================================ */
+
+let running = false;
+
+let currentCharacter = null;
+let previousCharacter = null;
+
+let characterTimer = null;
+let feedbackTimer = null;
+
+let sessionTimer = null;
+let sessionStopTimer = null;
+
+let startTime = 0;
+
+let correct = 0;
+let total = 0;
+
+let waitingForNext = false;
+
+
+/* ============================================================
+   START
+   ============================================================ */
+
+function start() {
+
+    if (running) {
+        stop();
+        return;
+    }
+
+
+    const speed = getSpeed();
+
+    let timer =
+        parseInt(timerElement.value);
+
+
+    /*
+     * Timer only applies to Text Flashing.
+     */
+
+    if (
+        modeElement.value === "Text Flashing"
+    ) {
+
+        if (!timer || timer <= 0) {
+
+            alert(
+                "Please enter a valid timer."
+            );
+
+            return;
+        }
+    }
+
+
+    running = true;
+
+    waitingForNext = false;
+
+    previousCharacter = null;
+
+    correct = 0;
+    total = 0;
+
+    startTime = Date.now();
+
+
+    startButton.textContent = "Stop";
+
+    startButton.classList.add("stop");
+
+
+    updateScore();
+
+
+    /*
+     * TYPING MODE
+     */
+
+    if (
+        modeElement.value === "Typing"
+    ) {
+
+        inputArea.style.display = "block";
+
+        timeElement.textContent = "∞";
+
+    }
+
+
+    /*
+     * TEXT FLASHING MODE
+     */
+
+    else {
+
+        inputArea.style.display = "none";
+
+        timeElement.textContent = timer;
+    }
+
+
+    showNext();
+
+
+    /*
+     * Text Flashing gets a session timer.
+     */
+
+    if (
+        modeElement.value === "Text Flashing"
+    ) {
+
+        sessionTimer =
+            setInterval(
+                updateSession,
+                100
+            );
+
+
+        sessionStopTimer =
+            setTimeout(
+                () => {
+
+                    if (running) {
+                        stop();
+                    }
+
+                },
+                timer * 1000
+            );
+    }
+}
+
+
+/* ============================================================
+   STOP
+   ============================================================ */
+
+function stop() {
+
+    running = false;
+
+    waitingForNext = false;
+
+
+    clearTimeout(characterTimer);
+    clearTimeout(feedbackTimer);
+    clearTimeout(sessionStopTimer);
+
+    clearInterval(sessionTimer);
+
+
+    characterTimer = null;
+    feedbackTimer = null;
+    sessionStopTimer = null;
+    sessionTimer = null;
+
+
+    startButton.textContent = "Start";
+
+    startButton.classList.remove(
+        "stop"
+    );
+
+
+    characterElement.textContent = "—";
+
+    correctAnswerElement.textContent = "";
+
+    translationElement.textContent = "";
+
+
+    inputArea.style.display = "none";
+
+
+    answerElement.value = "";
+
+    answerElement.classList.remove(
+        "correct",
+        "incorrect"
+    );
+
+
+    if (
+        modeElement.value === "Text Flashing"
+    ) {
+
+        scoreElement.textContent = "—";
+
+    }
+
+    else {
+
+        updateScore();
+    }
+}
+
+
+/* ============================================================
+   RANDOM CHARACTER
+   ============================================================ */
+
+function getRandomCharacter(list) {
+
+    if (list.length <= 1) {
+        return list[0];
+    }
+
+
+    let selected;
+
+
+    do {
+
+        selected =
+            list[
+                Math.floor(
+                    Math.random() * list.length
+                )
+            ];
+
+    }
+
+    while (
+        previousCharacter &&
+        selected.c === previousCharacter.c
+    );
+
+
+    return selected;
+}
+
+
+/* ============================================================
+   CURRENT LIST
+   ============================================================ */
+
+function getCurrentList() {
+
+    switch (
+        typeElement.value
+    ) {
+
+        case "All Alphabets":
+
+            return [
+                ...hiragana,
+                ...katakana
+            ];
+
+
+        case "Hiragana":
+
+            return hiragana;
+
+
+        case "Katakana":
+
+            return katakana;
+
+
+        case "Vocab 1":
+
+            return vocab1;
+
+
+        case "Vocab 2":
+
+            return vocab2;
+
+
+        case "Vocab 3":
+
+            return vocab3;
+
+
+        case "All Vocabs":
+
+            return [
+                ...vocab1,
+                ...vocab2,
+                ...vocab3
+            ];
+
+
+        default:
+
+            return hiragana;
+    }
+}
+
+
+/* ============================================================
+   SHOW NEXT
+   ============================================================ */
+
+function showNext() {
+
+    if (!running) {
+        return;
+    }
+
+
+    clearTimeout(characterTimer);
+    clearTimeout(feedbackTimer);
+
+
+    waitingForNext = false;
+
+
+    const list =
+        getCurrentList();
+
+
+    currentCharacter =
+        getRandomCharacter(list);
+
+
+    previousCharacter =
+        currentCharacter;
+
+
+    characterElement.textContent =
+        currentCharacter.c;
+
+
+    correctAnswerElement.textContent = "";
+
+    translationElement.textContent = "";
+
+
+    answerElement.value = "";
+
+
+    answerElement.classList.remove(
+        "correct",
+        "incorrect"
+    );
+
+
+    /*
+     * TEXT FLASHING
+     */
+
+    if (
+        modeElement.value === "Text Flashing"
+    ) {
+
+        inputArea.style.display = "none";
+
+
+        characterTimer =
+            setTimeout(
+                () => {
+
+                    showFlashingAnswer();
+
+                },
+                getSpeed() * 1000
+            );
+
+
+        return;
+    }
+
+
+    /*
+     * TYPING
+     */
+
+    inputArea.style.display = "block";
+
+
+    /*
+     * Focus input so the mobile keyboard
+     * can immediately be used.
+     */
+
+    answerElement.focus();
+
+
+    characterTimer =
+        setTimeout(
+            () => {
+
+                /*
+                 * Nothing entered before
+                 * SPEED expired.
+                 */
+
+                if (
+                    answerElement.value
+                        .trim() === ""
+                ) {
+
+                    total++;
+
+
+                    revealTypingAnswer(
+                        false,
+                        true
+                    );
+
+
+                    return;
+                }
+
+
+                /*
+                 * Automatically check
+                 * entered answer.
+                 */
+
+                checkAnswer();
+
+            },
+            getSpeed() * 1000
+        );
+}
+
+
+/* ============================================================
+   FLASHING ANSWER
+   ============================================================ */
+
+function showFlashingAnswer() {
+
+    if (!running) {
+        return;
+    }
+
+
+    correctAnswerElement.textContent =
+        currentCharacter.a[0];
+
+
+    correctAnswerElement.style.color =
+        "#22a447";
+
+
+    if (
+        typeElement.value === "Vocab 1" ||
+        typeElement.value === "Vocab 2" ||
+        typeElement.value === "Vocab 3" ||
+        typeElement.value === "All Vocabs"
+    ) {
+
+        translationElement.textContent =
+            currentCharacter.t || "";
+
+    }
+
+    else {
+
+        translationElement.textContent = "";
+    }
+
+
+
+    feedbackTimer =
+        setTimeout(
+            () => {
+
+                if (running) {
+                    showNext();
+                }
+
+            },
+            750
+        );
+}
+
+
+/* ============================================================
+   CHECK TYPING ANSWER
+   ============================================================ */
+
+function checkAnswer() {
+
+    if (
+        !running ||
+        !currentCharacter
+    ) {
+
+        return;
+    }
+
+
+    /*
+     * If the answer has already been
+     * revealed, do nothing.
+     */
+
+    if (waitingForNext) {
+        return;
+    }
+
+
+    clearTimeout(characterTimer);
+
+
+    const answer =
+        answerElement.value
+            .trim()
+            .toLowerCase();
+
+
+    /*
+     * Don't count a manually submitted
+     * empty answer.
+     */
+
+    if (answer === "") {
+        return;
+    }
+
+
+    total++;
+
+
+    const normalizedAnswer =
+        answer
+            .replace(/\s+/g, " ")
+            .trim();
+
+
+    const acceptedAnswers =
+        currentCharacter.a.map(
+            x =>
+                x
+                    .toLowerCase()
+                    .replace(/\s+/g, " ")
+                    .trim()
+        );
+
+
+    const isCorrect =
+        acceptedAnswers.includes(
+            normalizedAnswer
+        );
+
+
+    revealTypingAnswer(
+        isCorrect,
+        false
+    );
+}
+
+
+/* ============================================================
+   REVEAL TYPING ANSWER
+   ============================================================ */
+
+function revealTypingAnswer(
+    isCorrect,
+    timedOut
+) {
+
+    waitingForNext = true;
+
+
+    answerElement.classList.remove(
+        "correct",
+        "incorrect"
+    );
+
+
+    if (isCorrect) {
+
+        correct++;
+
+
+        answerElement.classList.add(
+            "correct"
+        );
+
+    }
+
+    else {
+
+        answerElement.classList.add(
+            "incorrect"
+        );
+
+    }
+
+
+    /*
+     * Show correct answer.
+     */
+
+    correctAnswerElement.textContent =
+        currentCharacter.a[0];
+
+
+    correctAnswerElement.style.color =
+        "#22a447";
+
+
+    /*
+     * Show vocabulary translation.
+     */
+
+    if (
+        typeElement.value === "Vocab 1" ||
+        typeElement.value === "Vocab 2" ||
+        typeElement.value === "Vocab 3" ||
+        typeElement.value === "All Vocabs"
+    ) {
+
+        translationElement.textContent =
+            currentCharacter.t || "";
+
+    }
+
+    else {
+
+        translationElement.textContent = "";
+    }
+
+
+    updateScore();
+
+
+    /*
+     * There is NO automatic advance.
+     *
+     * The user must press Enter.
+     */
+}
+
+
+/* ============================================================
+   KEYBOARD / MOBILE ENTER
+   ============================================================ */
+
+answerElement.addEventListener(
+    "keydown",
+    function(event) {
+
+        /*
+         * Once the answer is revealed,
+         * Enter moves to the next question.
+         */
+
+        if (waitingForNext) {
+
+            if (
+                event.key === "Enter" ||
+                event.key === "Done"
+            ) {
+
+                event.preventDefault();
+
+                showNext();
+            }
+
+            return;
+        }
+
+
+        /*
+         * Before the answer is revealed,
+         * Enter submits the answer.
+         */
+
+        if (
+            event.key === "Enter" ||
+            event.key === "Done"
+        ) {
+
+            event.preventDefault();
+
+            checkAnswer();
+        }
+    }
+);
+
+
+/* ============================================================
+   START BUTTON
+   ============================================================ */
+
+startButton.addEventListener(
+    "click",
+    start
+);
+
+
+/* ============================================================
+   SPEED
+   ============================================================ */
+
+function getSpeed() {
+
+    let speed =
+        parseFloat(
+            speedElement.value
+        );
+
+
+    if (
+        !speed ||
+        speed <= 0
+    ) {
+
+        speed = 3;
+
+        speedElement.value = 3;
+    }
+
+
+    return speed;
+}
+
+
+/* ============================================================
+   SESSION TIMER
+   ============================================================ */
+
+function updateSession() {
+
+    /*
+     * Only Text Flashing uses TIMER.
+     */
+
+    if (
+        !running ||
+        modeElement.value !== "Text Flashing"
+    ) {
+
+        return;
+    }
+
+
+    const timer =
+        parseInt(
+            timerElement.value
+        );
+
+
+    const elapsed =
+        (Date.now() - startTime) / 1000;
+
+
+    const remaining =
+        Math.max(
+            0,
+            timer - elapsed
+        );
+
+
+    timeElement.textContent =
+        Math.ceil(remaining);
+}
+
+
+/* ============================================================
+   SCORE
+   ============================================================ */
+
+function updateScore() {
+
+    /*
+     * Text Flashing has no score.
+     */
+
+    if (
+        modeElement.value === "Text Flashing"
+    ) {
+
+        scoreElement.textContent = "—";
+
+        return;
+    }
+
+
+    /*
+     * Typing mode.
+     */
+
+    scoreElement.textContent =
+        `${correct} / ${total}`;
+}
+
+
+/* ============================================================
+   RESET UI
+   ============================================================ */
+
+function resetForSelectionChange() {
+
+    /*
+     * Changing Mode or Type ALWAYS stops
+     * the current game.
+     */
+
+    if (running) {
+        stop();
+    }
+
+
+    /*
+     * Clear all timers again just to make
+     * sure no previous round remains.
+     */
+
+    clearTimeout(characterTimer);
+    clearTimeout(feedbackTimer);
+    clearTimeout(sessionStopTimer);
+    clearInterval(sessionTimer);
+
+
+    characterTimer = null;
+    feedbackTimer = null;
+    sessionTimer = null;
+    sessionStopTimer = null;
+
+
+    running = false;
+
+    waitingForNext = false;
+
+
+    /*
+     * Reset score.
+     */
+
+    correct = 0;
+    total = 0;
+
+
+    /*
+     * Clear answer UI.
+     */
+
+    correctAnswerElement.textContent = "";
+
+    translationElement.textContent = "";
+
+    answerElement.value = "";
+
+    answerElement.classList.remove(
+        "correct",
+        "incorrect"
+    );
+
+    /*
+     * Update mode-specific layout.
+     */
+
+    if (
+        modeElement.value === "Typing"
+    ) {
+
+        inputArea.style.display = "block";
+
+        timeElement.textContent = "∞";
+
+    }
+
+    else {
+
+        inputArea.style.display = "none";
+
+        timeElement.textContent = "0";
+    }
+
+
+    /*
+     * Update score.
+     */
+
+    updateScore();
+
+
+    /*
+     * Update starting character based
+     * on selected Type.
+     */
+
+    updatePreviewCharacter();
+}
+
+
+/* ============================================================
+   UPDATE PREVIEW CHARACTER
+   ============================================================ */
+
+function updatePreviewCharacter() {
+
+    switch (
+        typeElement.value
+    ) {
+
+        case "Hiragana":
+
+            characterElement.textContent =
+                "あ";
+
+            break;
+
+
+        case "Katakana":
+
+            characterElement.textContent =
+                "ア";
+
+            break;
+
+
+        case "Vocab 1":
+
+            characterElement.textContent =
+                "あの";
+
+            break;
+
+
+        case "Vocab 2":
+
+            characterElement.textContent =
+                "これ";
+
+            break;
+
+
+        case "Vocab 3":
+
+            characterElement.textContent =
+                "ビジネス";
+
+            break;
+
+
+        case "All Vocabs":
+
+            characterElement.textContent =
+                "これ";
+
+            break;
+
+
+        case "All Alphabets":
+
+        default:
+
+            characterElement.textContent =
+                "あ";
+
+            break;
+    }
+}
+
+
+/* ============================================================
+   MODE CHANGE
+   ============================================================ */
+
+modeElement.addEventListener(
+    "change",
+    function() {
+
+        resetForSelectionChange();
+    }
+);
+
+
+/* ============================================================
+   TYPE CHANGE
+   ============================================================ */
+
+typeElement.addEventListener(
+    "change",
+    function() {
+
+        resetForSelectionChange();
+    }
+);
+
+
+/* ============================================================
+   INITIAL DISPLAY
+   ============================================================ */
+
+characterElement.textContent = "あ";
+
+updateScore();
+
+</script>
+
+</body>
+</html>
