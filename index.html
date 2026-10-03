@@ -6,13 +6,9 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width,
-               initial-scale=1.0,
-               maximum-scale=1.0,
-               user-scalable=no">
+      content="width=device-width, initial-scale=1.0">
 
 <title>Japanese Reading Practice</title>
-
 
 <style>
 
@@ -24,24 +20,35 @@
     box-sizing: border-box;
 }
 
-html,
-body {
+html {
     margin: 0;
     padding: 0;
-    min-height: 100%;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    -webkit-overflow-scrolling: touch;
 }
 
 body {
+    margin: 0;
+    padding: 0;
+
+    min-height: 100vh;
+
     font-family: Arial, sans-serif;
+
     background: #f4f6f8;
     color: #222;
 
     /*
-     * Allow normal scrolling.
-     *
-     * We deliberately do NOT use overflow:hidden here,
-     * because the user should still be able to scroll.
+     * Allow normal vertical scrolling on mobile.
      */
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    touch-action: pan-y;
+
     overscroll-behavior-y: auto;
 }
 
@@ -52,16 +59,20 @@ body {
 
 .app {
     width: min(600px, calc(100% - 20px));
+
     margin: 20px auto;
     padding: 22px;
 
     background: white;
+
     border-radius: 15px;
 
     box-shadow:
         0 4px 20px rgba(0,0,0,.12);
 
     text-align: center;
+
+    min-height: max-content;
 }
 
 
@@ -71,6 +82,7 @@ body {
 
 h1 {
     margin: 0 0 22px;
+
     font-size: 28px;
 }
 
@@ -81,7 +93,9 @@ h1 {
 
 .settings {
     display: grid;
+
     grid-template-columns: 1fr 1fr;
+
     gap: 14px;
 
     text-align: left;
@@ -89,7 +103,9 @@ h1 {
 
 label {
     font-weight: bold;
+
     display: block;
+
     margin-bottom: 6px;
 }
 
@@ -103,9 +119,16 @@ input[type="text"] {
     font-size: 16px;
 
     border: 1px solid #bbb;
+
     border-radius: 8px;
 
     background: white;
+
+    /*
+     * Prevent iOS from zooming when inputs are focused.
+     * 16px is large enough for this.
+     */
+    -webkit-appearance: none;
 }
 
 
@@ -122,13 +145,17 @@ input[type="text"] {
     padding: 20px;
 
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     justify-content: center;
 
     background: #fafafa;
 
     border: 2px solid #ddd;
+
     border-radius: 12px;
 
     overflow: hidden;
@@ -136,12 +163,15 @@ input[type="text"] {
 
 #character {
     font-size: 75px;
+
     font-weight: bold;
+
     line-height: 1.1;
 
     max-width: 100%;
 
     white-space: nowrap;
+
     text-align: center;
 }
 
@@ -151,6 +181,7 @@ input[type="text"] {
     margin-top: 12px;
 
     font-size: 24px;
+
     font-weight: bold;
 
     color: #22a447;
@@ -173,6 +204,7 @@ input[type="text"] {
 
 #inputArea {
     display: none;
+
     margin-bottom: 18px;
 }
 
@@ -190,18 +222,21 @@ input[type="text"] {
         border-color .2s;
 
     /*
-     * Helps Android treat this as a normal touch input.
+     * Allows the input to work normally while
+     * keeping page scrolling available.
      */
     touch-action: manipulation;
 }
 
 #answer.correct {
     background-color: #8be28b;
+
     border-color: #38a838;
 }
 
 #answer.incorrect {
     background-color: #ff9b9b;
+
     border-color: #d33;
 }
 
@@ -212,7 +247,9 @@ input[type="text"] {
 
 .buttons {
     display: flex;
+
     gap: 10px;
+
     justify-content: center;
 }
 
@@ -222,15 +259,19 @@ button {
     font-size: 17px;
 
     border: 0;
+
     border-radius: 8px;
 
     cursor: pointer;
 
     touch-action: manipulation;
+
+    -webkit-tap-highlight-color: transparent;
 }
 
 #startButton {
     background: #2878e3;
+
     color: white;
 }
 
@@ -249,9 +290,11 @@ button:hover {
 
 .status {
     display: flex;
+
     justify-content: space-between;
 
     margin-top: 20px;
+
     padding: 12px;
 
     background: #f0f0f0;
@@ -278,6 +321,7 @@ button:hover {
 
     h1 {
         font-size: 23px;
+
         margin-bottom: 15px;
     }
 
@@ -287,6 +331,7 @@ button:hover {
 
     label {
         font-size: 14px;
+
         margin-bottom: 4px;
     }
 
@@ -294,13 +339,15 @@ button:hover {
     input[type="number"],
     input[type="text"] {
         padding: 8px;
-        font-size: 15px;
+
+        font-size: 16px;
     }
 
     .display {
         margin: 14px 0 12px;
 
         height: 175px;
+
         min-height: 175px;
 
         padding: 12px;
@@ -312,6 +359,7 @@ button:hover {
 
     #correctAnswer {
         font-size: 22px;
+
         margin-top: 8px;
     }
 
@@ -321,6 +369,7 @@ button:hover {
 
     #answer {
         font-size: 22px;
+
         padding: 9px;
 
         min-height: 44px;
@@ -328,6 +377,7 @@ button:hover {
 
     .status {
         margin-top: 12px;
+
         padding: 9px;
     }
 
@@ -342,19 +392,23 @@ button:hover {
 
     .app {
         margin-top: 5px;
+
         padding: 10px;
     }
 
     h1 {
         font-size: 20px;
+
         margin-bottom: 10px;
     }
 
     .display {
         height: 140px;
+
         min-height: 140px;
 
         margin: 10px 0;
+
         padding: 8px;
     }
 
@@ -372,6 +426,7 @@ button:hover {
 
     #translation {
         font-size: 14px;
+
         min-height: 20px;
     }
 
@@ -383,6 +438,40 @@ button:hover {
         margin-top: 8px;
     }
 
+}
+
+
+/* ============================================================
+   VERY SMALL PHONES
+   ============================================================ */
+
+@media (max-width: 380px) {
+
+    .settings {
+        grid-template-columns: 1fr;
+    }
+
+    .app {
+        width: calc(100% - 10px);
+
+        padding: 10px;
+    }
+
+    #character {
+        font-size: 50px;
+    }
+
+}
+
+
+/* ============================================================
+   REDUCE MOBILE TAP HIGHLIGHT
+   ============================================================ */
+
+button,
+select,
+input {
+    -webkit-tap-highlight-color: transparent;
 }
 
 </style>
@@ -983,73 +1072,6 @@ let waitingForNext = false;
 
 
 /* ============================================================
-   SCROLL POSITION HELPER
-   ============================================================ */
-
-/*
- * Get the current page scroll position.
- *
- * We use this instead of disabling scrolling.
- */
-
-function getScrollPosition() {
-
-    return {
-        x: window.scrollX,
-        y: window.scrollY
-    };
-
-}
-
-
-/*
- * Restore a previously saved scroll position.
- *
- * Multiple animation frames are used because Android Chrome
- * can perform its own viewport adjustment immediately after
- * Enter/focus events.
- */
-
-function restoreScrollPosition(position) {
-
-    if (!position) {
-        return;
-    }
-
-
-    window.scrollTo(
-        position.x,
-        position.y
-    );
-
-
-    requestAnimationFrame(
-        () => {
-
-            window.scrollTo(
-                position.x,
-                position.y
-            );
-
-
-            requestAnimationFrame(
-                () => {
-
-                    window.scrollTo(
-                        position.x,
-                        position.y
-                    );
-
-                }
-            );
-
-        }
-    );
-
-}
-
-
-/* ============================================================
    START
    ============================================================ */
 
@@ -1381,7 +1403,9 @@ function showNext() {
 
 
     /*
+     * ========================================================
      * TEXT FLASHING
+     * ========================================================
      */
 
     if (
@@ -1407,40 +1431,49 @@ function showNext() {
 
 
     /*
+     * ========================================================
      * TYPING
+     * ========================================================
      */
 
     inputArea.style.display = "block";
 
 
     /*
-     * Save the user's current scroll position
-     * before focusing the input.
+     * IMPORTANT MOBILE FIX
+     *
+     * We no longer save or restore window.scrollY.
+     *
+     * The browser is allowed to handle the keyboard
+     * and viewport normally.
      */
 
-    const scrollPosition =
-        getScrollPosition();
+    setTimeout(
+        () => {
 
+            if (
+                running &&
+                document.activeElement !== answerElement
+            ) {
 
-    /*
-     * preventScroll is supported by modern Android
-     * browsers and prevents focus() from deliberately
-     * moving the page.
-     */
+                try {
 
-    answerElement.focus({
-        preventScroll: true
-    });
+                    answerElement.focus({
+                        preventScroll: true
+                    });
 
+                }
 
-    /*
-     * Android can still adjust the page after focus.
-     * Restore the user's position after the browser
-     * has had a chance to perform that adjustment.
-     */
+                catch (error) {
 
-    restoreScrollPosition(
-        scrollPosition
+                    answerElement.focus();
+
+                }
+
+            }
+
+        },
+        50
     );
 
 
@@ -1717,18 +1750,11 @@ answerElement.addEventListener(
 
 
         /*
-         * Save the exact position BEFORE doing anything.
-         */
-
-        const savedScrollPosition =
-            getScrollPosition();
-
-
-        /*
-         * Stop Android Chrome's default Enter behavior.
+         * Stop the keyboard's default Enter action.
          */
 
         event.preventDefault();
+
         event.stopPropagation();
 
 
@@ -1742,19 +1768,6 @@ answerElement.addEventListener(
 
             showNext();
 
-
-            /*
-             * showNext() focuses the input again.
-             *
-             * Restore the user's original page position
-             * after Android processes that focus.
-             */
-
-            restoreScrollPosition(
-                savedScrollPosition
-            );
-
-
             return;
         }
 
@@ -1766,18 +1779,6 @@ answerElement.addEventListener(
          */
 
         checkAnswer();
-
-
-        /*
-         * checkAnswer() changes the input and may cause
-         * Android Chrome to reposition the viewport.
-         *
-         * Restore the user's position.
-         */
-
-        restoreScrollPosition(
-            savedScrollPosition
-        );
 
     }
 );
@@ -1880,6 +1881,7 @@ function updateScore() {
         scoreElement.textContent = "—";
 
         return;
+
     }
 
 
