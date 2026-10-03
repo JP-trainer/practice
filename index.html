@@ -6,7 +6,7 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>Japanese Reading Practice</title>
+<title>Japanese Practice</title>
 
 <style>
 
@@ -37,6 +37,10 @@ body {
     text-align: center;
 }
 
+h1 {
+    margin: 0 0 22px;
+    font-size: 28px;
+}
 
 .settings {
     display: grid;
@@ -195,6 +199,10 @@ button:hover {
         padding: 15px;
     }
 
+    h1 {
+        font-size: 23px;
+        margin-bottom: 15px;
+    }
 
     .settings {
         gap: 9px;
@@ -289,6 +297,10 @@ button:hover {
      * valuable vertical space.
      */
 
+    h1,
+    .settings {
+        display: none;
+    }
 
     /*
      * Smaller display area.
@@ -352,6 +364,8 @@ button:hover {
 <body>
 
 <div class="app">
+
+    <h1>Japanese Reading Practice</h1>
 
 
     <!-- ======================================================
@@ -1275,6 +1289,7 @@ function showNext() {
     inputArea.style.display = "block";
 
 
+    /*answerElement.focus();*/
 
 
     /*
