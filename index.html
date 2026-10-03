@@ -1,111 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>Japanese Reading Practice</title>
 
 <style>
 
-/* ============================================================
-   GLOBAL
-   ============================================================ */
-
 * {
     box-sizing: border-box;
 }
 
-html {
-    margin: 0;
-    padding: 0;
-
-    overflow-x: hidden;
-    overflow-y: auto;
-
-    -webkit-overflow-scrolling: touch;
-}
-
+html,
 body {
     margin: 0;
     padding: 0;
-
-    min-height: 100vh;
-
-    font-family: Arial, sans-serif;
-
-    background: #f4f6f8;
-    color: #222;
-
-    /*
-     * Allow normal vertical scrolling on mobile.
-     */
-    overflow-x: hidden;
-    overflow-y: auto;
-
-    touch-action: pan-y;
-
-    overscroll-behavior-y: auto;
+    min-height: 100%;
 }
 
-
-/* ============================================================
-   APP
-   ============================================================ */
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+}
 
 .app {
     width: min(600px, calc(100% - 20px));
-
     margin: 20px auto;
     padding: 22px;
-
     background: white;
-
     border-radius: 15px;
-
-    box-shadow:
-        0 4px 20px rgba(0,0,0,.12);
-
+    box-shadow: 0 4px 20px rgba(0,0,0,.12);
     text-align: center;
-
-    min-height: max-content;
 }
-
-
-/* ============================================================
-   TITLE
-   ============================================================ */
 
 h1 {
     margin: 0 0 22px;
-
     font-size: 28px;
 }
 
-
-/* ============================================================
-   SETTINGS
-   ============================================================ */
-
 .settings {
     display: grid;
-
     grid-template-columns: 1fr 1fr;
-
     gap: 14px;
-
     text-align: left;
 }
 
 label {
     font-weight: bold;
-
     display: block;
-
     margin-bottom: 6px;
 }
 
@@ -113,49 +59,26 @@ select,
 input[type="number"],
 input[type="text"] {
     width: 100%;
-
     padding: 10px;
-
     font-size: 16px;
-
     border: 1px solid #bbb;
-
     border-radius: 8px;
-
     background: white;
-
-    /*
-     * Prevent iOS from zooming when inputs are focused.
-     * 16px is large enough for this.
-     */
-    -webkit-appearance: none;
 }
-
-
-/* ============================================================
-   DISPLAY
-   ============================================================ */
 
 .display {
     margin: 25px 0 15px;
-
     min-height: 220px;
     height: 220px;
-
     padding: 20px;
 
     display: flex;
-
     flex-direction: column;
-
     align-items: center;
-
     justify-content: center;
 
     background: #fafafa;
-
     border: 2px solid #ddd;
-
     border-radius: 12px;
 
     overflow: hidden;
@@ -163,115 +86,72 @@ input[type="text"] {
 
 #character {
     font-size: 75px;
-
     font-weight: bold;
-
     line-height: 1.1;
-
     max-width: 100%;
-
     white-space: nowrap;
-
     text-align: center;
 }
 
 #correctAnswer {
     min-height: 30px;
-
     margin-top: 12px;
-
     font-size: 24px;
-
     font-weight: bold;
-
     color: #22a447;
 }
 
 #translation {
     min-height: 25px;
-
     margin-top: 5px;
-
     font-size: 18px;
-
     color: #555;
 }
 
-
-/* ============================================================
-   TYPING INPUT
-   ============================================================ */
-
 #inputArea {
     display: none;
-
     margin-bottom: 18px;
 }
 
 #answer {
     width: 100%;
-
     text-align: center;
-
     font-size: 24px;
-
     padding: 11px;
 
     transition:
         background-color .2s,
         border-color .2s;
 
-    /*
-     * Allows the input to work normally while
-     * keeping page scrolling available.
-     */
     touch-action: manipulation;
 }
 
 #answer.correct {
     background-color: #8be28b;
-
     border-color: #38a838;
 }
 
 #answer.incorrect {
     background-color: #ff9b9b;
-
     border-color: #d33;
 }
 
-
-/* ============================================================
-   BUTTONS
-   ============================================================ */
-
 .buttons {
     display: flex;
-
     gap: 10px;
-
     justify-content: center;
 }
 
 button {
     padding: 12px 30px;
-
     font-size: 17px;
-
     border: 0;
-
     border-radius: 8px;
-
     cursor: pointer;
-
-    touch-action: manipulation;
-
-    -webkit-tap-highlight-color: transparent;
 }
 
 #startButton {
     background: #2878e3;
-
     color: white;
 }
 
@@ -283,24 +163,13 @@ button:hover {
     opacity: .85;
 }
 
-
-/* ============================================================
-   STATUS
-   ============================================================ */
-
 .status {
     display: flex;
-
     justify-content: space-between;
-
     margin-top: 20px;
-
     padding: 12px;
-
     background: #f0f0f0;
-
     border-radius: 8px;
-
     font-size: 16px;
 }
 
@@ -311,17 +180,27 @@ button:hover {
 
 @media (max-width: 700px) {
 
+    html,
+    body {
+        width: 100%;
+        min-height: 100%;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow-x: hidden;
+    }
+
     .app {
         width: calc(100% - 16px);
-
         margin: 8px auto;
-
         padding: 15px;
     }
 
     h1 {
         font-size: 23px;
-
         margin-bottom: 15px;
     }
 
@@ -331,7 +210,6 @@ button:hover {
 
     label {
         font-size: 14px;
-
         margin-bottom: 4px;
     }
 
@@ -339,143 +217,147 @@ button:hover {
     input[type="number"],
     input[type="text"] {
         padding: 8px;
-
-        font-size: 16px;
+        font-size: 15px;
     }
+
+    /*
+     * Smaller display so there is more room for
+     * the answer box on mobile.
+     */
 
     .display {
-        margin: 14px 0 12px;
-
-        height: 175px;
-
-        min-height: 175px;
-
-        padding: 12px;
+        margin: 10px 0 10px;
+        height: 150px;
+        min-height: 150px;
+        padding: 10px;
     }
 
+    /*
+     * Smaller Japanese character.
+     */
+
     #character {
-        font-size: 62px;
+        font-size: 54px;
     }
 
     #correctAnswer {
-        font-size: 22px;
-
-        margin-top: 8px;
+        font-size: 20px;
+        margin-top: 6px;
+        min-height: 26px;
     }
 
     #translation {
-        font-size: 16px;
+        font-size: 15px;
+        min-height: 22px;
+    }
+
+    #inputArea {
+        margin-bottom: 12px;
+
+        scroll-margin-top: 10px;
+        scroll-margin-bottom: 10px;
     }
 
     #answer {
-        font-size: 22px;
-
+        font-size: 20px;
         padding: 9px;
+        min-height: 46px;
+    }
 
-        min-height: 44px;
+    .buttons {
+        margin-top: 8px;
     }
 
     .status {
         margin-top: 12px;
-
         padding: 9px;
     }
-
 }
 
 
 /* ============================================================
-   SHORT MOBILE SCREENS
+   MOBILE KEYBOARD OPEN
    ============================================================ */
 
-@media (max-width: 700px) and (max-height: 600px) {
+@media (max-width: 700px) and (max-height: 700px) {
+
+    /*
+     * The keyboard makes the viewport much shorter.
+     * Reduce the overall layout so the textbox remains
+     * visible instead of being pushed below the keyboard.
+     */
 
     .app {
-        margin-top: 5px;
-
-        padding: 10px;
-    }
-
-    h1 {
-        font-size: 20px;
-
-        margin-bottom: 10px;
-    }
-
-    .display {
-        height: 140px;
-
-        min-height: 140px;
-
-        margin: 10px 0;
-
+        margin: 3px auto;
         padding: 8px;
     }
 
+    /*
+     * These aren't necessary while typing and take up
+     * valuable vertical space.
+     */
+
+    h1,
+    .settings {
+        display: none;
+    }
+
+    /*
+     * Smaller display area.
+     */
+
+    .display {
+        margin: 3px 0 6px;
+        height: 105px;
+        min-height: 105px;
+        padding: 6px;
+    }
+
+    /*
+     * Smaller Japanese character.
+     */
+
     #character {
-        font-size: 52px;
+        font-size: 46px;
     }
 
     #correctAnswer {
-        font-size: 19px;
-
-        min-height: 24px;
-
-        margin-top: 5px;
+        font-size: 18px;
+        margin-top: 3px;
+        min-height: 22px;
     }
 
     #translation {
-        font-size: 14px;
-
-        min-height: 20px;
+        font-size: 13px;
+        min-height: 18px;
     }
 
     #inputArea {
-        margin-bottom: 10px;
+        margin-bottom: 7px;
+    }
+
+    /*
+     * Keep textbox compact but still easy to tap.
+     */
+
+    #answer {
+        font-size: 20px;
+        min-height: 46px;
+        padding: 9px;
+    }
+
+    .buttons {
+        margin-top: 3px;
     }
 
     .status {
-        margin-top: 8px;
+        margin-top: 5px;
+        padding: 6px;
+        font-size: 14px;
     }
-
-}
-
-
-/* ============================================================
-   VERY SMALL PHONES
-   ============================================================ */
-
-@media (max-width: 380px) {
-
-    .settings {
-        grid-template-columns: 1fr;
-    }
-
-    .app {
-        width: calc(100% - 10px);
-
-        padding: 10px;
-    }
-
-    #character {
-        font-size: 50px;
-    }
-
-}
-
-
-/* ============================================================
-   REDUCE MOBILE TAP HIGHLIGHT
-   ============================================================ */
-
-button,
-select,
-input {
-    -webkit-tap-highlight-color: transparent;
 }
 
 </style>
-
 </head>
 
 
@@ -483,9 +365,7 @@ input {
 
 <div class="app">
 
-    <h1>
-        Japanese Reading Practice
-    </h1>
+    <h1>Japanese Reading Practice</h1>
 
 
     <!-- ======================================================
@@ -495,10 +375,7 @@ input {
     <div class="settings">
 
         <div>
-
-            <label for="mode">
-                Mode
-            </label>
+            <label for="mode">Mode</label>
 
             <select id="mode">
 
@@ -511,15 +388,11 @@ input {
                 </option>
 
             </select>
-
         </div>
 
 
         <div>
-
-            <label for="type">
-                Type
-            </label>
+            <label for="type">Type</label>
 
             <select id="type">
 
@@ -552,12 +425,10 @@ input {
                 </option>
 
             </select>
-
         </div>
 
 
         <div>
-
             <label for="speed">
                 Speed (seconds)
             </label>
@@ -569,12 +440,10 @@ input {
                 min="0.5"
                 step="0.5"
             >
-
         </div>
 
 
         <div>
-
             <label for="timer">
                 Timer (seconds)
             </label>
@@ -585,7 +454,6 @@ input {
                 value="60"
                 min="1"
             >
-
         </div>
 
     </div>
@@ -597,9 +465,7 @@ input {
 
     <div class="display">
 
-        <div id="character">
-            あ
-        </div>
+        <div id="character">あ</div>
 
         <div id="correctAnswer"></div>
 
@@ -1089,10 +955,6 @@ function start() {
         parseInt(timerElement.value);
 
 
-    /*
-     * Timer only applies to Text Flashing.
-     */
-
     if (
         modeElement.value === "Text Flashing"
     ) {
@@ -1105,7 +967,6 @@ function start() {
 
             return;
         }
-
     }
 
 
@@ -1153,7 +1014,6 @@ function start() {
         inputArea.style.display = "none";
 
         timeElement.textContent = timer;
-
     }
 
 
@@ -1186,9 +1046,7 @@ function start() {
                 },
                 timer * 1000
             );
-
     }
-
 }
 
 
@@ -1252,9 +1110,7 @@ function stop() {
     else {
 
         updateScore();
-
     }
-
 }
 
 
@@ -1348,9 +1204,7 @@ function getCurrentList() {
         default:
 
             return hiragana;
-
     }
-
 }
 
 
@@ -1403,9 +1257,7 @@ function showNext() {
 
 
     /*
-     * ========================================================
      * TEXT FLASHING
-     * ========================================================
      */
 
     if (
@@ -1431,50 +1283,22 @@ function showNext() {
 
 
     /*
-     * ========================================================
      * TYPING
-     * ========================================================
      */
 
     inputArea.style.display = "block";
 
 
+    answerElement.focus();
+
+
     /*
-     * IMPORTANT MOBILE FIX
-     *
-     * We no longer save or restore window.scrollY.
-     *
-     * The browser is allowed to handle the keyboard
-     * and viewport normally.
+     * Give the mobile browser a moment to
+     * open the keyboard before positioning
+     * the input area.
      */
 
-    setTimeout(
-        () => {
-
-            if (
-                running &&
-                document.activeElement !== answerElement
-            ) {
-
-                try {
-
-                    answerElement.focus({
-                        preventScroll: true
-                    });
-
-                }
-
-                catch (error) {
-
-                    answerElement.focus();
-
-                }
-
-            }
-
-        },
-        50
-    );
+    keepTypingAreaVisible();
 
 
     characterTimer =
@@ -1514,7 +1338,6 @@ function showNext() {
             },
             getSpeed() * 1000
         );
-
 }
 
 
@@ -1552,7 +1375,6 @@ function showFlashingAnswer() {
     else {
 
         translationElement.textContent = "";
-
     }
 
 
@@ -1567,7 +1389,6 @@ function showFlashingAnswer() {
             },
             750
         );
-
 }
 
 
@@ -1586,11 +1407,6 @@ function checkAnswer() {
     }
 
 
-    /*
-     * If the answer has already been revealed,
-     * do nothing.
-     */
-
     if (waitingForNext) {
         return;
     }
@@ -1604,10 +1420,6 @@ function checkAnswer() {
             .trim()
             .toLowerCase();
 
-
-    /*
-     * Don't count an empty answer.
-     */
 
     if (answer === "") {
         return;
@@ -1643,7 +1455,6 @@ function checkAnswer() {
         isCorrect,
         false
     );
-
 }
 
 
@@ -1685,10 +1496,6 @@ function revealTypingAnswer(
     }
 
 
-    /*
-     * Show correct answer.
-     */
-
     correctAnswerElement.textContent =
         currentCharacter.a[0];
 
@@ -1696,10 +1503,6 @@ function revealTypingAnswer(
     correctAnswerElement.style.color =
         "#22a447";
 
-
-    /*
-     * Show vocabulary translation.
-     */
 
     if (
         typeElement.value === "Vocab 1" ||
@@ -1716,12 +1519,10 @@ function revealTypingAnswer(
     else {
 
         translationElement.textContent = "";
-
     }
 
 
     updateScore();
-
 }
 
 
@@ -1734,52 +1535,40 @@ answerElement.addEventListener(
     function(event) {
 
         /*
-         * Android keyboards can report Enter in
-         * slightly different ways.
-         */
-
-        const isEnter =
-            event.key === "Enter" ||
-            event.key === "Done" ||
-            event.keyCode === 13;
-
-
-        if (!isEnter) {
-            return;
-        }
-
-
-        /*
-         * Stop the keyboard's default Enter action.
-         */
-
-        event.preventDefault();
-
-        event.stopPropagation();
-
-
-        /*
-         * Answer has already been revealed.
-         *
-         * Enter = next question.
+         * Once the answer is revealed,
+         * Enter moves to the next question.
          */
 
         if (waitingForNext) {
 
-            showNext();
+            if (
+                event.key === "Enter" ||
+                event.key === "Done"
+            ) {
+
+                event.preventDefault();
+
+                showNext();
+            }
 
             return;
         }
 
 
         /*
-         * Answer has not been revealed.
-         *
-         * Enter = submit answer.
+         * Before the answer is revealed,
+         * Enter submits the answer.
          */
 
-        checkAnswer();
+        if (
+            event.key === "Enter" ||
+            event.key === "Done"
+        ) {
 
+            event.preventDefault();
+
+            checkAnswer();
+        }
     }
 );
 
@@ -1814,7 +1603,6 @@ function getSpeed() {
         speed = 3;
 
         speedElement.value = 3;
-
     }
 
 
@@ -1860,7 +1648,6 @@ function updateSession() {
 
     timeElement.textContent =
         Math.ceil(remaining);
-
 }
 
 
@@ -1881,7 +1668,6 @@ function updateScore() {
         scoreElement.textContent = "—";
 
         return;
-
     }
 
 
@@ -1891,7 +1677,6 @@ function updateScore() {
 
     scoreElement.textContent =
         `${correct} / ${total}`;
-
 }
 
 
@@ -1911,14 +1696,9 @@ function resetForSelectionChange() {
     }
 
 
-    /*
-     * Clear all timers again.
-     */
-
     clearTimeout(characterTimer);
     clearTimeout(feedbackTimer);
     clearTimeout(sessionStopTimer);
-
     clearInterval(sessionTimer);
 
 
@@ -1976,7 +1756,6 @@ function resetForSelectionChange() {
         inputArea.style.display = "none";
 
         timeElement.textContent = "0";
-
     }
 
 
@@ -1993,7 +1772,6 @@ function resetForSelectionChange() {
      */
 
     updatePreviewCharacter();
-
 }
 
 
@@ -2063,9 +1841,7 @@ function updatePreviewCharacter() {
                 "あ";
 
             break;
-
     }
-
 }
 
 
@@ -2078,7 +1854,6 @@ modeElement.addEventListener(
     function() {
 
         resetForSelectionChange();
-
     }
 );
 
@@ -2092,9 +1867,79 @@ typeElement.addEventListener(
     function() {
 
         resetForSelectionChange();
-
     }
 );
+
+
+/* ============================================================
+   MOBILE KEYBOARD POSITIONING
+   ============================================================ */
+
+/*
+ * Keep the answer area visible when the keyboard
+ * opens on a mobile device.
+ */
+
+function keepTypingAreaVisible() {
+
+    if (
+        window.innerWidth <= 700 &&
+        modeElement.value === "Typing" &&
+        running
+    ) {
+
+        setTimeout(() => {
+
+            if (!running) {
+                return;
+            }
+
+
+            inputArea.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+        }, 150);
+    }
+}
+
+
+/*
+ * Also reposition when the browser's visual
+ * viewport changes because of the keyboard.
+ */
+
+if (window.visualViewport) {
+
+    window.visualViewport.addEventListener(
+        "resize",
+        function() {
+
+            if (
+                window.innerWidth <= 700 &&
+                modeElement.value === "Typing" &&
+                running
+            ) {
+
+                setTimeout(() => {
+
+                    if (!running) {
+                        return;
+                    }
+
+
+                    inputArea.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
+
+                }, 100);
+            }
+        }
+    );
+
+}
 
 
 /* ============================================================
