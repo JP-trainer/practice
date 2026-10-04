@@ -30,6 +30,9 @@ input:disabled{opacity:.45}
 button{width:100%;padding:14px;font-size:17px;font-weight:600;color:#fff;background:var(--accent);border:0;border-radius:12px;cursor:pointer}
 button.stop{background:#555}
 button:active{transform:scale(.99)}
+.buttons{display:flex;gap:10px}
+.buttons button{width:auto;flex:1}
+button.alt{color:var(--ink);background:var(--bg);border:1px solid var(--line)}
 .status{display:flex;justify-content:space-around;margin-top:14px;padding:12px;background:var(--bg);border-radius:12px;font-size:15px;color:var(--mute)}
 .status strong{color:var(--ink);font-size:17px}
 </style>
@@ -40,9 +43,9 @@ button:active{transform:scale(.99)}
 
   <div class="settings">
     <div><label for="mode">Mode</label>
-      <select id="mode"><option>Text Flashing</option><option>Typing</option></select></div>
+      <select id="mode"><option>Flashing Text</option><option>Typing</option></select></div>
     <div><label for="type">Type</label>
-      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>All Vocabs</option></select></div>
+      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>All Vocabs</option></select></div>
     <div><label for="speed">Seconds per card</label>
       <input id="speed" type="number" value="3" min="0.5" step="0.5"></div>
     <div><label for="timer">Session timer (s)</label>
@@ -59,7 +62,7 @@ button:active{transform:scale(.99)}
 
   <input id="answer" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="Type the romaji…" hidden>
 
-  <button id="startButton">Start</button>
+  <div class="buttons"><button id="startButton">Start</button><button id="pauseButton" class="alt" hidden>Pause</button></div>
 
   <div class="status">
     <span>Time <strong id="time">0</strong></span>
@@ -232,6 +235,48 @@ const numbers = vocab(`
 はっせん|hassen|8,000
 いちまん|ichiman|10,000`);
 
+const sentences = vocab(`
+わたしはがくせいです。|watashi wa gakusei desu|I am a student.
+わたしはだいがくのいちねんせいです。|watashi wa daigaku no ichinensei desu|I am a first-year college student.
+わたしはアメリカじんです。|watashi wa amerikajin desu|I am American.
+あの、わたしはりゅうがくせいです。|ano watashi wa ryuugakusei desu|Um... I am an international student.
+せんせいはにほんじんです。|sensei wa nihonjin desu|The teacher is Japanese.
+なまえはなんですか。|namae wa nan desu ka|What is your name?
+せんこうはなんですか。|senkou wa nan desu ka|What is your major?
+わたしのせんこうはれきしです。|watashi no senkou wa rekishi desu|My major is history.
+いまなんじですか。|ima nanji desu ka|What time is it now?
+いまごごさんじはんです。|ima gogo sanji han desu|It is 3:30 P.M. now.
+わたしはじゅうきゅうさいです。|watashi wa juukyuusai desu|I am 19 years old.
+ともだちはこうこうのせんせいです。|tomodachi wa koukou no sensei desu|My friend is a high school teacher.
+ええ、そうです。|ee sou desu|Yes, that's right.
+これはなんですか。|kore wa nan desu ka|What is this?
+それはえんぴつです。|sore wa enpitsu desu|That is a pencil.
+あれはとしょかんです。|are wa toshokan desu|That over there is the library.
+このかばんはわたしのです。|kono kaban wa watashi no desu|This bag is mine.
+おてあらいはどこですか。|otearai wa doko desu ka|Where is the restroom?
+ぎんこうはあそこです。|ginkou wa asoko desu|The bank is over there.
+これはいくらですか。|kore wa ikura desu ka|How much is this?
+それはごひゃくえんです。|sore wa gohyaku en desu|That is 500 yen.
+とんかつはおいしいです。|tonkatsu wa oishii desu|Pork cutlet is delicious.
+そのほんはたかいです。|sono hon wa takai desu|That book is expensive.
+だれのかさですか。|dare no kasa desu ka|Whose umbrella is it?
+さいふはどれですか。|saifu wa dore desu ka|Which one is the wallet?
+おかあさんはせんせいです。|okaasan wa sensei desu|Your mother is a teacher.
+コーヒーをください。|koohii o kudasai|Coffee, please.
+メニューをおねがいします。|menyuu o onegaishimasu|The menu, please.
+まいにちあさごはんをたべます。|mainichi asagohan o tabemasu|I eat breakfast every day.
+まいにちテレビをみます。|mainichi terebi o mimasu|I watch TV every day.
+ときどきおんがくをききます。|tokidoki ongaku o kikimasu|I sometimes listen to music.
+ぜんぜんテレビをみません。|zenzen terebi o mimasen|I don't watch TV at all.
+よくえいがをみます。|yoku eiga o mimasu|I often watch movies.
+まいにちしんぶんをよみます。|mainichi shinbun o yomimasu|I read the newspaper every day.
+ごぜんしちじにおきます。|gozen shichiji ni okimasu|I get up at 7 A.M.
+ごごじゅうじにねます。|gogo juuji ni nemasu|I go to bed at 10 P.M.
+きょうだいがくにいきます。|kyou daigaku ni ikimasu|I go to college today.
+あしたいえにかえります。|ashita ie ni kaerimasu|I will go home tomorrow.
+こんばんべんきょうします。|konban benkyou shimasu|I will study tonight.
+ともだちとはなします。|tomodachi to hanashimasu|I talk with a friend.`);
+
 const seen = new Set();
 const allVocabs = [...vocab1, ...vocab2, ...vocab3].filter(x => {
   const k = x.c + x.t.toLowerCase();
@@ -240,7 +285,7 @@ const allVocabs = [...vocab1, ...vocab2, ...vocab3].filter(x => {
 
 const LISTS = {
   "All Alphabets": [...hiragana, ...katakana],
-  "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers,
+  "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers, "Sentences": sentences,
   "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3,
   "All Vocabs": allVocabs
 };
@@ -250,10 +295,11 @@ const $ = id => document.getElementById(id);
 const modeEl = $("mode"), typeEl = $("type"), speedEl = $("speed"), timerEl = $("timer");
 const charEl = $("character"), ansEl = $("correctAnswer"), transEl = $("translation");
 const answer = $("answer"), startBtn = $("startButton"), timeEl = $("time"), scoreEl = $("score");
-const bar = $("bar"), hint = $("hint"), card = $("card");
+const bar = $("bar"), hint = $("hint"), card = $("card"), pauseBtn = $("pauseButton");
+const HINT = hint.textContent;
 
 /* ---------- STATE ---------- */
-let running = false, waiting = false;
+let running = false, waiting = false, paused = false, pauseAt = 0, step = null;
 let current = null, previous = null, deck = [];
 let charTimer, fbTimer, stopTimer, tick;
 let startTime = 0, correct = 0, total = 0;
@@ -261,10 +307,12 @@ let missed = new Map();
 
 const isTyping = () => modeEl.value === "Typing";
 const getList = () => LISTS[typeEl.value] || hiragana;
+const defaultSpeed = () => { const sn = typeEl.value === "Sentences"; return isTyping() ? (sn ? 25 : 8) : (sn ? 6 : 3); };
+const fit = () => { const n = charEl.textContent.length; charEl.style.fontSize = n > 12 ? "30px" : n > 6 ? "42px" : ""; };
 
 function getSpeed() {
   let s = parseFloat(speedEl.value);
-  if (!s || s <= 0) { s = isTyping() ? 8 : 3; speedEl.value = s; }
+  if (!s || s <= 0) { s = defaultSpeed(); speedEl.value = s; }
   return s;
 }
 
@@ -273,7 +321,7 @@ function getSpeed() {
 const normalize = s => s.toLowerCase()
   .replace(/ō/g, "oo").replace(/ū/g, "uu")
   .replace(/[^a-z]/g, "")
-  .replace(/ou/g, "oo").replace(/ei/g, "ee");
+  .replace(/ou/g, "oo").replace(/ei/g, "ee").replace(/wo/g, "o");
 
 /* ---------- DECK (shuffled, no repeats until all seen) ---------- */
 function draw() {
@@ -296,16 +344,51 @@ function runBar(sec) {
 }
 function resetBar() { bar.style.transition = "none"; bar.style.width = "0"; }
 
+/* ---------- PAUSE (Flashing Text only) ---------- */
+function schedule(fn, ms) {
+  if (step) clearTimeout(step.id);
+  step = { fn, ms, t0: Date.now(), id: setTimeout(() => { step = null; fn(); }, ms) };
+}
+
+function togglePause() {
+  if (!running || isTyping()) return;
+  if (!paused) {
+    paused = true; pauseAt = Date.now();
+    if (step) { clearTimeout(step.id); step.ms = Math.max(0, step.ms - (pauseAt - step.t0)); }
+    clearTimeout(stopTimer); clearInterval(tick);
+    const px = bar.getBoundingClientRect().width;
+    bar.style.transition = "none"; bar.style.width = px + "px";
+    pauseBtn.textContent = "Resume";
+    hint.textContent = "Paused — tap the card or press Resume"; hint.hidden = false;
+  } else {
+    paused = false;
+    const now = Date.now();
+    startTime += now - pauseAt;
+    if (step) {
+      const f = step.fn;
+      step.t0 = now;
+      step.id = setTimeout(() => { step = null; f(); }, step.ms);
+      void bar.offsetWidth;
+      bar.style.transition = `width ${step.ms / 1000}s linear`; bar.style.width = "0";
+    }
+    tick = setInterval(updateSession, 100);
+    stopTimer = setTimeout(() => running && stop(), Math.max(0, parseInt(timerEl.value) * 1000 - (now - startTime)));
+    pauseBtn.textContent = "Pause";
+    hint.hidden = true; hint.textContent = HINT;
+  }
+}
+
 /* ---------- FLOW ---------- */
 function start() {
   if (running) return stop();
   const timer = parseInt(timerEl.value);
   if (!isTyping() && (!timer || timer <= 0)) { alert("Please enter a valid timer."); return; }
 
-  running = true; waiting = false; previous = null; deck = [];
+  running = true; waiting = false; paused = false; previous = null; deck = [];
   correct = 0; total = 0; missed.clear(); startTime = Date.now();
   startBtn.textContent = "Stop"; startBtn.classList.add("stop");
   answer.hidden = !isTyping();
+  pauseBtn.hidden = isTyping(); pauseBtn.textContent = "Pause";
   timeEl.textContent = isTyping() ? "∞" : timer;
   updateScore();
   showNext();
@@ -320,9 +403,11 @@ function stop() {
   const wasRunning = running;
   running = false; waiting = false;
   clearTimeout(charTimer); clearTimeout(fbTimer); clearTimeout(stopTimer); clearInterval(tick);
+  if (step) clearTimeout(step.id);
+  step = null; paused = false; pauseBtn.hidden = true; pauseBtn.textContent = "Pause"; hint.textContent = HINT;
   resetBar();
   startBtn.textContent = "Start"; startBtn.classList.remove("stop");
-  charEl.textContent = "—"; ansEl.textContent = ""; hint.hidden = true;
+  charEl.textContent = "—"; fit(); ansEl.textContent = ""; hint.hidden = true;
   transEl.textContent = wasRunning && missed.size
     ? "Review: " + [...missed.values()].join("   ") : "";
   answer.hidden = true; answer.value = ""; answer.className = "";
@@ -336,7 +421,7 @@ function showNext() {
   waiting = false; hint.hidden = true;
 
   current = draw(); previous = current;
-  charEl.textContent = current.c;
+  charEl.textContent = current.c; fit();
   ansEl.textContent = ""; transEl.textContent = "";
   answer.value = ""; answer.className = "";
 
@@ -350,7 +435,7 @@ function showNext() {
       else checkAnswer();
     }, sec * 1000);
   } else {
-    charTimer = setTimeout(showFlashingAnswer, sec * 1000);
+    schedule(showFlashingAnswer, sec * 1000);
   }
 }
 
@@ -360,7 +445,7 @@ function showFlashingAnswer() {
   ansEl.textContent = current.a[0];
   transEl.textContent = current.t || "";
   resetBar();
-  fbTimer = setTimeout(() => running && showNext(), 900);
+  schedule(() => running && showNext(), typeEl.value === "Sentences" ? 1500 : 900);
 }
 
 function checkAnswer() {
@@ -412,7 +497,7 @@ function save() {
 
 function syncUI() {
   timerEl.disabled = isTyping();
-  charEl.textContent = getList()[0].c;
+  charEl.textContent = getList()[0].c; fit();
   ansEl.textContent = ""; transEl.textContent = "";
   answer.hidden = true; answer.value = ""; answer.className = "";
   timeEl.textContent = isTyping() ? "∞" : "0";
@@ -426,10 +511,10 @@ function onSelectionChange() {
 }
 
 modeEl.addEventListener("change", () => {
-  speedEl.value = isTyping() ? 8 : 3;   // typing needs more time per card
+  speedEl.value = defaultSpeed();   // typing and sentences need more time per card
   onSelectionChange();
 });
-typeEl.addEventListener("change", onSelectionChange);
+typeEl.addEventListener("change", () => { speedEl.value = defaultSpeed(); onSelectionChange(); });
 speedEl.addEventListener("change", save);
 timerEl.addEventListener("change", save);
 
@@ -442,13 +527,18 @@ answer.addEventListener("keydown", e => {
   waiting ? showNext() : checkAnswer();
 });
 
-card.addEventListener("click", () => { if (running && waiting) showNext(); });
+card.addEventListener("click", () => {
+  if (!running) return;
+  if (isTyping()) { if (waiting) showNext(); }
+  else togglePause();
+});
+pauseBtn.addEventListener("click", togglePause);
 document.addEventListener("keydown", e => { if (e.key === "Escape" && running) stop(); });
 
 /* ---------- INIT ---------- */
 try {
   const s = JSON.parse(localStorage.getItem("jp-practice") || "null");
-  if (s) { modeEl.value = s.m; typeEl.value = s.t; speedEl.value = s.s; timerEl.value = s.r; }
+  if (s) { if (s.m === "Flashing Text" || s.m === "Typing") modeEl.value = s.m; typeEl.value = s.t; speedEl.value = s.s; timerEl.value = s.r; }
 } catch (e) {}
 if (!LISTS[typeEl.value]) typeEl.value = "All Alphabets";
 syncUI();
