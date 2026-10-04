@@ -784,6 +784,8 @@ function start() {
 
     if (running) {
         stop();
+        typeElement.click();
+        inputArea.focus();
         return;
     }
 
@@ -1438,7 +1440,6 @@ answerElement.addEventListener(
 startButton.addEventListener(
     "click",
     start
-    inputArea.focus();
 );
 
 
