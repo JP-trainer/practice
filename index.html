@@ -42,7 +42,7 @@ button:active{transform:scale(.99)}
     <div><label for="mode">Mode</label>
       <select id="mode"><option>Text Flashing</option><option>Typing</option></select></div>
     <div><label for="type">Type</label>
-      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>All Vocabs</option></select></div>
+      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>All Vocabs</option></select></div>
     <div><label for="speed">Seconds per card</label>
       <input id="speed" type="number" value="3" min="0.5" step="0.5"></div>
     <div><label for="timer">Session timer (s)</label>
@@ -194,6 +194,44 @@ const vocab3 = vocab(`
 する|suru|To do
 よむ|yomu|To read`);
 
+const numbers = vocab(`
+ゼロ|zero/rei|0
+いち|ichi|1
+に|ni|2
+さん|san|3
+よん|yon/shi|4
+ご|go|5
+ろく|roku|6
+なな|nana/shichi|7
+はち|hachi|8
+きゅう|kyuu/ku|9
+じゅう|juu|10
+じゅういち|juuichi|11
+じゅうに|juuni|12
+じゅうご|juugo|15
+にじゅう|nijuu|20
+さんじゅう|sanjuu|30
+よんじゅう|yonjuu/shijuu|40
+ごじゅう|gojuu|50
+ろくじゅう|rokujuu|60
+ななじゅう|nanajuu/shichijuu|70
+はちじゅう|hachijuu|80
+きゅうじゅう|kyuujuu|90
+ひゃく|hyaku|100
+にひゃく|nihyaku|200
+さんびゃく|sanbyaku|300
+よんひゃく|yonhyaku|400
+ごひゃく|gohyaku|500
+ろっぴゃく|roppyaku|600
+ななひゃく|nanahyaku|700
+はっぴゃく|happyaku|800
+きゅうひゃく|kyuuhyaku|900
+せん|sen|1,000
+にせん|nisen|2,000
+さんぜん|sanzen|3,000
+はっせん|hassen|8,000
+いちまん|ichiman|10,000`);
+
 const seen = new Set();
 const allVocabs = [...vocab1, ...vocab2, ...vocab3].filter(x => {
   const k = x.c + x.t.toLowerCase();
@@ -202,7 +240,7 @@ const allVocabs = [...vocab1, ...vocab2, ...vocab3].filter(x => {
 
 const LISTS = {
   "All Alphabets": [...hiragana, ...katakana],
-  "Hiragana": hiragana, "Katakana": katakana,
+  "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers,
   "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3,
   "All Vocabs": allVocabs
 };
