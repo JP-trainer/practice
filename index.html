@@ -297,7 +297,7 @@ button:hover {
             autocapitalize="off"
             spellcheck="false"
             enterkeyhint="done"
-            placeholder="Type the reading..."
+            placeholder="Type the characters..."
         >
 
     </div>
@@ -1132,13 +1132,6 @@ function showNext() {
     inputArea.style.display = "block";
 
 
-    /*
-     * Focus input so the mobile keyboard
-     * can immediately be used. answerElement.focus();
-     */
-
-    
-
 
     characterTimer =
         setTimeout(
@@ -1445,6 +1438,7 @@ answerElement.addEventListener(
 startButton.addEventListener(
     "click",
     start
+    inputArea.focus();
 );
 
 
@@ -1617,7 +1611,6 @@ function resetForSelectionChange() {
         inputArea.style.display = "block";
 
         timeElement.textContent = "∞";
-        inputArea.focus();
 
     }
 
