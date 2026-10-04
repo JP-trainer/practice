@@ -93,7 +93,6 @@ input[type="text"] {
     text-align: center;
 }
 
-
 #correctAnswer {
     min-height: 30px;
     margin-top: 12px;
@@ -650,65 +649,35 @@ const vocab2 = [
 const vocab3 = [
 
     { c:"ビジネス", a:["bijinesu"], t:"Business" },
-
     { c:"えいが", a:["eiga"], t:"Movie" },
-
     { c:"おんがく", a:["ongaku"], t:"Music" },
-
     { c:"スポーツ", a:["supootsu"], t:"Sports" },
-
     { c:"はなす", a:["hanasu"], t:"To speak; to talk" },
-
     { c:"テレビ", a:["terebi"], t:"TV" },
-
     { c:"あさごはん", a:["asagohan"], t:"Breakfast" },
-
     { c:"さけ", a:["sake"], t:"Sake; alcohol" },
-
     { c:"おちゃ", a:["ocha"], t:"Green Tea" },
-
     { c:"コーヒー", a:["koohii"], t:"Coffee" },
-
     { c:"ひるごはん", a:["hirugohan"], t:"Lunch" },
-
     { c:"ばんごはん", a:["bangohan"], t:"Dinner" },
-
     { c:"みず", a:["mizu"], t:"Water" },
-
     { c:"いえ", a:["ie"], t:"Home; house" },
-
     { c:"きょう", a:["kyou"], t:"Today" },
-
     { c:"あした", a:["ashita"], t:"Tomorrow" },
-
     { c:"こんばん", a:["konban"], t:"Tonight" },
-
     { c:"まいにち", a:["mainichi"], t:"Every day" },
-
     { c:"いく", a:["iku"], t:"To go" },
-
     { c:"かえる", a:["kaeru"], t:"To go back; to return" },
-
     { c:"きく", a:["kiku"], t:"To listen; to hear" },
-
     { c:"おきる", a:["okiru"], t:"To get up" },
-
     { c:"たべる", a:["taberu"], t:"To eat" },
-
     { c:"ねる", a:["neru"], t:"To sleep; to go to sleep" },
-
     { c:"みる", a:["miru"], t:"To see; to look at; to watch" },
-
     { c:"べんきょうする", a:["benkyou suru"], t:"To study" },
-
     { c:"ぜんぜん", a:["zenzen"], t:"Not at all" },
-
     { c:"ときどき", a:["tokidoki"], t:"Sometimes" },
-
     { c:"よく", a:["yoku"], t:"Often; much" },
-
     { c:"する", a:["suru"], t:"To do" },
-
     { c:"よむ", a:["yomu"], t:"To read" }
 
 ];
@@ -863,6 +832,24 @@ function start() {
 
 
     showNext();
+
+
+    /*
+     * Automatically focus the input
+     * when Typing mode starts.
+     *
+     * This is triggered by the Start
+     * button click, which allows mobile
+     * browsers to open the keyboard.
+     */
+
+    if (
+        modeElement.value === "Typing"
+    ) {
+
+        answerElement.focus();
+
+    }
 
 
     /*
@@ -1099,6 +1086,22 @@ function showNext() {
         "correct",
         "incorrect"
     );
+
+
+    /*
+     * Keep the input focused in Typing mode.
+     *
+     * This keeps the cursor ready for the
+     * next answer after pressing Enter.
+     */
+
+    if (
+        modeElement.value === "Typing"
+    ) {
+
+        answerElement.focus();
+
+    }
 
 
     /*
@@ -1588,7 +1591,8 @@ function resetForSelectionChange() {
 
     /*
      * Clear answer UI.
-     */
+
+    */
 
     correctAnswerElement.textContent = "";
 
