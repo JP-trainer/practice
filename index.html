@@ -2,1752 +2,418 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Japanese Practice</title>
-
 <style>
-
-* {
-    box-sizing: border-box;
-}
-
-html,
-body {
-    margin: 0;
-    padding: 0;
-    min-height: 100%;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
-    color: #222;
-}
-
-.app {
-    width: min(600px, calc(100% - 20px));
-    margin: 20px auto;
-    padding: 22px;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0,0,0,.12);
-    text-align: center;
-}
-
-h1 {
-    margin: 0 0 22px;
-    font-size: 28px;
-}
-
-.settings {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    text-align: left;
-}
-
-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 6px;
-}
-
-select,
-input[type="number"],
-input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #bbb;
-    border-radius: 8px;
-    background: white;
-}
-
-.display {
-    margin: 25px 0 15px;
-    min-height: 220px;
-    height: 220px;
-    padding: 20px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    background: #fafafa;
-    border: 2px solid #ddd;
-    border-radius: 12px;
-
-    overflow: hidden;
-}
-
-#character {
-    font-size: 60px;
-    font-weight: bold;
-    line-height: 1.1;
-    max-width: 100%;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    text-align: center;
-}
-
-#correctAnswer {
-    min-height: 30px;
-    margin-top: 12px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #22a447;
-}
-
-#translation {
-    min-height: 25px;
-    margin-top: 5px;
-    font-size: 18px;
-    color: #555;
-}
-
-#inputArea {
-    display: none;
-    margin-bottom: 18px;
-}
-
-#answer {
-    width: 100%;
-    text-align: center;
-    font-size: 24px;
-    padding: 11px;
-    transition:
-        background-color .2s,
-        border-color .2s;
-}
-
-#answer.correct {
-    background-color: #8be28b;
-    border-color: #38a838;
-}
-
-#answer.incorrect {
-    background-color: #ff9b9b;
-    border-color: #d33;
-}
-
-.buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-}
-
-button {
-    padding: 12px 30px;
-    font-size: 17px;
-    border: 0;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-#startButton {
-    background: #2878e3;
-    color: white;
-}
-
-#startButton.stop {
-    background: #d83b3b;
-}
-
-button:hover {
-    opacity: .85;
-}
-
-.status {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    padding: 12px;
-    background: #f0f0f0;
-    border-radius: 8px;
-    font-size: 16px;
-}
-
+:root{--bg:#f3f1ec;--panel:#fff;--ink:#1f2328;--mute:#6b7280;--line:#e3e0d8;--accent:#c8372d;--ok:#2e9e5b;--okbg:#dff4e6;--bad:#d33c3c;--badbg:#fde3e3}
+@media(prefers-color-scheme:dark){:root{--bg:#15171a;--panel:#1f2226;--ink:#eceff3;--mute:#98a1ad;--line:#33373d;--accent:#e65a4f;--ok:#4cc27f;--okbg:#17352440;--bad:#ef6a6a;--badbg:#3a1c1c80}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif}
+.app{width:min(560px,calc(100% - 20px));margin:16px auto;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:20px}
+h1{margin:0 0 16px;font-size:20px;letter-spacing:.02em}
+h1 span{color:var(--accent)}
+.settings{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:block;margin-bottom:5px;font-size:12px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+select,input{width:100%;padding:10px;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;outline:none}
+select:focus,input:focus{border-color:var(--accent)}
+input:disabled{opacity:.45}
+.card{position:relative;margin:18px 0 14px;min-height:250px;padding:28px 18px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--bg);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:default}
+.bar{position:absolute;top:0;left:0;height:5px;width:0;background:var(--accent)}
+#character{font-size:68px;font-weight:700;line-height:1.15;max-width:100%;overflow-wrap:anywhere}
+#correctAnswer{min-height:34px;margin-top:10px;font-size:26px;font-weight:700;color:var(--ok)}
+#translation{min-height:24px;margin-top:4px;font-size:17px;color:var(--mute)}
+.hint{position:absolute;bottom:8px;font-size:12px;color:var(--mute)}
+#answer{margin-bottom:14px;padding:12px;font-size:24px;text-align:center;transition:background-color .2s,border-color .2s}
+#answer.correct{background:var(--okbg);border-color:var(--ok)}
+#answer.incorrect{background:var(--badbg);border-color:var(--bad)}
+button{width:100%;padding:14px;font-size:17px;font-weight:600;color:#fff;background:var(--accent);border:0;border-radius:12px;cursor:pointer}
+button.stop{background:#555}
+button:active{transform:scale(.99)}
+.status{display:flex;justify-content:space-around;margin-top:14px;padding:12px;background:var(--bg);border-radius:12px;font-size:15px;color:var(--mute)}
+.status strong{color:var(--ink);font-size:17px}
 </style>
 </head>
-
 <body>
-
 <div class="app">
+  <h1>Japanese <span>Practice</span></h1>
 
-    <h1>Japanese Practice</h1>
+  <div class="settings">
+    <div><label for="mode">Mode</label>
+      <select id="mode"><option>Text Flashing</option><option>Typing</option></select></div>
+    <div><label for="type">Type</label>
+      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>All Vocabs</option></select></div>
+    <div><label for="speed">Seconds per card</label>
+      <input id="speed" type="number" value="3" min="0.5" step="0.5"></div>
+    <div><label for="timer">Session timer (s)</label>
+      <input id="timer" type="number" value="60" min="1"></div>
+  </div>
 
+  <div class="card" id="card">
+    <div class="bar" id="bar"></div>
+    <div id="character">あ</div>
+    <div id="correctAnswer"></div>
+    <div id="translation"></div>
+    <div class="hint" id="hint" hidden>Press Enter or tap the card for the next one</div>
+  </div>
 
-    <!-- ======================================================
-         SETTINGS
-         ====================================================== -->
+  <input id="answer" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="Type the romaji…" hidden>
 
-    <div class="settings">
+  <button id="startButton">Start</button>
 
-        <div>
-            <label for="mode">Mode</label>
-
-            <select id="mode">
-                <option value="Text Flashing">
-                    Text Flashing
-                </option>
-
-                <option value="Typing">
-                    Typing
-                </option>
-            </select>
-        </div>
-
-
-        <div>
-            <label for="type">Type</label>
-
-            <select id="type">
-
-                <option value="All Alphabets">
-                    All Alphabets
-                </option>
-
-                <option value="Hiragana">
-                    Hiragana
-                </option>
-
-                <option value="Katakana">
-                    Katakana
-                </option>
-
-                <option value="Vocab 1">
-                    Vocab 1
-                </option>
-
-                <option value="Vocab 2">
-                    Vocab 2
-                </option>
-
-                <option value="Vocab 3">
-                    Vocab 3
-                </option>
-
-                <option value="All Vocabs">
-                    All Vocabs
-                </option>
-
-            </select>
-        </div>
-
-
-        <div>
-            <label for="speed">
-                Speed (seconds)
-            </label>
-
-            <input
-                id="speed"
-                type="number"
-                value="3"
-                min="0.5"
-                step="0.5"
-            >
-        </div>
-
-
-        <div>
-            <label for="timer">
-                Timer (seconds)
-            </label>
-
-            <input
-                id="timer"
-                type="number"
-                value="60"
-                min="1"
-            >
-        </div>
-
-    </div>
-
-
-    <!-- ======================================================
-         DISPLAY
-         ====================================================== -->
-
-    <div class="display">
-
-        <div id="character">あ</div>
-
-        <div id="correctAnswer"></div>
-
-        <div id="translation"></div>
-
-    </div>
-
-
-    <!-- ======================================================
-         TYPING INPUT
-         ====================================================== -->
-
-    <div id="inputArea">
-
-        <input
-            id="answer"
-            type="text"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="off"
-            spellcheck="false"
-            enterkeyhint="done"
-            placeholder="Type the characters..."
-        >
-
-    </div>
-
-
-    <!-- ======================================================
-         START / STOP
-         ====================================================== -->
-
-    <div class="buttons">
-
-        <button id="startButton">
-            Start
-        </button>
-
-    </div>
-
-
-    <!-- ======================================================
-         STATUS
-         ====================================================== -->
-
-    <div class="status">
-
-        <span>
-            Time:
-            <strong id="time">0</strong>
-        </span>
-
-        <span>
-            Score:
-            <strong id="score">—</strong>
-        </span>
-
-    </div>
-
+  <div class="status">
+    <span>Time <strong id="time">0</strong></span>
+    <span>Score <strong id="score">—</strong></span>
+  </div>
 </div>
 
-
 <script>
-
-
-/* ============================================================
-   HIRAGANA
-   ============================================================ */
-
-const hiragana = [
-
-    { c:"あ", a:["a"] },
-    { c:"い", a:["i"] },
-    { c:"う", a:["u"] },
-    { c:"え", a:["e"] },
-    { c:"お", a:["o"] },
-
-    { c:"か", a:["ka"] },
-    { c:"き", a:["ki"] },
-    { c:"く", a:["ku"] },
-    { c:"け", a:["ke"] },
-    { c:"こ", a:["ko"] },
-
-    { c:"さ", a:["sa"] },
-    { c:"し", a:["shi","si"] },
-    { c:"す", a:["su"] },
-    { c:"せ", a:["se"] },
-    { c:"そ", a:["so"] },
-
-    { c:"た", a:["ta"] },
-    { c:"ち", a:["chi","ti"] },
-    { c:"つ", a:["tsu","tu"] },
-    { c:"て", a:["te"] },
-    { c:"と", a:["to"] },
-
-    { c:"な", a:["na"] },
-    { c:"に", a:["ni"] },
-    { c:"ぬ", a:["nu"] },
-    { c:"ね", a:["ne"] },
-    { c:"の", a:["no"] },
-
-    { c:"は", a:["ha"] },
-    { c:"ひ", a:["hi"] },
-    { c:"ふ", a:["fu","hu"] },
-    { c:"へ", a:["he"] },
-    { c:"ほ", a:["ho"] },
-
-    { c:"ま", a:["ma"] },
-    { c:"み", a:["mi"] },
-    { c:"む", a:["mu"] },
-    { c:"め", a:["me"] },
-    { c:"も", a:["mo"] },
-
-    { c:"や", a:["ya"] },
-    { c:"ゆ", a:["yu"] },
-    { c:"よ", a:["yo"] },
-
-    { c:"ら", a:["ra"] },
-    { c:"り", a:["ri"] },
-    { c:"る", a:["ru"] },
-    { c:"れ", a:["re"] },
-    { c:"ろ", a:["ro"] },
-
-    { c:"わ", a:["wa"] },
-    { c:"を", a:["wo","o"] },
-    { c:"ん", a:["n","nn"] },
-
-    { c:"が", a:["ga"] },
-    { c:"ぎ", a:["gi"] },
-    { c:"ぐ", a:["gu"] },
-    { c:"げ", a:["ge"] },
-    { c:"ご", a:["go"] },
-
-    { c:"ざ", a:["za"] },
-    { c:"じ", a:["ji","zi"] },
-    { c:"ず", a:["zu"] },
-    { c:"ぜ", a:["ze"] },
-    { c:"ぞ", a:["zo"] },
-
-    { c:"だ", a:["da"] },
-    { c:"ぢ", a:["ji","di"] },
-    { c:"づ", a:["zu","du"] },
-    { c:"で", a:["de"] },
-    { c:"ど", a:["do"] },
-
-    { c:"ば", a:["ba"] },
-    { c:"び", a:["bi"] },
-    { c:"ぶ", a:["bu"] },
-    { c:"べ", a:["be"] },
-    { c:"ぼ", a:["bo"] },
-
-    { c:"ぱ", a:["pa"] },
-    { c:"ぴ", a:["pi"] },
-    { c:"ぷ", a:["pu"] },
-    { c:"ぺ", a:["pe"] },
-    { c:"ぽ", a:["po"] }
-
-];
-
-
-/* ============================================================
-   KATAKANA
-   ============================================================ */
-
-const katakana = [
-
-    { c:"ア", a:["a"] },
-    { c:"イ", a:["i"] },
-    { c:"ウ", a:["u"] },
-    { c:"エ", a:["e"] },
-    { c:"オ", a:["o"] },
-
-    { c:"カ", a:["ka"] },
-    { c:"キ", a:["ki"] },
-    { c:"ク", a:["ku"] },
-    { c:"ケ", a:["ke"] },
-    { c:"コ", a:["ko"] },
-
-    { c:"サ", a:["sa"] },
-    { c:"シ", a:["shi","si"] },
-    { c:"ス", a:["su"] },
-    { c:"セ", a:["se"] },
-    { c:"ソ", a:["so"] },
-
-    { c:"タ", a:["ta"] },
-    { c:"チ", a:["chi","ti"] },
-    { c:"ツ", a:["tsu","tu"] },
-    { c:"テ", a:["te"] },
-    { c:"ト", a:["to"] },
-
-    { c:"ナ", a:["na"] },
-    { c:"ニ", a:["ni"] },
-    { c:"ヌ", a:["nu"] },
-    { c:"ネ", a:["ne"] },
-    { c:"ノ", a:["no"] },
-
-    { c:"ハ", a:["ha"] },
-    { c:"ヒ", a:["hi"] },
-    { c:"フ", a:["fu","hu"] },
-    { c:"ヘ", a:["he"] },
-    { c:"ホ", a:["ho"] },
-
-    { c:"マ", a:["ma"] },
-    { c:"ミ", a:["mi"] },
-    { c:"ム", a:["mu"] },
-    { c:"メ", a:["me"] },
-    { c:"モ", a:["mo"] },
-
-    { c:"ヤ", a:["ya"] },
-    { c:"ユ", a:["yu"] },
-    { c:"ヨ", a:["yo"] },
-
-    { c:"ラ", a:["ra"] },
-    { c:"リ", a:["ri"] },
-    { c:"ル", a:["ru"] },
-    { c:"レ", a:["re"] },
-    { c:"ロ", a:["ro"] },
-
-    { c:"ワ", a:["wa"] },
-    { c:"ヲ", a:["wo","o"] },
-    { c:"ン", a:["n","nn"] },
-
-    { c:"ガ", a:["ga"] },
-    { c:"ギ", a:["gi"] },
-    { c:"グ", a:["gu"] },
-    { c:"ゲ", a:["ge"] },
-    { c:"ゴ", a:["go"] },
-
-    { c:"ザ", a:["za"] },
-    { c:"ジ", a:["ji","zi"] },
-    { c:"ズ", a:["zu"] },
-    { c:"ゼ", a:["ze"] },
-    { c:"ゾ", a:["zo"] },
-
-    { c:"ダ", a:["da"] },
-    { c:"ヂ", a:["ji","di"] },
-    { c:"ヅ", a:["zu","du"] },
-    { c:"デ", a:["de"] },
-    { c:"ド", a:["do"] },
-
-    { c:"バ", a:["ba"] },
-    { c:"ビ", a:["bi"] },
-    { c:"ブ", a:["bu"] },
-    { c:"ベ", a:["be"] },
-    { c:"ボ", a:["bo"] },
-
-    { c:"パ", a:["pa"] },
-    { c:"ピ", a:["pi"] },
-    { c:"プ", a:["pu"] },
-    { c:"ペ", a:["pe"] },
-    { c:"ポ", a:["po"] }
-
-];
-
-
-/* ============================================================
-   VOCAB 1
-   ============================================================ */
-
-const vocab1 = [
-
-    { c:"あの", a:["ano"], t:"um..." },
-    { c:"いま", a:["ima"], t:"now" },
-    { c:"えいご", a:["eigo"], t:"English (language)" },
-    { c:"ええ、はい", a:["ee, hai","ee hai"], t:"yes" },
-    { c:"がくせい", a:["gakusei"], t:"student" },
-    { c:"ご", a:["go"], t:"...language" },
-    { c:"こうこう", a:["koukou"], t:"high school" },
-    { c:"ごご", a:["gogo"], t:"P.M." },
-    { c:"ごぜん", a:["gozen"], t:"A.M." },
-    { c:"さい", a:["sai"], t:"...years old" },
-    { c:"さん", a:["san"], t:"Mr. or Mrs...." },
-    { c:"じ", a:["ji"], t:"time; o'clock" },
-    { c:"じん", a:["jin"], t:"...people" },
-    { c:"せんこう", a:["senkou"], t:"major" },
-    { c:"せんせい", a:["sensei"], t:"teacher; Professor..." },
-    { c:"そうです", a:["sou desu"], t:"That's right." },
-    { c:"だいがく", a:["daigaku"], t:"college; university" },
-    { c:"でんわ", a:["denwa"], t:"phone" },
-    { c:"ともだち", a:["tomodachi"], t:"friend" },
-    { c:"なまえ", a:["namae"], t:"name" },
-    { c:"なん、なに", a:["nan, nani","nan nani"], t:"what" },
-    { c:"にほん", a:["nihon"], t:"Japan" },
-    { c:"ねんせい", a:["nensei"], t:"...year student" },
-    { c:"はん", a:["han"], t:"half" },
-    { c:"ばんごう", a:["bangou"], t:"number" },
-    { c:"りゅうがくせい", a:["ryuugakusei"], t:"international student" },
-    { c:"わたし", a:["watashi"], t:"I; me; myself" }
-
-];
-
-
-/* ============================================================
-   VOCAB 2
-   ============================================================ */
-
-const vocab2 = [
-
-    { c:"これ", a:["kore"], t:"this one" },
-    { c:"それ", a:["sore"], t:"that one" },
-    { c:"あれ", a:["are"], t:"that one (over there)" },
-    { c:"どれ", a:["dore"], t:"which one" },
-
-    { c:"この", a:["kono"], t:"this..." },
-    { c:"その", a:["sono"], t:"that..." },
-    { c:"あの", a:["ano"], t:"that... (over there)" },
-    { c:"どの", a:["dono"], t:"which..." },
-
-    { c:"あそこ", a:["asoko"], t:"over there" },
-    { c:"どこ", a:["doko"], t:"where" },
-    { c:"だれ", a:["dare"], t:"who" },
-
-    { c:"おいしい", a:["oishii"], t:"delicious" },
-    { c:"さかな", a:["sakana"], t:"fish" },
-    { c:"とんかつ", a:["tonkatsu"], t:"pork cutlet" },
-    { c:"にく", a:["niku"], t:"meat" },
-    { c:"メニュー", a:["menyuu"], t:"menu" },
-    { c:"やさい", a:["yasai"], t:"vegetable" },
-
-    { c:"えんぴつ", a:["enpitsu"], t:"pencil" },
-    { c:"かさ", a:["kasa"], t:"umbrella" },
-    { c:"かばん", a:["kaban"], t:"bag" },
-    { c:"くつ", a:["kutsu"], t:"shoes" },
-    { c:"さいふ", a:["saifu"], t:"wallet" },
-    { c:"ジーンズ", a:["jiinzu"], t:"jeans" },
-    { c:"じしょ", a:["jisho"], t:"dictionary" },
-    { c:"じてんしゃ", a:["jitensha"], t:"bicycle" },
-    { c:"しんぶん", a:["shinbun"], t:"newspaper" },
-    { c:"テープ", a:["teepu"], t:"tape" },
-    { c:"トレーナー", a:["toreenaa"], t:"sweat shirt" },
-
-    { c:"ノート", a:["nooto"], t:"notebook" },
-    { c:"ペン", a:["pen"], t:"pen" },
-    { c:"ぼうし", a:["booshi"], t:"hat" },
-    { c:"ほん", a:["hon"], t:"book" },
-
-    { c:"おてあらい", a:["otearai"], t:"restroom" },
-    { c:"ぎんこう", a:["ginkoo"], t:"bank" },
-    { c:"としょかん", a:["toshokan"], t:"library" },
-    { c:"ゆうびんきょく", a:["yuubinkyoku"], t:"post office" },
-
-    { c:"アメリカ", a:["amerika"], t:"USA" },
-    { c:"イギリス", a:["igirisu"], t:"Britain" },
-    { c:"かんこく", a:["kankoku"], t:"Korea" },
-    { c:"ちゅうごく", a:["chuugoku"], t:"China" },
-
-    { c:"けいざい", a:["keezai"], t:"economics" },
-    { c:"コンピューター", a:["konpyuutaa"], t:"computer" },
-    { c:"ビジネス", a:["bijinesu"], t:"business" },
-    { c:"れきし", a:["rekishi"], t:"history" },
-
-    { c:"おかあさん", a:["okaasan"], t:"mother" },
-    { c:"おとうさん", a:["otoosan"], t:"father" },
-
-    { c:"いくら", a:["ikura"], t:"how much" },
-    { c:"えん", a:["en"], t:"yen" },
-    { c:"たかい", a:["takai"], t:"expensive" },
-
-    { c:"いらっしゃいませ", a:["irasshaimase"], t:"welcome" },
-    { c:"おねがいします", a:["onegaishimasu"], t:"please" },
-    { c:"ください", a:["kudasai"], t:"please" },
-    { c:"きっさてん", a:["kissaten"], t:"cafe" }
-
-];
-
-
-/* ============================================================
-   VOCAB 3
-   ============================================================ */
-
-const vocab3 = [
-
-    { c:"ビジネス", a:["bijinesu"], t:"Business" },
-    { c:"えいが", a:["eiga"], t:"Movie" },
-    { c:"おんがく", a:["ongaku"], t:"Music" },
-    { c:"スポーツ", a:["supootsu"], t:"Sports" },
-    { c:"はなす", a:["hanasu"], t:"To speak; to talk" },
-    { c:"テレビ", a:["terebi"], t:"TV" },
-    { c:"あさごはん", a:["asagohan"], t:"Breakfast" },
-    { c:"さけ", a:["sake"], t:"Sake; alcohol" },
-    { c:"おちゃ", a:["ocha"], t:"Green Tea" },
-    { c:"コーヒー", a:["koohii"], t:"Coffee" },
-    { c:"ひるごはん", a:["hirugohan"], t:"Lunch" },
-    { c:"ばんごはん", a:["bangohan"], t:"Dinner" },
-    { c:"みず", a:["mizu"], t:"Water" },
-    { c:"いえ", a:["ie"], t:"Home; house" },
-    { c:"きょう", a:["kyou"], t:"Today" },
-    { c:"あした", a:["ashita"], t:"Tomorrow" },
-    { c:"こんばん", a:["konban"], t:"Tonight" },
-    { c:"まいにち", a:["mainichi"], t:"Every day" },
-    { c:"いく", a:["iku"], t:"To go" },
-    { c:"かえる", a:["kaeru"], t:"To go back; to return" },
-    { c:"きく", a:["kiku"], t:"To listen; to hear" },
-    { c:"おきる", a:["okiru"], t:"To get up" },
-    { c:"たべる", a:["taberu"], t:"To eat" },
-    { c:"ねる", a:["neru"], t:"To sleep; to go to sleep" },
-    { c:"みる", a:["miru"], t:"To see; to look at; to watch" },
-    { c:"べんきょうする", a:["benkyou suru"], t:"To study" },
-    { c:"ぜんぜん", a:["zenzen"], t:"Not at all" },
-    { c:"ときどき", a:["tokidoki"], t:"Sometimes" },
-    { c:"よく", a:["yoku"], t:"Often; much" },
-    { c:"する", a:["suru"], t:"To do" },
-    { c:"よむ", a:["yomu"], t:"To read" }
-
-];
-
-
-/* ============================================================
-   ELEMENTS
-   ============================================================ */
-
-const modeElement =
-    document.getElementById("mode");
-
-const typeElement =
-    document.getElementById("type");
-
-const speedElement =
-    document.getElementById("speed");
-
-const timerElement =
-    document.getElementById("timer");
-
-const characterElement =
-    document.getElementById("character");
-
-const correctAnswerElement =
-    document.getElementById("correctAnswer");
-
-const translationElement =
-    document.getElementById("translation");
-
-const inputArea =
-    document.getElementById("inputArea");
-
-const answerElement =
-    document.getElementById("answer");
-
-const startButton =
-    document.getElementById("startButton");
-
-const timeElement =
-    document.getElementById("time");
-
-const scoreElement =
-    document.getElementById("score");
-
-
-/* ============================================================
-   VARIABLES
-   ============================================================ */
-
-let running = false;
-
-let currentCharacter = null;
-let previousCharacter = null;
-
-let characterTimer = null;
-let feedbackTimer = null;
-
-let sessionTimer = null;
-let sessionStopTimer = null;
-
-let startTime = 0;
-
-let correct = 0;
-let total = 0;
-
-let waitingForNext = false;
-
-
-/* ============================================================
-   START
-   ============================================================ */
-
-function start() {
-
-    if (running) {
-        stop();
-        return;
-    }
-
-
-    const speed = getSpeed();
-
-    let timer =
-        parseInt(timerElement.value);
-
-
-    /*
-     * Timer only applies to Text Flashing.
-     */
-
-    if (
-        modeElement.value === "Text Flashing"
-    ) {
-
-        if (!timer || timer <= 0) {
-
-            alert(
-                "Please enter a valid timer."
-            );
-
-            return;
-        }
-    }
-
-
-    running = true;
-
-    waitingForNext = false;
-
-    previousCharacter = null;
-
-    correct = 0;
-    total = 0;
-
-    startTime = Date.now();
-
-
-    startButton.textContent = "Stop";
-
-    startButton.classList.add("stop");
-
-
-    updateScore();
-
-
-    /*
-     * TYPING MODE
-     */
-
-    if (
-        modeElement.value === "Typing"
-    ) {
-
-        inputArea.style.display = "block";
-
-        timeElement.textContent = "∞";
-
-    }
-
-
-    /*
-     * TEXT FLASHING MODE
-     */
-
-    else {
-
-        inputArea.style.display = "none";
-
-        timeElement.textContent = timer;
-    }
-
-
-    showNext();
-
-
-    /*
-     * Automatically focus the input
-     * when Typing mode starts.
-     *
-     * This is triggered by the Start
-     * button click, which allows mobile
-     * browsers to open the keyboard.
-     */
-
-    if (
-        modeElement.value === "Typing"
-    ) {
-
-        answerElement.focus();
-
-    }
-
-
-    /*
-     * Text Flashing gets a session timer.
-     */
-
-    if (
-        modeElement.value === "Text Flashing"
-    ) {
-
-        sessionTimer =
-            setInterval(
-                updateSession,
-                100
-            );
-
-
-        sessionStopTimer =
-            setTimeout(
-                () => {
-
-                    if (running) {
-                        stop();
-                    }
-
-                },
-                timer * 1000
-            );
-    }
-}
-
-
-/* ============================================================
-   STOP
-   ============================================================ */
-
-function stop() {
-
-    running = false;
-
-    waitingForNext = false;
-
-
-    clearTimeout(characterTimer);
-    clearTimeout(feedbackTimer);
-    clearTimeout(sessionStopTimer);
-
-    clearInterval(sessionTimer);
-
-
-    characterTimer = null;
-    feedbackTimer = null;
-    sessionStopTimer = null;
-    sessionTimer = null;
-
-
-    startButton.textContent = "Start";
-
-    startButton.classList.remove(
-        "stop"
-    );
-
-
-    characterElement.textContent = "—";
-
-    correctAnswerElement.textContent = "";
-
-    translationElement.textContent = "";
-
-
-    inputArea.style.display = "none";
-
-
-    answerElement.value = "";
-
-    answerElement.classList.remove(
-        "correct",
-        "incorrect"
-    );
-
-
-    if (
-        modeElement.value === "Text Flashing"
-    ) {
-
-        scoreElement.textContent = "—";
-
-    }
-
-    else {
-
-        updateScore();
-    }
-}
-
-
-/* ============================================================
-   RANDOM CHARACTER
-   ============================================================ */
-
-function getRandomCharacter(list) {
-
-    if (list.length <= 1) {
-        return list[0];
-    }
-
-
-    let selected;
-
-
-    do {
-
-        selected =
-            list[
-                Math.floor(
-                    Math.random() * list.length
-                )
-            ];
-
-    }
-
-    while (
-        previousCharacter &&
-        selected.c === previousCharacter.c
-    );
-
-
-    return selected;
-}
-
-
-/* ============================================================
-   CURRENT LIST
-   ============================================================ */
-
-function getCurrentList() {
-
-    switch (
-        typeElement.value
-    ) {
-
-        case "All Alphabets":
-
-            return [
-                ...hiragana,
-                ...katakana
-            ];
-
-
-        case "Hiragana":
-
-            return hiragana;
-
-
-        case "Katakana":
-
-            return katakana;
-
-
-        case "Vocab 1":
-
-            return vocab1;
-
-
-        case "Vocab 2":
-
-            return vocab2;
-
-
-        case "Vocab 3":
-
-            return vocab3;
-
-
-        case "All Vocabs":
-
-            return [
-                ...vocab1,
-                ...vocab2,
-                ...vocab3
-            ];
-
-
-        default:
-
-            return hiragana;
-    }
-}
-
-
-/* ============================================================
-   SHOW NEXT
-   ============================================================ */
-
-function showNext() {
-
-    if (!running) {
-        return;
-    }
-
-
-    clearTimeout(characterTimer);
-    clearTimeout(feedbackTimer);
-
-
-    waitingForNext = false;
-
-
-    const list =
-        getCurrentList();
-
-
-    currentCharacter =
-        getRandomCharacter(list);
-
-
-    previousCharacter =
-        currentCharacter;
-
-
-    characterElement.textContent =
-        currentCharacter.c;
-
-
-    correctAnswerElement.textContent = "";
-
-    translationElement.textContent = "";
-
-
-    answerElement.value = "";
-
-
-    answerElement.classList.remove(
-        "correct",
-        "incorrect"
-    );
-
-
-    /*
-     * Keep the input focused in Typing mode.
-     *
-     * This keeps the cursor ready for the
-     * next answer after pressing Enter.
-     */
-
-    if (
-        modeElement.value === "Typing"
-    ) {
-
-        answerElement.focus();
-
-    }
-
-
-    /*
-     * TEXT FLASHING
-     */
-
-    if (
-        modeElement.value === "Text Flashing"
-    ) {
-
-        inputArea.style.display = "none";
-
-
-        characterTimer =
-            setTimeout(
-                () => {
-
-                    showFlashingAnswer();
-
-                },
-                getSpeed() * 1000
-            );
-
-
-        return;
-    }
-
-
-    /*
-     * TYPING
-     */
-
-    inputArea.style.display = "block";
-
-
-
-    characterTimer =
-        setTimeout(
-            () => {
-
-                /*
-                 * Nothing entered before
-                 * SPEED expired.
-                 */
-
-                if (
-                    answerElement.value
-                        .trim() === ""
-                ) {
-
-                    total++;
-
-
-                    revealTypingAnswer(
-                        false,
-                        true
-                    );
-
-
-                    return;
-                }
-
-
-                /*
-                 * Automatically check
-                 * entered answer.
-                 */
-
-                checkAnswer();
-
-            },
-            getSpeed() * 1000
-        );
-}
-
-
-/* ============================================================
-   FLASHING ANSWER
-   ============================================================ */
-
-function showFlashingAnswer() {
-
-    if (!running) {
-        return;
-    }
-
-
-    correctAnswerElement.textContent =
-        currentCharacter.a[0];
-
-
-    correctAnswerElement.style.color =
-        "#22a447";
-
-
-    if (
-        typeElement.value === "Vocab 1" ||
-        typeElement.value === "Vocab 2" ||
-        typeElement.value === "Vocab 3" ||
-        typeElement.value === "All Vocabs"
-    ) {
-
-        translationElement.textContent =
-            currentCharacter.t || "";
-
-    }
-
-    else {
-
-        translationElement.textContent = "";
-    }
-
-
-
-    feedbackTimer =
-        setTimeout(
-            () => {
-
-                if (running) {
-                    showNext();
-                }
-
-            },
-            750
-        );
-}
-
-
-/* ============================================================
-   CHECK TYPING ANSWER
-   ============================================================ */
-
-function checkAnswer() {
-
-    if (
-        !running ||
-        !currentCharacter
-    ) {
-
-        return;
-    }
-
-
-    /*
-     * If the answer has already been
-     * revealed, do nothing.
-     */
-
-    if (waitingForNext) {
-        return;
-    }
-
-
-    clearTimeout(characterTimer);
-
-
-    const answer =
-        answerElement.value
-            .trim()
-            .toLowerCase();
-
-
-    /*
-     * Don't count a manually submitted
-     * empty answer.
-     */
-
-    if (answer === "") {
-        return;
-    }
-
-
-    total++;
-
-
-    const normalizedAnswer =
-        answer
-            .replace(/\s+/g, " ")
-            .trim();
-
-
-    const acceptedAnswers =
-        currentCharacter.a.map(
-            x =>
-                x
-                    .toLowerCase()
-                    .replace(/\s+/g, " ")
-                    .trim()
-        );
-
-
-    const isCorrect =
-        acceptedAnswers.includes(
-            normalizedAnswer
-        );
-
-
-    revealTypingAnswer(
-        isCorrect,
-        false
-    );
-}
-
-
-/* ============================================================
-   REVEAL TYPING ANSWER
-   ============================================================ */
-
-function revealTypingAnswer(
-    isCorrect,
-    timedOut
-) {
-
-    waitingForNext = true;
-
-
-    answerElement.classList.remove(
-        "correct",
-        "incorrect"
-    );
-
-
-    if (isCorrect) {
-
-        correct++;
-
-
-        answerElement.classList.add(
-            "correct"
-        );
-
-    }
-
-    else {
-
-        answerElement.classList.add(
-            "incorrect"
-        );
-
-    }
-
-
-    /*
-     * Show correct answer.
-     */
-
-    correctAnswerElement.textContent =
-        currentCharacter.a[0];
-
-
-    correctAnswerElement.style.color =
-        "#22a447";
-
-
-    /*
-     * Show vocabulary translation.
-     */
-
-    if (
-        typeElement.value === "Vocab 1" ||
-        typeElement.value === "Vocab 2" ||
-        typeElement.value === "Vocab 3" ||
-        typeElement.value === "All Vocabs"
-    ) {
-
-        translationElement.textContent =
-            currentCharacter.t || "";
-
-    }
-
-    else {
-
-        translationElement.textContent = "";
-    }
-
-
-    updateScore();
-
-
-    /*
-     * There is NO automatic advance.
-     *
-     * The user must press Enter.
-     */
-}
-
-
-/* ============================================================
-   KEYBOARD / MOBILE ENTER
-   ============================================================ */
-
-answerElement.addEventListener(
-    "keydown",
-    function(event) {
-
-        /*
-         * Once the answer is revealed,
-         * Enter moves to the next question.
-         */
-
-        if (waitingForNext) {
-
-            if (
-                event.key === "Enter" ||
-                event.key === "Done"
-            ) {
-
-                event.preventDefault();
-
-                showNext();
-            }
-
-            return;
-        }
-
-
-        /*
-         * Before the answer is revealed,
-         * Enter submits the answer.
-         */
-
-        if (
-            event.key === "Enter" ||
-            event.key === "Done"
-        ) {
-
-            event.preventDefault();
-
-            checkAnswer();
-        }
-    }
-);
-
-
-/* ============================================================
-   START BUTTON
-   ============================================================ */
-
-startButton.addEventListener(
-    "click",
-    start
-);
-
-
-/* ============================================================
-   SPEED
-   ============================================================ */
+/* ---------- DATA ---------- */
+const HIRA = "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ";
+const KATA = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ";
+const ROM = "a i u e o ka ki ku ke ko sa shi/si su se so ta chi/ti tsu/tu te to na ni nu ne no ha hi fu/hu he ho ma mi mu me mo ya yu yo ra ri ru re ro wa wo/o n/nn ga gi gu ge go za ji/zi zu ze zo da ji/di zu/du de do ba bi bu be bo pa pi pu pe po".split(" ");
+const kana = s => [...s].map((c, i) => ({ c, a: ROM[i].split("/") }));
+const vocab = s => s.trim().split("\n").map(l => { const [c, a, t] = l.split("|"); return { c, a: a.split("/"), t }; });
+
+const hiragana = kana(HIRA), katakana = kana(KATA);
+
+const vocab1 = vocab(`
+あの|ano|um...
+いま|ima|now
+えいご|eigo|English (language)
+ええ、はい|ee hai|yes
+がくせい|gakusei|student
+ご|go|...language
+こうこう|koukou|high school
+ごご|gogo|P.M.
+ごぜん|gozen|A.M.
+さい|sai|...years old
+さん|san|Mr. or Mrs....
+じ|ji|time; o'clock
+じん|jin|...people
+せんこう|senkou|major
+せんせい|sensei|teacher; Professor...
+そうです|sou desu|That's right.
+だいがく|daigaku|college; university
+でんわ|denwa|phone
+ともだち|tomodachi|friend
+なまえ|namae|name
+なん、なに|nan nani|what
+にほん|nihon|Japan
+ねんせい|nensei|...year student
+はん|han|half
+ばんごう|bangou|number
+りゅうがくせい|ryuugakusei|international student
+わたし|watashi|I; me; myself`);
+
+const vocab2 = vocab(`
+これ|kore|this one
+それ|sore|that one
+あれ|are|that one (over there)
+どれ|dore|which one
+この|kono|this...
+その|sono|that...
+あの|ano|that... (over there)
+どの|dono|which...
+あそこ|asoko|over there
+どこ|doko|where
+だれ|dare|who
+おいしい|oishii|delicious
+さかな|sakana|fish
+とんかつ|tonkatsu|pork cutlet
+にく|niku|meat
+メニュー|menyuu|menu
+やさい|yasai|vegetable
+えんぴつ|enpitsu|pencil
+かさ|kasa|umbrella
+かばん|kaban|bag
+くつ|kutsu|shoes
+さいふ|saifu|wallet
+ジーンズ|jiinzu|jeans
+じしょ|jisho|dictionary
+じてんしゃ|jitensha|bicycle
+しんぶん|shinbun|newspaper
+テープ|teepu|tape
+トレーナー|toreenaa|sweat shirt
+ノート|nooto|notebook
+ペン|pen|pen
+ぼうし|booshi|hat
+ほん|hon|book
+おてあらい|otearai|restroom
+ぎんこう|ginkoo|bank
+としょかん|toshokan|library
+ゆうびんきょく|yuubinkyoku|post office
+アメリカ|amerika|USA
+イギリス|igirisu|Britain
+かんこく|kankoku|Korea
+ちゅうごく|chuugoku|China
+けいざい|keezai|economics
+コンピューター|konpyuutaa|computer
+ビジネス|bijinesu|business
+れきし|rekishi|history
+おかあさん|okaasan|mother
+おとうさん|otoosan|father
+いくら|ikura|how much
+えん|en|yen
+たかい|takai|expensive
+いらっしゃいませ|irasshaimase|welcome
+おねがいします|onegaishimasu|please
+ください|kudasai|please
+きっさてん|kissaten|cafe`);
+
+const vocab3 = vocab(`
+ビジネス|bijinesu|Business
+えいが|eiga|Movie
+おんがく|ongaku|Music
+スポーツ|supootsu|Sports
+はなす|hanasu|To speak; to talk
+テレビ|terebi|TV
+あさごはん|asagohan|Breakfast
+さけ|sake|Sake; alcohol
+おちゃ|ocha|Green Tea
+コーヒー|koohii|Coffee
+ひるごはん|hirugohan|Lunch
+ばんごはん|bangohan|Dinner
+みず|mizu|Water
+いえ|ie|Home; house
+きょう|kyou|Today
+あした|ashita|Tomorrow
+こんばん|konban|Tonight
+まいにち|mainichi|Every day
+いく|iku|To go
+かえる|kaeru|To go back; to return
+きく|kiku|To listen; to hear
+おきる|okiru|To get up
+たべる|taberu|To eat
+ねる|neru|To sleep; to go to sleep
+みる|miru|To see; to look at; to watch
+べんきょうする|benkyou suru|To study
+ぜんぜん|zenzen|Not at all
+ときどき|tokidoki|Sometimes
+よく|yoku|Often; much
+する|suru|To do
+よむ|yomu|To read`);
+
+const seen = new Set();
+const allVocabs = [...vocab1, ...vocab2, ...vocab3].filter(x => {
+  const k = x.c + x.t.toLowerCase();
+  return seen.has(k) ? false : seen.add(k);
+});
+
+const LISTS = {
+  "All Alphabets": [...hiragana, ...katakana],
+  "Hiragana": hiragana, "Katakana": katakana,
+  "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3,
+  "All Vocabs": allVocabs
+};
+
+/* ---------- ELEMENTS ---------- */
+const $ = id => document.getElementById(id);
+const modeEl = $("mode"), typeEl = $("type"), speedEl = $("speed"), timerEl = $("timer");
+const charEl = $("character"), ansEl = $("correctAnswer"), transEl = $("translation");
+const answer = $("answer"), startBtn = $("startButton"), timeEl = $("time"), scoreEl = $("score");
+const bar = $("bar"), hint = $("hint"), card = $("card");
+
+/* ---------- STATE ---------- */
+let running = false, waiting = false;
+let current = null, previous = null, deck = [];
+let charTimer, fbTimer, stopTimer, tick;
+let startTime = 0, correct = 0, total = 0;
+let missed = new Map();
+
+const isTyping = () => modeEl.value === "Typing";
+const getList = () => LISTS[typeEl.value] || hiragana;
 
 function getSpeed() {
-
-    let speed =
-        parseFloat(
-            speedElement.value
-        );
-
-
-    if (
-        !speed ||
-        speed <= 0
-    ) {
-
-        speed = 3;
-
-        speedElement.value = 3;
-    }
-
-
-    return speed;
+  let s = parseFloat(speedEl.value);
+  if (!s || s <= 0) { s = isTyping() ? 8 : 3; speedEl.value = s; }
+  return s;
 }
 
+/* ---------- ANSWER MATCHING ---------- */
+// Lenient: ignores spaces/punctuation, and treats ou/oo and ei/ee as equal.
+const normalize = s => s.toLowerCase()
+  .replace(/ō/g, "oo").replace(/ū/g, "uu")
+  .replace(/[^a-z]/g, "")
+  .replace(/ou/g, "oo").replace(/ei/g, "ee");
 
-/* ============================================================
-   SESSION TIMER
-   ============================================================ */
+/* ---------- DECK (shuffled, no repeats until all seen) ---------- */
+function draw() {
+  if (!deck.length) {
+    deck = [...getList()];
+    for (let i = deck.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+    if (deck.length > 1 && previous && deck[deck.length - 1].c === previous.c) deck.unshift(deck.pop());
+  }
+  return deck.pop();
+}
 
+/* ---------- PROGRESS BAR ---------- */
+function runBar(sec) {
+  bar.style.transition = "none"; bar.style.width = "100%";
+  void bar.offsetWidth;
+  bar.style.transition = `width ${sec}s linear`; bar.style.width = "0";
+}
+function resetBar() { bar.style.transition = "none"; bar.style.width = "0"; }
+
+/* ---------- FLOW ---------- */
+function start() {
+  if (running) return stop();
+  const timer = parseInt(timerEl.value);
+  if (!isTyping() && (!timer || timer <= 0)) { alert("Please enter a valid timer."); return; }
+
+  running = true; waiting = false; previous = null; deck = [];
+  correct = 0; total = 0; missed.clear(); startTime = Date.now();
+  startBtn.textContent = "Stop"; startBtn.classList.add("stop");
+  answer.hidden = !isTyping();
+  timeEl.textContent = isTyping() ? "∞" : timer;
+  updateScore();
+  showNext();
+
+  if (!isTyping()) {
+    tick = setInterval(updateSession, 100);
+    stopTimer = setTimeout(() => running && stop(), timer * 1000);
+  }
+}
+
+function stop() {
+  const wasRunning = running;
+  running = false; waiting = false;
+  clearTimeout(charTimer); clearTimeout(fbTimer); clearTimeout(stopTimer); clearInterval(tick);
+  resetBar();
+  startBtn.textContent = "Start"; startBtn.classList.remove("stop");
+  charEl.textContent = "—"; ansEl.textContent = ""; hint.hidden = true;
+  transEl.textContent = wasRunning && missed.size
+    ? "Review: " + [...missed.values()].join("   ") : "";
+  answer.hidden = true; answer.value = ""; answer.className = "";
+  timeEl.textContent = isTyping() ? "∞" : "0";
+  updateScore();
+}
+
+function showNext() {
+  if (!running) return;
+  clearTimeout(charTimer); clearTimeout(fbTimer);
+  waiting = false; hint.hidden = true;
+
+  current = draw(); previous = current;
+  charEl.textContent = current.c;
+  ansEl.textContent = ""; transEl.textContent = "";
+  answer.value = ""; answer.className = "";
+
+  const sec = getSpeed();
+  runBar(sec);
+
+  if (isTyping()) {
+    answer.hidden = false; answer.focus();
+    charTimer = setTimeout(() => {
+      if (answer.value.trim() === "") { total++; reveal(false); }
+      else checkAnswer();
+    }, sec * 1000);
+  } else {
+    charTimer = setTimeout(showFlashingAnswer, sec * 1000);
+  }
+}
+
+function showFlashingAnswer() {
+  if (!running) return;
+  total++; updateScore();
+  ansEl.textContent = current.a[0];
+  transEl.textContent = current.t || "";
+  resetBar();
+  fbTimer = setTimeout(() => running && showNext(), 900);
+}
+
+function checkAnswer() {
+  if (!running || !current || waiting) return;
+  const val = answer.value.trim();
+  if (!val) return;
+  clearTimeout(charTimer);
+  total++;
+  const n = normalize(val);
+  reveal(current.a.some(x => normalize(x) === n));
+}
+
+function reveal(ok) {
+  waiting = true;
+  resetBar();
+  answer.className = ok ? "correct" : "incorrect";
+  if (ok) correct++;
+  else {
+    missed.set(current.c + current.a[0], `${current.c} (${current.a[0]})`);
+    // bring it back in a few cards
+    deck.splice(Math.max(0, deck.length - 3 - Math.floor(Math.random() * 3)), 0, current);
+  }
+  ansEl.textContent = current.a[0];
+  transEl.textContent = current.t || "";
+  hint.hidden = false;
+  updateScore();
+}
+
+/* ---------- STATUS ---------- */
 function updateSession() {
-
-    /*
-     * Only Text Flashing uses TIMER.
-     */
-
-    if (
-        !running ||
-        modeElement.value !== "Text Flashing"
-    ) {
-
-        return;
-    }
-
-
-    const timer =
-        parseInt(
-            timerElement.value
-        );
-
-
-    const elapsed =
-        (Date.now() - startTime) / 1000;
-
-
-    const remaining =
-        Math.max(
-            0,
-            timer - elapsed
-        );
-
-
-    timeElement.textContent =
-        Math.ceil(remaining);
+  if (!running || isTyping()) return;
+  const left = Math.max(0, parseInt(timerEl.value) - (Date.now() - startTime) / 1000);
+  timeEl.textContent = Math.ceil(left);
 }
-
-
-/* ============================================================
-   SCORE
-   ============================================================ */
 
 function updateScore() {
-
-    /*
-     * Text Flashing has no score.
-     */
-
-    if (
-        modeElement.value === "Text Flashing"
-    ) {
-
-        scoreElement.textContent = "—";
-
-        return;
-    }
-
-
-    /*
-     * Typing mode.
-     */
-
-    scoreElement.textContent =
-        `${correct} / ${total}`;
+  if (isTyping()) {
+    const pct = total ? ` (${Math.round(correct / total * 100)}%)` : "";
+    scoreEl.textContent = `${correct} / ${total}${pct}`;
+  } else {
+    scoreEl.textContent = total ? `${total} cards` : "—";
+  }
 }
 
-
-/* ============================================================
-   RESET UI
-   ============================================================ */
-
-function resetForSelectionChange() {
-
-    /*
-     * Changing Mode or Type ALWAYS stops
-     * the current game.
-     */
-
-    if (running) {
-        stop();
-    }
-
-
-    /*
-     * Clear all timers again just to make
-     * sure no previous round remains.
-     */
-
-    clearTimeout(characterTimer);
-    clearTimeout(feedbackTimer);
-    clearTimeout(sessionStopTimer);
-    clearInterval(sessionTimer);
-
-
-    characterTimer = null;
-    feedbackTimer = null;
-    sessionTimer = null;
-    sessionStopTimer = null;
-
-
-    running = false;
-
-    waitingForNext = false;
-
-
-    /*
-     * Reset score.
-     */
-
-    correct = 0;
-    total = 0;
-
-
-    /*
-     * Clear answer UI.
-
-    */
-
-    correctAnswerElement.textContent = "";
-
-    translationElement.textContent = "";
-
-    answerElement.value = "";
-
-    answerElement.classList.remove(
-        "correct",
-        "incorrect"
-    );
-
-    /*
-     * Update mode-specific layout.
-     */
-
-    if (
-        modeElement.value === "Typing"
-    ) {
-
-        inputArea.style.display = "block";
-
-        timeElement.textContent = "∞";
-
-    }
-
-    else {
-
-        inputArea.style.display = "none";
-
-        timeElement.textContent = "0";
-    }
-
-
-    /*
-     * Update score.
-     */
-
-    updateScore();
-
-
-    /*
-     * Update starting character based
-     * on selected Type.
-     */
-
-    updatePreviewCharacter();
+/* ---------- SETTINGS ---------- */
+function save() {
+  try { localStorage.setItem("jp-practice", JSON.stringify({ m: modeEl.value, t: typeEl.value, s: speedEl.value, r: timerEl.value })); } catch (e) {}
 }
 
-
-/* ============================================================
-   UPDATE PREVIEW CHARACTER
-   ============================================================ */
-
-function updatePreviewCharacter() {
-
-    switch (
-        typeElement.value
-    ) {
-
-        case "Hiragana":
-
-            characterElement.textContent =
-                "あ";
-
-            break;
-
-
-        case "Katakana":
-
-            characterElement.textContent =
-                "ア";
-
-            break;
-
-
-        case "Vocab 1":
-
-            characterElement.textContent =
-                "あの";
-
-            break;
-
-
-        case "Vocab 2":
-
-            characterElement.textContent =
-                "これ";
-
-            break;
-
-
-        case "Vocab 3":
-
-            characterElement.textContent =
-                "ビジネス";
-
-            break;
-
-
-        case "All Vocabs":
-
-            characterElement.textContent =
-                "これ";
-
-            break;
-
-
-        case "All Alphabets":
-
-        default:
-
-            characterElement.textContent =
-                "あ";
-
-            break;
-    }
+function syncUI() {
+  timerEl.disabled = isTyping();
+  charEl.textContent = getList()[0].c;
+  ansEl.textContent = ""; transEl.textContent = "";
+  answer.hidden = true; answer.value = ""; answer.className = "";
+  timeEl.textContent = isTyping() ? "∞" : "0";
+  correct = 0; total = 0; deck = [];
+  updateScore();
 }
 
+function onSelectionChange() {
+  if (running) stop();
+  syncUI(); save();
+}
 
-/* ============================================================
-   MODE CHANGE
-   ============================================================ */
+modeEl.addEventListener("change", () => {
+  speedEl.value = isTyping() ? 8 : 3;   // typing needs more time per card
+  onSelectionChange();
+});
+typeEl.addEventListener("change", onSelectionChange);
+speedEl.addEventListener("change", save);
+timerEl.addEventListener("change", save);
 
-modeElement.addEventListener(
-    "change",
-    function() {
+/* ---------- INPUT ---------- */
+startBtn.addEventListener("click", start);
 
-        resetForSelectionChange();
-    }
-);
+answer.addEventListener("keydown", e => {
+  if (e.key !== "Enter" && e.key !== "Done") return;
+  e.preventDefault();
+  waiting ? showNext() : checkAnswer();
+});
 
+card.addEventListener("click", () => { if (running && waiting) showNext(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && running) stop(); });
 
-/* ============================================================
-   TYPE CHANGE
-   ============================================================ */
-
-typeElement.addEventListener(
-    "change",
-    function() {
-
-        resetForSelectionChange();
-    }
-);
-
-
-/* ============================================================
-   INITIAL DISPLAY
-   ============================================================ */
-
-characterElement.textContent = "あ";
-
-updateScore();
-
+/* ---------- INIT ---------- */
+try {
+  const s = JSON.parse(localStorage.getItem("jp-practice") || "null");
+  if (s) { modeEl.value = s.m; typeEl.value = s.t; speedEl.value = s.s; timerEl.value = s.r; }
+} catch (e) {}
+if (!LISTS[typeEl.value]) typeEl.value = "All Alphabets";
+syncUI();
 </script>
-
 </body>
 </html>
