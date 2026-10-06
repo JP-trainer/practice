@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Japanese Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f3f1ec;--panel:#fff;--ink:#1f2328;--mute:#6b7280;--line:#e3e0d8;--accent:#c8372d;--ok:#2e9e5b;--okbg:#dff4e6;--bad:#d33c3c;--badbg:#fde3e3}
 @media(prefers-color-scheme:dark){:root{--bg:#15171a;--panel:#1f2226;--ink:#eceff3;--mute:#98a1ad;--line:#33373d;--accent:#e65a4f;--ok:#4cc27f;--okbg:#17352440;--bad:#ef6a6a;--badbg:#3a1c1c80}}
@@ -20,7 +23,7 @@ select:focus,input:focus{border-color:var(--accent)}
 input:disabled{opacity:.45}
 .card{position:relative;margin:18px 0 14px;min-height:250px;padding:28px 18px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--bg);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:default}
 .bar{position:absolute;top:0;left:0;height:5px;width:0;background:var(--accent)}
-#character{font-size:68px;font-weight:700;line-height:1.15;max-width:100%;overflow-wrap:anywhere}
+#character{font-family:"Klee One","UD Digi Kyokasho N-R","UD デジタル 教科書体 N-R",system-ui,"Hiragino Sans","Noto Sans JP",sans-serif;font-size:68px;font-weight:600;line-height:1.15;max-width:100%;overflow-wrap:anywhere}
 #correctAnswer{min-height:34px;margin-top:10px;font-size:26px;font-weight:700;color:var(--ok)}
 #translation{min-height:24px;margin-top:4px;font-size:17px;color:var(--mute)}
 .hint{position:absolute;bottom:8px;font-size:12px;color:var(--mute)}
