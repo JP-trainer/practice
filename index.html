@@ -48,7 +48,7 @@ button.alt{color:var(--ink);background:var(--bg);border:1px solid var(--line)}
     <div><label for="mode">Mode</label>
       <select id="mode"><option>Flashing Text</option><option>Typing</option></select></div>
     <div><label for="type">Type</label>
-      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>All Vocabs</option></select></div>
+      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>All Vocabs</option></select></div>
     <div><label for="speed">Seconds per card</label>
       <input id="speed" type="number" value="3" min="0.5" step="0.5"></div>
     <div><label for="timer">Session timer (s)</label>
@@ -201,6 +201,74 @@ const vocab3 = vocab(`
 する|suru|To do
 よむ|yomu|To read`);
 
+const vocab4 = vocab(`
+アルバイト|arubaito|part-time job
+かいもの|kaimono|shopping
+クラス|kurasu|class
+あなた|anata|you
+いぬ|inu|dog
+ねこ|neko|cat
+いす|isu|chair
+つくえ|tsukue/tukue|desk
+おみやげ|omiyage|souvenir
+ゲーム|geemu|game
+こども|kodomo|child
+ごはん|gohan|rice; meal
+しゃしん|shashin|picture; photograph
+てがみ|tegami|letter
+パン|pan|bread
+はな|hana|flower
+ひと|hito|person
+おてら|otera|temple
+こうえん|kouen|park
+スーパー|suupaa|supermarket
+デパート|depaato|department store
+バスてい|basutei|bus stop
+びょういん|byouin|hospital
+ホテル|hoteru|hotel
+ほんや|honya|bookstore
+まち|machi|town; city
+レストラン|resutoran|restaurant
+きのう|kinou|yesterday
+さっき|sakki|a little while ago
+〜じかん|jikan|hour
+いちじかん|ichijikan|one hour
+せんしゅう|senshuu|last week
+とき|toki|when...; at the time of...
+げつようび|getsuyoubi|Monday
+かようび|kayoubi|Tuesday
+すいようび|suiyoubi|Wednesday
+もくようび|mokuyoubi|Thursday
+きんようび|kinyoubi|Friday
+あう|au|to meet; to see (a person)
+ある|aru|there is...
+いる|iru|(a person) is in...; stays at...
+かう|kau|to buy
+かく|kaku|to write
+とる|toru|to take (pictures)
+まつ|matsu|to wait
+わかる|wakaru|to understand
+みぎ|migi|right
+ひだり|hidari|left
+まえ|mae|front
+うしろ|ushiro|back
+なか|naka|inside
+うえ|ue|on
+した|shita|under
+そば|soba|near
+となり|tonari|next
+あいだ|aida|between
+ここ|koko|here
+そこ|soko|there
+〜ぐらい|gurai|about (approximate measurement)
+〜と|to|together with (a person)
+たくさん|takusan|many; a lot
+ひとりで|hitoride|alone
+どうして|doushite|why
+だから|dakara|so; therefore
+ごめんなさい|gomennasai|I'm sorry.
+もしもし|moshimoshi|Hello? (used on the phone)`);
+
 const numbers = vocab(`
 ゼロ|zero/rei|0
 いち|ichi|1
@@ -282,7 +350,7 @@ const sentences = vocab(`
 ともだちとはなします。|tomodachi to hanashimasu|I talk with a friend.`);
 
 const seen = new Set();
-const allVocabs = [...vocab1, ...vocab2, ...vocab3].filter(x => {
+const allVocabs = [...vocab1, ...vocab2, ...vocab3, ...vocab4].filter(x => {
   const k = x.c + x.t.toLowerCase();
   return seen.has(k) ? false : seen.add(k);
 });
@@ -290,7 +358,7 @@ const allVocabs = [...vocab1, ...vocab2, ...vocab3].filter(x => {
 const LISTS = {
   "All Alphabets": [...hiragana, ...katakana],
   "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers, "Sentences": sentences,
-  "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3,
+  "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3, "Vocab 4": vocab4,
   "All Vocabs": allVocabs
 };
 
