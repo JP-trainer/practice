@@ -48,7 +48,7 @@ button.alt{color:var(--ink);background:var(--bg);border:1px solid var(--line)}
     <div><label for="mode">Mode</label>
       <select id="mode"><option>Flashing Text</option><option>Typing</option></select></div>
     <div><label for="type">Type</label>
-      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>All Vocabs</option></select></div>
+      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Numbers (Kanji)</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>All Vocabs</option></select></div>
     <div><label for="speed">Seconds per card</label>
       <input id="speed" type="number" value="3" min="0.5" step="0.5"></div>
     <div><label for="timer">Session timer (s)</label>
@@ -307,6 +307,44 @@ const numbers = vocab(`
 はっせん|hassen|8,000
 いちまん|ichiman|10,000`);
 
+const numbersKanji = vocab(`
+零|zero/rei|0 · ゼロ
+一|ichi|1 · いち
+二|ni|2 · に
+三|san|3 · さん
+四|yon/shi|4 · よん
+五|go|5 · ご
+六|roku|6 · ろく
+七|nana/shichi|7 · なな
+八|hachi|8 · はち
+九|kyuu/ku|9 · きゅう
+十|juu|10 · じゅう
+十一|juuichi|11 · じゅういち
+十二|juuni|12 · じゅうに
+十五|juugo|15 · じゅうご
+二十|nijuu|20 · にじゅう
+三十|sanjuu|30 · さんじゅう
+四十|yonjuu/shijuu|40 · よんじゅう
+五十|gojuu|50 · ごじゅう
+六十|rokujuu|60 · ろくじゅう
+七十|nanajuu/shichijuu|70 · ななじゅう
+八十|hachijuu|80 · はちじゅう
+九十|kyuujuu|90 · きゅうじゅう
+百|hyaku|100 · ひゃく
+二百|nihyaku|200 · にひゃく
+三百|sanbyaku|300 · さんびゃく
+四百|yonhyaku|400 · よんひゃく
+五百|gohyaku|500 · ごひゃく
+六百|roppyaku|600 · ろっぴゃく
+七百|nanahyaku|700 · ななひゃく
+八百|happyaku|800 · はっぴゃく
+九百|kyuuhyaku|900 · きゅうひゃく
+千|sen|1,000 · せん
+二千|nisen|2,000 · にせん
+三千|sanzen|3,000 · さんぜん
+八千|hassen|8,000 · はっせん
+一万|ichiman|10,000 · いちまん`);
+
 const sentences = vocab(`
 わたしはがくせいです。|watashi wa gakusei desu|I am a student.
 わたしはだいがくのいちねんせいです。|watashi wa daigaku no ichinensei desu|I am a first-year college student.
@@ -357,7 +395,7 @@ const allVocabs = [...vocab1, ...vocab2, ...vocab3, ...vocab4].filter(x => {
 
 const LISTS = {
   "All Alphabets": [...hiragana, ...katakana],
-  "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers, "Sentences": sentences,
+  "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers, "Numbers (Kanji)": numbersKanji, "Sentences": sentences,
   "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3, "Vocab 4": vocab4,
   "All Vocabs": allVocabs
 };
