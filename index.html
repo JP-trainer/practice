@@ -48,7 +48,7 @@ button.alt{color:var(--ink);background:var(--bg);border:1px solid var(--line)}
     <div><label for="mode">Mode</label>
       <select id="mode"><option>Flashing Text</option><option>Typing</option></select></div>
     <div><label for="type">Type</label>
-      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Numbers (Kanji)</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>All Vocabs</option></select></div>
+      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Numbers (Kanji)</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>All Vocabs</option><option>Particles</option><option>Translation</option><option>Q&amp;A</option></select></div>
     <div><label for="speed">Seconds per card</label>
       <input id="speed" type="number" value="3" min="0.5" step="0.5"></div>
     <div><label for="timer">Session timer (s)</label>
@@ -387,6 +387,56 @@ const sentences = vocab(`
 こんばんべんきょうします。|konban benkyou shimasu|I will study tonight.
 ともだちとはなします。|tomodachi to hanashimasu|I talk with a friend.`);
 
+/* ---------- PARTICLES / TRANSLATION / Q&A ---------- */
+// III. Particles (は の を に で も, or × for none)
+const particles = vocab(`
+わたし（ ）がくせいです。|wa/ha|は · I am a student.
+せんこう（ ）なんですか。|wa/ha|は · What is your major?
+これはわたし（ ）ほんです。|no|の · This is my book.
+だいがく（ ）せんせいです。|no|の · (He/She) is a college teacher.
+ともだち（ ）なまえはなんですか。|no|の · What is your friend's name?
+まいにち テレビ（ ）みます。|o/wo|を · I watch TV every day.
+コーヒー（ ）のみます。|o/wo|を · I drink coffee.
+なに（ ）たべますか。|o/wo|を · What will you eat?
+がっこう（ ）いきます。|ni|に · I go to school.
+しちじ（ ）おきます。|ni|に · I get up at 7 o'clock.
+いえ（ ）かえります。|ni|に · I go home.
+どこ（ ）いきますか。|ni|に · Where are you going?
+としょかん（ ）べんきょうします。|de|で · I study at the library.
+きっさてん（ ）はなします。|de|で · I talk at the cafe.
+いえ（ ）しんぶんをよみます。|de|で · I read the newspaper at home.
+わたし（ ）コーヒーをのみます。|mo|も · I drink coffee too.
+たなかさん（ ）がくせいです。|mo|も · Mr. Tanaka is a student too.
+まいにち（ ）テレビをみます。|x|× (no particle) · I watch TV every day.
+きょう（ ）だいがくにいきます。|x|× (no particle) · I go to college today.
+わたしは まい日（ ）日本ご（ ）クラス（ ）きません。|x no ni|× の に · I don't come to Japanese class every day.`);
+
+// IV. Translation (English -> Japanese, answer in romaji)
+const translations = vocab(`
+I study at the library every day.|watashi wa mainichi toshokan de benkyou shimasu|わたしは まいにち としょかんで べんきょうします。
+I eat breakfast at 7 o'clock.|watashi wa shichiji ni asagohan o tabemasu|わたしは しちじに あさごはんを たべます。
+I don't watch TV.|watashi wa terebi o mimasen|わたしは テレビを みません。
+I went to school yesterday.|kinou gakkou ni ikimashita|きのう がっこうに いきました。
+I talked with my friend at the cafe.|tomodachi to kissaten de hanashimashita|ともだちと きっさてんで はなしました。
+I listen to music every day.|mainichi ongaku o kikimasu|まいにち おんがくを ききます。
+I will go home tomorrow.|ashita ie ni kaerimasu|あした いえに かえります。
+I did not go to college today.|kyou daigaku ni ikimasendeshita|きょう だいがくに いきませんでした。
+I read the newspaper at home.|ie de shinbun o yomimasu|いえで しんぶんを よみます。
+I drink coffee too.|watashi mo koohii o nomimasu|わたしも コーヒーを のみます。
+Where do you go every day?|mainichi doko ni ikimasu ka|まいにち どこに いきますか。
+What do you do on weekends?|shuumatsu nani o shimasu ka|しゅうまつ なにを しますか。`);
+
+// VII. Q&A (question -> sample answer; answers vary, these are examples)
+const qaList = vocab(`
+しゅうまつ よく なにを しますか。|tomodachi to eiga o mimasu|A: ともだちと えいがを みます。 · What do you usually do on weekends?
+まいにち なんじに おきますか。|gozen shichiji ni okimasu|A: ごぜん しちじに おきます。 · What time do you get up every day?
+まいにち なにを のみますか。|koohii o nomimasu|A: コーヒーを のみます。 · What do you drink every day?
+きのう どこに いきましたか。|toshokan ni ikimashita|A: としょかんに いきました。 · Where did you go yesterday?
+だれと はなしますか。|tomodachi to hanashimasu|A: ともだちと はなします。 · Who do you talk with?
+なんじに ねますか。|gogo juuji ni nemasu|A: ごご じゅうじに ねます。 · What time do you go to bed?
+どこで べんきょうしますか。|toshokan de benkyou shimasu|A: としょかんで べんきょうします。 · Where do you study?
+テレビを よく みますか。|iie zenzen mimasen|A: いいえ、ぜんぜん みません。 · Do you often watch TV?`);
+
 const seen = new Set();
 const allVocabs = [...vocab1, ...vocab2, ...vocab3, ...vocab4].filter(x => {
   const k = x.c + x.t.toLowerCase();
@@ -397,8 +447,11 @@ const LISTS = {
   "All Alphabets": [...hiragana, ...katakana],
   "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers, "Numbers (Kanji)": numbersKanji, "Sentences": sentences,
   "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3, "Vocab 4": vocab4,
-  "All Vocabs": allVocabs
+  "All Vocabs": allVocabs,
+  "Particles": particles, "Translation": translations, "Q&A": qaList
 };
+const LONG = new Set(["Sentences", "Translation", "Q&A"]);
+const MID = new Set(["Particles"]);
 
 /* ---------- ELEMENTS ---------- */
 const $ = id => document.getElementById(id);
@@ -417,7 +470,7 @@ let missed = new Map();
 
 const isTyping = () => modeEl.value === "Typing";
 const getList = () => LISTS[typeEl.value] || hiragana;
-const defaultSpeed = () => { const sn = typeEl.value === "Sentences"; return isTyping() ? (sn ? 25 : 8) : (sn ? 6 : 3); };
+const defaultSpeed = () => { const t = typeEl.value, sn = LONG.has(t), md = MID.has(t); return isTyping() ? (sn ? 25 : md ? 12 : 8) : (sn ? 6 : md ? 5 : 3); };
 const fit = () => { const n = charEl.textContent.length; charEl.style.fontSize = n > 12 ? "30px" : n > 6 ? "42px" : ""; };
 
 function getSpeed() {
@@ -555,7 +608,7 @@ function showFlashingAnswer() {
   ansEl.textContent = current.a[0];
   transEl.textContent = current.t || "";
   resetBar();
-  schedule(() => running && showNext(), typeEl.value === "Sentences" ? 1500 : 900);
+  schedule(() => running && showNext(), LONG.has(typeEl.value) ? 1500 : 900);
 }
 
 function checkAnswer() {
