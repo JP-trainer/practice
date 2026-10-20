@@ -48,7 +48,7 @@ button.alt{color:var(--ink);background:var(--bg);border:1px solid var(--line)}
     <div><label for="mode">Mode</label>
       <select id="mode"><option>Flashing Text</option><option>Typing</option></select></div>
     <div><label for="type">Type</label>
-      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Numbers (Kanji)</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>All Vocabs</option><option>Particles</option></select></div>
+      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Numbers (Kanji)</option><option>Lesson 4 Kanji</option><option>Midterm Katakana</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>All Vocabs</option><option>Particles</option></select></div>
     <div><label for="speed">Seconds per card</label>
       <input id="speed" type="number" value="3" min="0.5" step="0.5"></div>
     <div><label for="timer">Session timer (s)</label>
@@ -105,7 +105,8 @@ const vocab1 = vocab(`
 でんわ|denwa|phone
 ともだち|tomodachi|friend
 なまえ|namae|name
-なん、なに|nan nani|what
+なん|nan|what
+なに|nani|what
 にほん|nihon|Japan
 ねんせい|nensei|...year student
 はん|han|half
@@ -255,7 +256,7 @@ const vocab4 = vocab(`
 なか|naka|inside
 うえ|ue|on
 した|shita|under
-そば|soba|near
+ちかく|chikaku|near
 となり|tonari|next
 あいだ|aida|between
 ここ|koko|here
@@ -345,6 +346,71 @@ const numbersKanji = vocab(`
 八千|hassen|8,000 · はっせん
 一万|ichiman|10,000 · いちまん`);
 
+const kanji4 = vocab(`
+日|nichi/hi|day; sun
+本|hon/moto|book; basis
+人|jin/nin/hito|person
+上|jou/ue/shou|up; above
+下|ka/ge/shita|down; below
+中|chuu/naka|middle; inside
+半|han|half
+月|getsu/tsuki|moon; month (Monday)
+火|ka/hi|fire (Tuesday)
+水|sui/mizu|water (Wednesday)
+木|moku/ki|tree; wood (Thursday)
+金|kin/kane|gold; money (Friday)
+土|do/tsuchi|earth; soil (Saturday)
+曜|you|day of the week
+月曜日|getsuyoubi|Monday
+火曜日|kayoubi|Tuesday
+水曜日|suiyoubi|Wednesday
+木曜日|mokuyoubi|Thursday
+金曜日|kinyoubi|Friday
+土曜日|doyoubi|Saturday
+日曜日|nichiyoubi|Sunday`);
+
+const midtermKatakana = vocab(`
+オーケー|ookee/okee|okay
+ケーキ|keeki/keki|cake
+ウエア|uea|wear
+コーク|kooku/koku|coke
+キウイ|kiui|kiwi
+ココア|kokoa|cocoa
+シーザー|shiizaa/shiza|Caesar
+スーツ|suutsu/sutsu|suit
+セット|setto|set
+ソックス|sokkusu|socks
+タコス|takosu|tacos
+チーズ|chiizu/chizu|cheese
+タイ|tai|Thailand
+デッキ|dekki|deck
+ボサノバ|bosanoba|bossa nova
+カヌー|kanuu/kanu|canoe
+ハーブ|haabu/habu|herb
+ビキニ|bikini|bikini
+ナッツ|nattsu|nuts
+ペット|petto|pet
+コネクション|konekushon|connection
+ハッピー|happii/happi|happy
+ネクタイ|nekutai|necktie
+ノート|nooto/noto|notebook
+メモ|memo|memo
+ムード|muudo/mudo|mood
+ミニ|mini|mini
+ヨット|yotto|yacht
+キャップ|kyappu|cap
+シチュー|shichuu/shichu|stew
+ショック|shokku|shock
+ハーモニカ|haamonika/hamonika|harmonica
+ヨーロッパ|yooroppa/yoroppa|Europe
+ワックス|wakkusu|wax
+ルーレット|ruuretto/ruretto|roulette
+アフリカ|afurika|Africa
+ヨーグルト|yooguruto/yoguruto|yogurt
+チェックイン|chekkuin|check-in
+シェークスピア|sheekusupia/shekusupia|Shakespeare
+ラーメン|raamen/ramen|ramen noodles`);
+
 const sentences = vocab(`
 わたしはがくせいです。|watashi wa gakusei desu|I am a student.
 わたしはだいがくのいちねんせいです。|watashi wa daigaku no ichinensei desu|I am a first-year college student.
@@ -419,7 +485,7 @@ const allVocabs = [...vocab1, ...vocab2, ...vocab3, ...vocab4].filter(x => {
 
 const LISTS = {
   "All Alphabets": [...hiragana, ...katakana],
-  "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers, "Numbers (Kanji)": numbersKanji, "Sentences": sentences,
+  "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers, "Numbers (Kanji)": numbersKanji, "Lesson 4 Kanji": kanji4, "Midterm Katakana": midtermKatakana, "Sentences": sentences,
   "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3, "Vocab 4": vocab4,
   "All Vocabs": allVocabs,
   "Particles": particles
