@@ -48,7 +48,7 @@ button.alt{color:var(--ink);background:var(--bg);border:1px solid var(--line)}
     <div><label for="mode">Mode</label>
       <select id="mode"><option>Flashing Text</option><option>Typing</option></select></div>
     <div><label for="type">Type</label>
-      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Numbers (Kanji)</option><option>Lesson 4 Kanji</option><option>Midterm Katakana</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>All Vocabs</option><option>Particles</option></select></div>
+      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Numbers (Kanji)</option><option>Lesson 4 Kanji</option><option>Midterm Katakana</option><option>Misc</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>All Vocabs</option><option>Particles</option></select></div>
     <div><label for="speed">Seconds per card</label>
       <input id="speed" type="number" value="3" min="0.5" step="0.5"></div>
     <div><label for="timer">Session timer (s)</label>
@@ -411,6 +411,27 @@ const midtermKatakana = vocab(`
 シェークスピア|sheekusupia/shekusupia|Shakespeare
 ラーメン|raamen/ramen|ramen noodles`);
 
+const misc = vocab(`
+くるま|kuruma|car
+おかね|okane|money
+しつもん|shitsumon|question
+こいびと|koibito|lover
+れいぞうこ|reizouko/reizoko|refrigerator; fridge
+ゆめ|yume|dream; fantasy
+どうぶつ|doubutsu/dobutsu|animal
+へや|heya|room
+き|ki|tree
+いいですね|iidesune|sounds good
+ぜひ|zehi|absolutely
+ちょっと|chotto/chootto|a little; (polite decline)
+すしや|sushiya|sushi restaurant
+キス|kisu|kiss
+かぎ|kagi|key
+かみ|kami|paper
+ドル|doru|dollar
+しゅっしん|shusshin|birthplace
+どうですか|doudesuka/dodesuka|how about...; how is...?`);
+
 const sentences = vocab(`
 わたしはがくせいです。|watashi wa gakusei desu|I am a student.
 わたしはだいがくのいちねんせいです。|watashi wa daigaku no ichinensei desu|I am a first-year college student.
@@ -485,7 +506,7 @@ const allVocabs = [...vocab1, ...vocab2, ...vocab3, ...vocab4].filter(x => {
 
 const LISTS = {
   "All Alphabets": [...hiragana, ...katakana],
-  "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers, "Numbers (Kanji)": numbersKanji, "Lesson 4 Kanji": kanji4, "Midterm Katakana": midtermKatakana, "Sentences": sentences,
+  "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers, "Numbers (Kanji)": numbersKanji, "Lesson 4 Kanji": kanji4, "Midterm Katakana": midtermKatakana, "Misc": misc, "Sentences": sentences,
   "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3, "Vocab 4": vocab4,
   "All Vocabs": allVocabs,
   "Particles": particles
