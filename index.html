@@ -48,7 +48,7 @@ button.alt{color:var(--ink);background:var(--bg);border:1px solid var(--line)}
     <div><label for="mode">Mode</label>
       <select id="mode"><option>Flashing Text</option><option>Typing</option></select></div>
     <div><label for="type">Type</label>
-      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Numbers (Kanji)</option><option>Lesson 4 Kanji</option><option>Midterm Katakana</option><option>Misc</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>All Vocabs</option><option>Particles</option></select></div>
+      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Numbers (Kanji)</option><option>Lesson 4 Kanji</option><option>Midterm Katakana</option><option>Misc</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>Vocab 5</option><option>All Vocabs</option><option>Particles</option></select></div>
     <div><label for="speed">Seconds per card</label>
       <input id="speed" type="number" value="3" min="0.5" step="0.5"></div>
     <div><label for="timer">Session timer (s)</label>
@@ -143,6 +143,7 @@ const vocab2 = vocab(`
 しんぶん|shinbun|newspaper
 テープ|teepu|tape
 トレーナー|toreenaa|sweat shirt
+Tシャツ|tiishatsu/teishatsu/Tshatsu|T-shirt
 ノート|nooto|notebook
 ペン|pen|pen
 ぼうし|booshi|hat
@@ -269,6 +270,67 @@ const vocab4 = vocab(`
 だから|dakara|so; therefore
 ごめんなさい|gomennasai|I'm sorry.
 もしもし|moshimoshi|Hello? (used on the phone)`);
+
+const vocab5 = vocab(`
+たべもの|tabemono|food
+のみもの|nomimono|drink
+くだもの|kudamono|fruit
+やすみ|yasumi|holiday; day off; absence
+りょこう|ryokou/ryokoo|travel
+うみ|umi|sea
+サーフィン|saafin/safin|surfing
+おみやげ|omiyage|souvenir
+バス|basu|bus
+てんき|tenki|weather
+しゅくだい|shukudai|homework
+テスト|tesuto|test
+たんじょうび|tanjoubi/tanjobi|birthday
+へや|heya|room
+ぼく|boku|I (used by men)
+Lサイズ|erusaizu/Lsaizu|size L
+きって|kitte|postage stamp
+きっぷ|kippu|ticket
+あたらしい|atarashii|new
+ふるい|furui|old (things; not people)
+あつい|atsui|hot (weather)
+あつい|atsui|hot (things)
+あたたかい|atatakai|warm (weather)
+あたたかい|atatakai|warm (things)
+さむい|samui|cold (weather)
+つめたい|tsumetai|cold (things)
+すずしい|suzushii|cool (weather)
+いそがしい|isogashii|busy (people; days)
+おおきい|ookii|large
+ちいさい|chiisai|small
+おもしろい|omoshiroi|interesting; funny
+つまらない|tsumaranai|boring
+やさしい|yasashii|easy (problem); kind (person)
+むずかしい|muzukashii|difficult
+かっこいい|kakkoii|good-looking
+こわい|kowai|frightening
+たのしい|tanoshii|fun
+やすい|yasui|inexpensive; cheap (things)
+すき|suki|fond of; to like (~が)
+きらい|kirai|disgusted with; to dislike (~が)
+だいすき|daisuki|very fond of; to love (~が)
+だいきらい|daikirai|to hate (~が)
+きれい|kirei|beautiful; clean
+げんき|genki|healthy; energetic
+しずか|shizuka|quiet
+にぎやか|nigiyaka|lively
+ひま|hima|not busy; free (time)
+およぐ|oyogu|to swim
+きく|kiku|to ask (person に)
+のる|noru|to ride; to board (~に)
+やる|yaru|to do; to perform (~を)
+でかける|dekakeru|to go out
+いっしょに|issho ni|together
+すごく|sugoku|extremely
+とても|totemo|very
+だいじょうぶ|daijoubu/daijobu|It's okay; Not to worry
+どんな|donna|what kind of...
+〜まい|mai|counter for flat objects
+まで|made|until; up to (a place or time)`);
 
 const numbers = vocab(`
 ゼロ|zero/rei|0
@@ -520,7 +582,7 @@ const particles = vocab(`
 へや（ ）ねます。|de|で · I sleep in the room.`);
 
 const seen = new Set();
-const allVocabs = [...vocab1, ...vocab2, ...vocab3, ...vocab4].filter(x => {
+const allVocabs = [...vocab1, ...vocab2, ...vocab3, ...vocab4, ...vocab5].filter(x => {
   const k = x.c + x.t.toLowerCase();
   return seen.has(k) ? false : seen.add(k);
 });
@@ -528,7 +590,7 @@ const allVocabs = [...vocab1, ...vocab2, ...vocab3, ...vocab4].filter(x => {
 const LISTS = {
   "All Alphabets": [...hiragana, ...katakana],
   "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers, "Numbers (Kanji)": numbersKanji, "Lesson 4 Kanji": kanji4, "Midterm Katakana": midtermKatakana, "Misc": misc, "Sentences": sentences,
-  "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3, "Vocab 4": vocab4,
+  "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3, "Vocab 4": vocab4, "Vocab 5": vocab5,
   "All Vocabs": allVocabs,
   "Particles": particles
 };
