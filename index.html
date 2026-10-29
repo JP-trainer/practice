@@ -38,6 +38,32 @@ button:active{transform:scale(.99)}
 button.alt{color:var(--ink);background:var(--bg);border:1px solid var(--line)}
 .status{display:flex;justify-content:space-around;margin-top:14px;padding:12px;background:var(--bg);border-radius:12px;font-size:15px;color:var(--mute)}
 .status strong{color:var(--ink);font-size:17px}
+.rv-note{display:none;margin-top:14px;font-size:14px;color:var(--mute)}
+.app.review .card,.app.review #answer,.app.review .buttons,.app.review .status,.app.review .settings>div:nth-child(n+2){display:none}
+.app.review .rv-note{display:block}
+button.rv-toggle{position:fixed;right:16px;bottom:16px;z-index:30;width:auto;padding:12px 20px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+button.sm{width:auto;padding:6px 10px;font-size:13px;border-radius:8px}
+#reviewBox{position:fixed;z-index:20;top:10px;bottom:76px;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 20px));display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.rv-head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line);font-size:17px}
+.rv-head span{display:flex;gap:6px}
+#reviewBody{flex:1;overflow-y:auto;padding:4px 14px 14px}
+.rv-cat{margin:18px 0 8px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+details.rv{margin:0 0 8px;background:var(--bg);border:1px solid var(--line);border-radius:12px}
+details.rv>summary{display:flex;justify-content:space-between;gap:8px;padding:10px 12px;font-weight:600;cursor:pointer;list-style:none}
+details.rv>summary::-webkit-details-marker{display:none}
+details.rv>summary .n{font-weight:400;font-size:13px;color:var(--mute)}
+.rv-rows{padding:0 12px 6px}
+.rv-group{margin:12px 0 2px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.rv-row{display:grid;grid-template-columns:minmax(90px,38%) 1fr;gap:2px 10px;align-items:baseline;padding:7px 0;border-top:1px solid var(--line)}
+.rv-row.wide{grid-template-columns:1fr}
+.rv-jp{font-family:"Klee One","UD Digi Kyokasho N-R",system-ui,"Hiragino Sans","Noto Sans JP",sans-serif;font-size:20px;font-weight:600;overflow-wrap:anywhere}
+.rv-k{margin-left:8px;font-size:15px;font-weight:400;color:var(--mute)}
+.rv-ro{font-weight:600;color:var(--ok)}
+.rv-en{font-size:14px;color:var(--mute)}
+.rv-tiles{display:flex;flex-wrap:wrap;gap:6px;padding:2px 12px 12px}
+.rv-tile{width:52px;padding:6px 0;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.rv-tile b{display:block;font-family:"Klee One","Hiragino Sans","Noto Sans JP",sans-serif;font-size:22px}
+.rv-tile i{font-style:normal;font-size:11px;color:var(--mute)}
 </style>
 </head>
 <body>
@@ -46,14 +72,16 @@ button.alt{color:var(--ink);background:var(--bg);border:1px solid var(--line)}
 
   <div class="settings">
     <div><label for="mode">Mode</label>
-      <select id="mode"><option>Flashing Text</option><option>Typing</option></select></div>
+      <select id="mode"><option>Flashing Text</option><option>Typing</option><option>Typing (English → Romaji)</option><option>Full Review</option></select></div>
     <div><label for="type">Type</label>
-      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Numbers (Kanji)</option><option>Lesson 4 Kanji</option><option>Midterm Katakana</option><option>Misc</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>Vocab 5</option><option>All Vocabs</option><option>Particles</option></select></div>
+      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Numbers (Kanji)</option><option>Kanji</option><option>Midterm Katakana</option><option>Misc vocab</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>Vocab 5</option><option>Vocab 6</option><option>All Vocabs</option><option>Particles</option></select></div>
     <div><label for="speed">Seconds per card</label>
       <input id="speed" type="number" value="3" min="0.5" step="0.5"></div>
     <div><label for="timer">Session timer (s)</label>
       <input id="timer" type="number" value="60" min="1"></div>
   </div>
+
+  <div class="rv-note" id="rvNote">Full Review: use the button at the bottom right to open or close the review box.</div>
 
   <div class="card" id="card">
     <div class="bar" id="bar"></div>
@@ -73,48 +101,106 @@ button.alt{color:var(--ink);background:var(--bg);border:1px solid var(--line)}
   </div>
 </div>
 
+<button id="reviewToggle" class="rv-toggle" hidden>Close review</button>
+<div id="reviewBox" hidden>
+  <div class="rv-head"><strong>Full Review</strong>
+    <span><button id="rvExpand" class="alt sm">Expand all</button> <button id="rvCollapse" class="alt sm">Collapse all</button></span></div>
+  <div id="reviewBody"></div>
+</div>
+
 <script>
 /* ---------- DATA ---------- */
 const HIRA = "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ";
 const KATA = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ";
 const ROM = "a i u e o ka ki ku ke ko sa shi/si su se so ta chi/ti tsu/tu te to na ni nu ne no ha hi fu/hu he ho ma mi mu me mo ya yu yo ra ri ru re ro wa wo/o n/nn ga gi gu ge go za ji/zi zu ze zo da ji/di zu/du de do ba bi bu be bo pa pi pu pe po".split(" ");
 const kana = s => [...s].map((c, i) => ({ c, a: ROM[i].split("/") }));
-const vocab = s => s.trim().split("\n").map(l => { const [c, a, t] = l.split("|"); return { c, a: a.split("/"), t }; });
+const vocab = s => { let g = ""; return s.trim().split("\n").flatMap(l => {
+  if (l.startsWith("#")) { g = l.slice(1).trim(); return []; }   // "# School" = sub-category heading
+  const [c, a, t, k, r] = l.split("|"); return [{ c, a: a.split("/"), t, g, k, r: r ? r.split("/") : null }];
+}); };
 
 const hiragana = kana(HIRA), katakana = kana(KATA);
 
 const vocab1 = vocab(`
-あの|ano|um...
-いま|ima|now
-えいご|eigo|English (language)
-ええ|ee|yes
-はい|hai|yes
-がくせい|gakusei|student
-ご|go|...language
-こうこう|koukou|high school
-ごご|gogo|P.M.
-ごぜん|gozen|A.M.
-さい|sai|...years old
-さん|san|Mr. or Mrs....
-じ|ji|time; o'clock
-じん|jin|...people
-せんこう|senkou|major
-せんせい|sensei|teacher; Professor...
-そうです|sou desu|That's right.
+# School
 だいがく|daigaku|college; university
-でんわ|denwa|phone
+こうこう|kookoo|high school
+がくせい|gakusee|student
+だいがくせい|daigakusee|college student
+りゅうがくせい|ryuugakusee|international student
+せんせい|sensee|teacher; Professor...
+〜ねんせい|nensee|...year student
+いちねんせい|ichinensee|first-year student
+せんこう|senkoo|major
+# Person
+わたし|watashi|I
 ともだち|tomodachi|friend
+〜さん|san|Mr./Ms....
+〜じん|jin|...people
+にほんじん|nihonjin|Japanese people
+# Time
+いま|ima|now
+ごぜん|gozen|A.M.
+ごご|gogo|P.M.
+〜じ|ji|o'clock
+いちじ|ichiji|one o'clock
+はん|han|half
+にじはん|niji han|half past two
+# Others
+にほん|Nihon|Japan
+アメリカ|Amerika|U.S.A.
+〜ご|go|...language
+にほんご|nihongo|Japanese language
+〜さい|sai|...years old
+でんわ|denwa|telephone
+〜ばん|ban|number...
+ばんごう|bangoo|number
 なまえ|namae|name
 なん|nan|what
 なに|nani|what
-にほん|nihon|Japan
-ねんせい|nensei|...year student
-はん|han|half
-ばんごう|bangou|number
-りゅうがくせい|ryuugakusei|international student
-わたし|watashi|I; me; myself`);
+# Expressions
+あのう|anoo|um...
+はい|hai|yes
+そうです|soo desu|That's right.
+そうですか|soo desu ka|I see.; Is that so?
+# Additional Vocabulary · Countries (くに kuni)
+イギリス|Igirisu|Britain
+オーストラリア|Oosutoraria|Australia
+かんこく|Kankoku|Korea
+カナダ|Kanada|Canada
+ちゅうごく|Chuugoku|China
+インド|Indo|India
+エジプト|Ejiputo|Egypt
+フィリピン|Firipin|Philippines
+# Additional Vocabulary · Majors (せんこう senkoo)
+アジアけんきゅう|ajia kenkyuu|Asian studies
+けいざい|keezai|economics
+こうがく|koogaku|engineering
+こくさいかんけい|kokusaikankee|international relations
+コンピューター|konpyuutaa|computer
+せいじ|seeji|politics
+せいぶつがく|seebutsugaku|biology
+ビジネス|bijinesu|business
+ぶんがく|bungaku|literature
+れきし|rekishi|history
+# Additional Vocabulary · Occupations (しごと shigoto)
+いしゃ|isha|doctor
+かいしゃいん|kaishain|office worker
+かんごし|kangoshi|nurse
+こうこうせい|kookoosee|high school student
+しゅふ|shufu|housewife
+だいがくいんせい|daigakuinsee|graduate student
+べんごし|bengoshi|lawyer
+# Additional Vocabulary · Family (かぞく kazoku)
+おかあさん|okaasan|mother
+おとうさん|otoosan|father
+おねえさん|oneesan|older sister
+おにいさん|oniisan|older brother
+いもうと|imooto|younger sister
+おとうと|otooto|younger brother`);
 
 const vocab2 = vocab(`
+# Words That Point
 これ|kore|this one
 それ|sore|that one
 あれ|are|that one (over there)
@@ -123,214 +209,318 @@ const vocab2 = vocab(`
 その|sono|that...
 あの|ano|that... (over there)
 どの|dono|which...
+ここ|koko|here
+そこ|soko|there
 あそこ|asoko|over there
 どこ|doko|where
 だれ|dare|who
+# Food
 おいしい|oishii|delicious
 さかな|sakana|fish
 とんかつ|tonkatsu|pork cutlet
 にく|niku|meat
 メニュー|menyuu|menu
 やさい|yasai|vegetable
-えんぴつ|enpitsu|pencil
+# Things
 かさ|kasa|umbrella
 かばん|kaban|bag
 くつ|kutsu|shoes
 さいふ|saifu|wallet
 ジーンズ|jiinzu|jeans
-じしょ|jisho|dictionary
 じてんしゃ|jitensha|bicycle
 しんぶん|shinbun|newspaper
-テープ|teepu|tape
-トレーナー|toreenaa|sweat shirt
+スマホ|sumaho|smartphone; mobile
 Tシャツ|tiishatsu/teishatsu/Tshatsu|T-shirt
+とけい|tokee|watch; clock
 ノート|nooto|notebook
 ペン|pen|pen
-ぼうし|booshi|hat
+ぼうし|booshi|hat; cap
 ほん|hon|book
-おてあらい|otearai|restroom
+# Places
 ぎんこう|ginkoo|bank
+コンビニ|konbini|convenience store
+トイレ|toire|toilet; restroom
 としょかん|toshokan|library
 ゆうびんきょく|yuubinkyoku|post office
-アメリカ|amerika|USA
-イギリス|igirisu|Britain
-かんこく|kankoku|Korea
-ちゅうごく|chuugoku|China
+# Countries
+イギリス|Igirisu|Britain
+かんこく|Kankoku|Korea
+ちゅうごく|Chuugoku|China
+# Majors
+えいご|eego|English (language)
 けいざい|keezai|economics
 コンピューター|konpyuutaa|computer
 ビジネス|bijinesu|business
 れきし|rekishi|history
+# Family
 おかあさん|okaasan|mother
 おとうさん|otoosan|father
+# Money Matters
 いくら|ikura|how much
-えん|en|yen
-たかい|takai|expensive
-いらっしゃいませ|irasshaimase|welcome
-おねがいします|onegaishimasu|please
-ください|kudasai|please
-きっさてん|kissaten|cafe`);
+〜えん|en|...yen
+たかい|takai|expensive; high
+# Expressions
+いらっしゃいませ|irasshaimase|Welcome (to our store).
+（〜を）おねがいします|onegaishimasu/o onegaishimasu|..., please.
+（〜を）ください|kudasai/o kudasai|Please give me...
+じゃあ|jaa|then...; if that is the case,...
+どうぞ|doozo|Please.; Here it is.
+どうも|doomo|Thank you.`);
 
 const vocab3 = vocab(`
-ビジネス|bijinesu|Business
-えいが|eiga|Movie
-おんがく|ongaku|Music
-スポーツ|supootsu|Sports
-はなす|hanasu|To speak; to talk
+# Nouns · Entertainment and Sports
+えいが|eiga|movie|映画
+おんがく|ongaku|music|音楽
+ざっし|zasshi|magazine|雑誌
+スポーツ|supootsu|sports
+デート|deeto|date (romantic, not calendar)
+テニス|tenisu|tennis
 テレビ|terebi|TV
-あさごはん|asagohan|Breakfast
-さけ|sake|Sake; alcohol
-おちゃ|ocha|Green Tea
-コーヒー|koohii|Coffee
-ひるごはん|hirugohan|Lunch
-ばんごはん|bangohan|Dinner
-みず|mizu|Water
-いえ|ie|Home; house
-きょう|kyou|Today
-あした|ashita|Tomorrow
-こんばん|konban|Tonight
-まいにち|mainichi|Every day
-いく|iku|To go
-かえる|kaeru|To go back; to return
-きく|kiku|To listen; to hear
-おきる|okiru|To get up
-たべる|taberu|To eat
-ねる|neru|To sleep; to go to sleep
-みる|miru|To see; to look at; to watch
-べんきょうする|benkyou suru|To study
-ぜんぜん|zenzen|Not at all
-ときどき|tokidoki|Sometimes
-よく|yoku|Often; much
-する|suru|To do
-よむ|yomu|To read`);
+# Nouns · Foods and Drinks
+アイスクリーム|aisukuriimu|ice cream
+ハンバーガー|hanbaagaa|hamburger
+おさけ|osake|sake; alcoholic drink|お酒
+おちゃ|ocha|green tea|お茶
+コーヒー|koohii|coffee
+みず|mizu|water|水
+あさごはん|asagohan|breakfast|朝ご飯
+ひるごはん|hirugohan|lunch|昼ご飯
+ばんごはん|bangohan|dinner|晩ご飯
+# Nouns · Places
+いえ|ie|home; house|家
+うち|uchi|home; house; my place
+がっこう|gakkoo|school|学校
+カフェ|kafe|cafe
+# Nouns · Time
+あした|ashita|tomorrow|明日
+きょう|kyoo|today|今日
+あさ|asa|morning|朝
+こんばん|konban|tonight|今晩
+まいにち|mainichi|every day|毎日
+まいばん|maiban|every night|毎晩
+しゅうまつ|shuumatsu|weekend|週末
+どようび|doyoobi|Saturday|土曜日
+にちようび|nichiyoobi|Sunday|日曜日
+いつ|itsu|when
+〜ごろ|goro|at about...
+# U-verbs
+いく|iku|to go (destination に/へ)|行く
+かえる|kaeru|to go back; to return (destination に/へ)|帰る
+きく|kiku|to listen; to hear (〜を)|聞く
+のむ|nomu|to drink (〜を)|飲む
+はなす|hanasu|to speak; to talk (language を/で)|話す
+よむ|yomu|to read (〜を)|読む
+# Ru-verbs
+おきる|okiru|to get up|起きる
+たべる|taberu|to eat (〜を)|食べる
+ねる|neru|to sleep; to go to sleep|寝る
+みる|miru|to see; to look at; to watch (〜を)|見る
+# Irregular Verbs
+くる|kuru|to come (destination に/へ)|来る
+する|suru|to do (〜を)
+べんきょうする|benkyoo suru|to study (〜を)|勉強する
+# Adjectives
+いい|ii|good
+はやい|hayai|early|早い
+# Adverbs
+あまり + negative|amari|not much
+ぜんぜん + negative|zenzen|not at all|全然
+たいてい|taitei|usually
+ちょっと|chotto|a little
+ときどき|tokidoki|sometimes|時々
+よく|yoku|often; much
+# Expressions
+そうですね|soo desu ne|That's right.; Let me see.
+でも|demo|but
+どうですか|doo desu ka|How about...?; How is...?
+ええ|ee|yes`);
 
 const vocab4 = vocab(`
-アルバイト|arubaito|part-time job
-かいもの|kaimono|shopping
-クラス|kurasu|class
-あなた|anata|you
-いぬ|inu|dog
-ねこ|neko|cat
-いす|isu|chair
-つくえ|tsukue/tukue|desk
-おみやげ|omiyage|souvenir
+# Nouns · Activities
 ゲーム|geemu|game
-こども|kodomo|child
-ごはん|gohan|rice; meal
-しゃしん|shashin|picture; photograph
-てがみ|tegami|letter
+アルバイト|arubaito|part-time job (more colloquially, バイト)
+かいもの|kaimono|shopping|買い物
+クラス|kurasu|class
+# Nouns · People and Things
+いぬ|inu|dog|犬
+ねこ|neko|cat|猫
+ひと|hito|person|人
+こども|kodomo|child|子供
+あなた|anata|you
+いす|isu|chair
+つくえ|tsukue/tukue|desk|机
+しゃしん|shashin|picture; photograph|写真
+はな|hana|flower|花
+レポート|repooto|(term) paper
+ごはん|gohan|rice; meal|ご飯
 パン|pan|bread
-はな|hana|flower
-ひと|hito|person
-おてら|otera|temple
-こうえん|kouen|park
+# Nouns · Places
+おてら|otera|temple|お寺
+こうえん|kooen|park|公園
 スーパー|suupaa|supermarket
-デパート|depaato|department store
-バスてい|basutei|bus stop
-びょういん|byouin|hospital
+バスてい|basutei|bus stop|バス停
+びょういん|byooin|hospital|病院
 ホテル|hoteru|hotel
-ほんや|honya|bookstore
-まち|machi|town; city
+ほんや|honya|bookstore|本屋
+まち|machi|town; city|町
 レストラン|resutoran|restaurant
-きのう|kinou|yesterday
-さっき|sakki|a little while ago
-〜じかん|jikan|hour
-いちじかん|ichijikan|one hour
-せんしゅう|senshuu|last week
-とき|toki|when...; at the time of...
-げつようび|getsuyoubi|Monday
-かようび|kayoubi|Tuesday
-すいようび|suiyoubi|Wednesday
-もくようび|mokuyoubi|Thursday
-きんようび|kinyoubi|Friday
-あう|au|to meet; to see (a person)
-ある|aru|there is...
-いる|iru|(a person) is in...; stays at...
-かう|kau|to buy
-かく|kaku|to write
-とる|toru|to take (pictures)
-まつ|matsu|to wait
-わかる|wakaru|to understand
-みぎ|migi|right
-ひだり|hidari|left
-まえ|mae|front
-うしろ|ushiro|back
-なか|naka|inside
-うえ|ue|on
-した|shita|under
-ちかく|chikaku|near
-となり|tonari|next
-あいだ|aida|between
-ここ|koko|here
-そこ|soko|there
+# Nouns · Time
+きのう|kinoo|yesterday|昨日
+〜じかん|jikan|...hours|〜時間
+いちじかん|ichijikan|one hour|一時間
+せんしゅう|senshuu|last week|先週
+とき|toki|when...; at the time of... (〜の)|時
+げつようび|getsuyoobi|Monday|月曜日
+かようび|kayoobi|Tuesday|火曜日
+すいようび|suiyoobi|Wednesday|水曜日
+もくようび|mokuyoobi|Thursday|木曜日
+きんようび|kinyoobi|Friday|金曜日
+# U-verbs
+あう|au|to meet; to see (a person) (person に)|会う
+ある|aru|there is... (place に thing が)
+かう|kau|to buy (〜を)|買う
+かく|kaku|to write (person に thing を)|書く
+とる|toru|to take (a picture) (〜を)|撮る
+まつ|matsu|to wait (〜を)|待つ
+わかる|wakaru|to understand (〜が)
+# Ru-verb
+いる|iru|(a person) is in...; stays at... (place に person が)
+# Adverbs and Other Expressions
 〜ぐらい|gurai|about (approximate measurement)
-〜と|to|together with (a person)
-たくさん|takusan|many; a lot
-ひとりで|hitoride|alone
-どうして|doushite|why
-だから|dakara|so; therefore
 ごめんなさい|gomennasai|I'm sorry.
-もしもし|moshimoshi|Hello? (used on the phone)`);
+それから|sorekara|and then
+だから|dakara|so; therefore
+たくさん|takusan|many; a lot
+〜と|to|together with (a person); and
+どうして|dooshite|why
+ひとりで|hitoride|alone|一人で
+もしもし|moshimoshi|Hello? (used on the phone)
+# Location Words
+みぎ|migi|right (〜の)|右
+ひだり|hidari|left (〜の)|左
+まえ|mae|front (〜の)|前
+うしろ|ushiro|back (〜の)|後ろ
+なか|naka|inside (〜の)|中
+うえ|ue|on (〜の)|上
+した|shita|under (〜の)|下
+ちかく|chikaku|near; nearby (〜の)|近く
+となり|tonari|next (〜の)|隣
+あいだ|aida|between (A と B の)|間`);
 
 const vocab5 = vocab(`
-たべもの|tabemono|food
-のみもの|nomimono|drink
-くだもの|kudamono|fruit
-やすみ|yasumi|holiday; day off; absence
-りょこう|ryokou/ryokoo|travel
-うみ|umi|sea
-サーフィン|saafin/safin|surfing
-おみやげ|omiyage|souvenir
+# Nouns
+たべもの|tabemono|food|食べ物
+のみもの|nomimono|drink|飲み物
+くだもの|kudamono|fruit|果物
+やすみ|yasumi|holiday; day off; absence|休み
+りょこう|ryokoo|travel|旅行
+うみ|umi|sea|海
+サーフィン|saafin|surfing
+おみやげ|omiyage|souvenir|お土産
 バス|basu|bus
-てんき|tenki|weather
-しゅくだい|shukudai|homework
+てんき|tenki|weather|天気
+しゅくだい|shukudai|homework|宿題
 テスト|tesuto|test
-たんじょうび|tanjoubi/tanjobi|birthday
-へや|heya|room
-ぼく|boku|I (used by men)
-Lサイズ|erusaizu/Lsaizu|size L
-きって|kitte|postage stamp
-きっぷ|kippu|ticket
-あたらしい|atarashii|new
-ふるい|furui|old (things; not people)
-あつい|atsui|hot (weather)
-あつい|atsui|hot (things)
-あたたかい|atatakai|warm (weather)
-あたたかい|atatakai|warm (things)
-さむい|samui|cold (weather)
-つめたい|tsumetai|cold (things)
-すずしい|suzushii|cool (weather)
-いそがしい|isogashii|busy (people; days)
-おおきい|ookii|large
-ちいさい|chiisai|small
-おもしろい|omoshiroi|interesting; funny
+たんじょうび|tanjoobi|birthday|誕生日
+へや|heya|room|部屋
+ぼく|boku|I (used by men)|僕
+Lサイズ（エルサイズ）|erusaizu/Lsaizu|size L
+# い-adjectives
+あたらしい|atarashii|new|新しい
+ふるい|furui|old (thing—not used for people)|古い
+あつい|atsui|hot (weather)|暑い
+さむい|samui|cold (weather—not used for things)|寒い
+あつい|atsui|hot (thing)|熱い
+いそがしい|isogashii|busy (people/days)|忙しい
+おおきい|ookii|large|大きい
+ちいさい|chiisai|small|小さい
+おもしろい|omoshiroi|interesting; funny|面白い
 つまらない|tsumaranai|boring
 やさしい|yasashii|easy (problem); kind (person)
-むずかしい|muzukashii|difficult
-かっこいい|kakkoii|good-looking
-こわい|kowai|frightening
-たのしい|tanoshii|fun
-やすい|yasui|inexpensive; cheap (things)
-すき|suki|fond of; to like (~が)
-きらい|kirai|disgusted with; to dislike (~が)
-だいすき|daisuki|very fond of; to love (~が)
-だいきらい|daikirai|to hate (~が)
-きれい|kirei|beautiful; clean
-げんき|genki|healthy; energetic
-しずか|shizuka|quiet
-にぎやか|nigiyaka|lively
-ひま|hima|not busy; free (time)
-およぐ|oyogu|to swim
-きく|kiku|to ask (person に)
-のる|noru|to ride; to board (~に)
-やる|yaru|to do; to perform (~を)
-でかける|dekakeru|to go out
-いっしょに|issho ni|together
+むずかしい|muzukashii|difficult|難しい
+かっこいい|kakkoii|good-looking (conjugates like いい)
+こわい|kowai|frightening|怖い
+たのしい|tanoshii|fun|楽しい
+やすい|yasui|inexpensive; cheap (thing)|安い
+# な-adjectives
+すき（な）|suki|fond of; to like (〜が)|好き
+きらい（な）|kirai|disgusted with; to dislike (〜が)|嫌い
+だいすき（な）|daisuki|very fond of; to love (〜が)|大好き
+だいきらい（な）|daikirai|to hate (〜が)|大嫌い
+きれい（な）|kirei|beautiful; clean
+げんき（な）|genki|healthy; energetic|元気
+しずか（な）|shizuka|quiet|静か
+にぎやか（な）|nigiyaka|lively
+ひま（な）|hima|not busy; free (time)|暇
+# U-verbs
+およぐ|oyogu|to swim|泳ぐ
+きく|kiku|to ask (person に)|聞く
+のる|noru|to ride; to board (〜に)|乗る
+やる|yaru|to do; to perform (〜を)
+# Ru-verb
+でかける|dekakeru|to go out|出かける
+# Adverbs and Other Expressions
+いっしょに|issho ni|together|一緒に
 すごく|sugoku|extremely
+だいじょうぶ|daijoobu|It's okay.; Not to worry.; Everything is under control.|大丈夫
 とても|totemo|very
-だいじょうぶ|daijoubu/daijobu|It's okay; Not to worry
 どんな|donna|what kind of...
-〜まい|mai|counter for flat objects
-まで|made|until; up to (a place or time)`);
+〜まい|mai|[counter for flat objects]|〜枚`);
+
+const vocab6 = vocab(`
+# Nouns
+かんじ|kanji|kanji; Chinese character|漢字
+きょうかしょ|kyookasho|textbook|教科書
+ページ|peeji|page
+つぎ|tsugi|next|次
+おかね|okane|money|お金
+にもつ|nimotsu|baggage|荷物
+パソコン|pasokon|personal computer
+シャワー|shawaa|shower
+エアコン|eakon|air conditioner
+でんき|denki|electricity; light|電気
+まど|mado|window|窓
+でんしゃ|densha|train|電車
+くに|kuni|country; place of origin|国
+こんしゅう|konshuu|this week|今週
+らいしゅう|raishuu|next week|来週
+らいねん|rainen|next year|来年
+よる|yoru|night|夜
+# な-adjective
+たいへん（な）|taihen|tough (situation)|大変
+# U-verbs
+あそぶ|asobu|to play; to spend time pleasantly|遊ぶ
+いそぐ|isogu|to hurry|急ぐ
+かえす|kaesu|to return (a thing) (person に thing を)|返す
+けす|kesu|to turn off; to erase (〜を)|消す
+しぬ|shinu|to die|死ぬ
+すわる|suwaru|to sit down (seat に)|座る
+たつ|tatsu|to stand up|立つ
+たばこをすう|tabako o suu|to smoke|たばこを吸う
+つかう|tsukau|to use (〜を)|使う
+てつだう|tetsudau|to help (person/task を)|手伝う
+はいる|hairu|to enter (〜に)|入る
+もつ|motsu|to carry; to hold (〜を)|持つ
+やすむ|yasumu|(1) to be absent (from...) (2) to rest (〜を)|休む
+# Ru-verbs
+あける|akeru|to open (something) (〜を)|開ける
+しめる|shimeru|to close (something) (〜を)|閉める
+おしえる|oshieru|to teach; to instruct (person に thing を)|教える
+わすれる|wasureru|to forget; to leave behind (〜を)|忘れる
+おりる|oriru|to get off (〜を)|降りる
+かりる|kariru|to borrow (person に thing を)|借りる
+シャワーをあびる|shawaa o abiru|to take a shower|シャワーを浴びる
+つける|tsukeru|to turn on (〜を)
+# Irregular Verbs
+でんわする|denwa suru|to call (〜に)|電話する
+つれてくる|tsurete kuru|to bring (a person) (〜を)|連れてくる
+もってくる|motte kuru|to bring (a thing) (〜を)|持ってくる
+# Adverbs and Other Expressions
+あとで|atode|later on|後で
+すぐ|sugu|right away
+ゆっくり|yukkuri|slowly; leisurely; unhurriedly
+けっこうです|kekkoo desu|That would be fine.; That wouldn't be necessary.|結構です
+ほんとうですか|hontoo desu ka|Really?|本当ですか`);
 
 const numbers = vocab(`
 ゼロ|zero/rei|0
@@ -371,7 +561,6 @@ const numbers = vocab(`
 いちまん|ichiman|10,000`);
 
 const numbersKanji = vocab(`
-零|zero/rei|0 · ゼロ
 一|ichi|1 · いち
 二|ni|2 · に
 三|san|3 · さん
@@ -382,47 +571,60 @@ const numbersKanji = vocab(`
 八|hachi|8 · はち
 九|kyuu/ku|9 · きゅう
 十|juu|10 · じゅう
-十一|juuichi|11 · じゅういち
-十二|juuni|12 · じゅうに
-十五|juugo|15 · じゅうご
-二十|nijuu|20 · にじゅう
-三十|sanjuu|30 · さんじゅう
-四十|yonjuu/shijuu|40 · よんじゅう
-五十|gojuu|50 · ごじゅう
-六十|rokujuu|60 · ろくじゅう
-七十|nanajuu/shichijuu|70 · ななじゅう
-八十|hachijuu|80 · はちじゅう
-九十|kyuujuu|90 · きゅうじゅう
 百|hyaku|100 · ひゃく
-二百|nihyaku|200 · にひゃく
-三百|sanbyaku|300 · さんびゃく
-四百|yonhyaku|400 · よんひゃく
-五百|gohyaku|500 · ごひゃく
-六百|roppyaku|600 · ろっぴゃく
-七百|nanahyaku|700 · ななひゃく
-八百|happyaku|800 · はっぴゃく
-九百|kyuuhyaku|900 · きゅうひゃく
 千|sen|1,000 · せん
-二千|nisen|2,000 · にせん
-三千|sanzen|3,000 · さんぜん
-八千|hassen|8,000 · はっせん
-一万|ichiman|10,000 · いちまん`);
+一万|ichiman/man|10,000 · いちまん
+十万|juuman|100,000 · じゅうまん
+百万|hyakuman|1,000,000 · ひゃくまん`);
 
 const kanji4 = vocab(`
-日|nichi/hi|day; sun
-本|hon/moto|book; basis
-人|jin/nin/hito|person
-上|jou/ue/shou|up; above
-下|ka/ge/shita|down; below
-中|chuu/naka|middle; inside
-半|han|half
-月|getsu/tsuki|moon; month (Monday)
-火|ka/hi|fire (Tuesday)
-水|sui/mizu|water (Wednesday)
-木|moku/ki|tree; wood (Thursday)
-金|kin/kane|gold; money (Friday)
-土|do/tsuchi|earth; soil (Saturday)
-曜|you|day of the week
+# Numbers, Yen and Time
+一|ichi/hito|one|▶ いち いっ  ▷ ひと
+二|ni/futa|two|▶ に  ▷ ふた
+三|san/mitsu/mi|three|▶ さん  ▷ みっ|san
+四|shi/yon/yo|four|▶ し  ▷ よん よ よっ
+五|go/itsu|five|▶ ご  ▷ いつ
+六|roku/mutsu/mu|six|▶ ろく ろっ  ▷ むっ|roku
+七|shichi/nana|seven|▶ しち  ▷ なな
+八|hachi/yatsu/ya|eight|▶ はち はっ  ▷ やっ|hachi
+九|kyuu/ku/kokono|nine|▶ きゅう く  ▷ ここの
+十|juu/too|ten|▶ じゅう じゅっ じっ  ▷ とお
+百|hyaku/byaku/pyaku|hundred|▶ ひゃく びゃく ぴゃく
+千|sen/zen|thousand|▶ せん ぜん
+万|man|ten thousand|▶ まん
+円|en/maru|yen; circle|▶ えん  ▷ まる
+時|ji/toki|time|▶ じ  ▷ とき
+# Day, Weekday and Position
+日|ni/nichi/bi/hi/ka|day; sun|▶ に にち にっ  ▷ び ひ か
+本|hon/moto|book; basis|▶ ほん  ▷ もと
+人|jin/nin/hito|person|▶ じん にん  ▷ ひと
+月|getsu/gatsu/tsuki|moon; month|▶ げつ がつ  ▷ つき
+火|ka/hi/bi|fire|▶ か  ▷ ひ び
+水|sui/mizu|water|▶ すい  ▷ みず
+木|moku/ki|tree|▶ もく  ▷ き
+金|kin/kane|gold; money|▶ きん  ▷ かね
+土|do/to/tsuchi|soil|▶ ど と  ▷ つち
+曜|you|weekday|▶ よう
+上|jou/ue/nobo|up|▶ じょう  ▷ うえ のぼ
+下|ka/shita/kuda|down|▶ か  ▷ した くだ
+中|chuu/juu/naka|middle|▶ ちゅう じゅう  ▷ なか
+半|han|half|▶ はん
+# More Kanji
+山|san/yama|mountain|▶ さん  ▷ やま
+川|kawa/gawa|river|▷ かわ がわ
+元|gen/gan/moto|origin|▶ げん がん  ▷ もと
+気|ki|spirit|▶ き
+天|ten|heaven|▶ てん
+私|shi/watashi|I; private|▶ し  ▷ わたし
+今|kon/ima|now|▶ こん  ▷ いま
+田|ta/da|rice field|▷ た だ
+女|jo/onna|woman|▶ じょ  ▷ おんな
+男|dan/otoko|man|▶ だん  ▷ おとこ
+見|ken/mi|to see|▶ けん  ▷ み
+行|kou/gyou/i|to go|▶ こう ぎょう  ▷ い
+食|shoku/ta|to eat|▶ しょく  ▷ た
+飲|in/no|to drink|▶ いん  ▷ の
+# Days of the week
 月曜日|getsuyoubi|Monday
 火曜日|kayoubi|Tuesday
 水曜日|suiyoubi|Wednesday
@@ -475,24 +677,20 @@ const midtermKatakana = vocab(`
 
 const misc = vocab(`
 くるま|kuruma|car
-おかね|okane|money
 しつもん|shitsumon|question
 こいびと|koibito|lover
 れいぞうこ|reizouko/reizoko|refrigerator; fridge
 ゆめ|yume|dream; fantasy
 どうぶつ|doubutsu/dobutsu|animal
-へや|heya|room
 き|ki|tree
 いいですね|iidesune|sounds good
 ぜひ|zehi|absolutely
-ちょっと|chotto/chootto|a little; (polite decline)
 すしや|sushiya|sushi restaurant
 キス|kisu|kiss
 かぎ|kagi|key
 かみ|kami|paper
 ドル|doru|dollar
-しゅっしん|shusshin|birthplace
-どうですか|doudesuka/dodesuka|how about...; how is...?`);
+しゅっしん|shusshin|birthplace`);
 
 const sentences = vocab(`
 わたしはがくせいです。|watashi wa gakusei desu|I am a student.
@@ -582,20 +780,75 @@ const particles = vocab(`
 へや（ ）ねます。|de|で · I sleep in the room.`);
 
 const seen = new Set();
-const allVocabs = [...vocab1, ...vocab2, ...vocab3, ...vocab4, ...vocab5].filter(x => {
+const allVocabs = [...vocab1, ...vocab2, ...vocab3, ...vocab4, ...vocab5, ...vocab6].filter(x => {
   const k = x.c + x.t.toLowerCase();
   return seen.has(k) ? false : seen.add(k);
 });
 
 const LISTS = {
   "All Alphabets": [...hiragana, ...katakana],
-  "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers, "Numbers (Kanji)": numbersKanji, "Lesson 4 Kanji": kanji4, "Midterm Katakana": midtermKatakana, "Misc": misc, "Sentences": sentences,
-  "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3, "Vocab 4": vocab4, "Vocab 5": vocab5,
+  "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers, "Numbers (Kanji)": numbersKanji, "Kanji": kanji4, "Midterm Katakana": midtermKatakana, "Misc vocab": misc, "Sentences": sentences,
+  "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3, "Vocab 4": vocab4, "Vocab 5": vocab5, "Vocab 6": vocab6,
   "All Vocabs": allVocabs,
   "Particles": particles
 };
 const LONG = new Set(["Sentences"]);
 const MID = new Set(["Particles"]);
+const SHOW_ALL = new Set(["Kanji"]);   // sets whose answer display lists every accepted reading
+const shown = x => SHOW_ALL.has(typeEl.value) ? x.a.join(" / ") : x.a[0];
+
+/* ---------- FULL REVIEW (overlay with every set, categorized, in order) ---------- */
+const REVIEW = [
+  ["Alphabets", [["Hiragana", hiragana, true], ["Katakana", katakana, true]]],
+  ["Numbers", [["Numbers", numbers], ["Numbers (Kanji)", numbersKanji]]],
+  ["Vocabulary", [["Lesson 1 Vocabulary", vocab1], ["Lesson 2 Vocabulary", vocab2], ["Lesson 3 Vocabulary", vocab3], ["Lesson 4 Vocabulary", vocab4], ["Lesson 5 Vocabulary", vocab5], ["Lesson 6 Vocabulary", vocab6]]],
+  ["Kanji", [["Kanji", kanji4]]],
+  ["Katakana", [["Midterm Katakana", midtermKatakana]]],
+  ["Misc vocab", [["Misc vocab", misc]]],
+  ["Sentences", [["Sentences", sentences]]],
+  ["Particles", [["Particles", particles]]]
+];
+const mkEl = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+let reviewBuilt = false;
+function buildReview() {
+  if (reviewBuilt) return;
+  reviewBuilt = true;
+  for (const [cat, sets] of REVIEW) {
+    reviewBody.append(mkEl("div", "rv-cat", cat));
+    for (const [name, list, tiles] of sets) {
+      const d = mkEl("details", "rv"), sm = mkEl("summary");
+      sm.append(mkEl("span", null, name), mkEl("span", "n", list.length + " items"));
+      d.append(sm);
+      if (tiles) {
+        const box = mkEl("div", "rv-tiles");
+        list.forEach(x => { const t = mkEl("div", "rv-tile"); t.append(mkEl("b", null, x.c), mkEl("i", null, x.a[0])); box.append(t); });
+        d.append(box);
+      } else {
+        const box = mkEl("div", "rv-rows");
+        let lastG = "";
+        list.forEach(x => {
+          if (x.g && x.g !== lastG) { box.append(mkEl("div", "rv-group", x.g)); lastG = x.g; }
+          const row = mkEl("div", "rv-row" + ((x.c.length > 8 || (x.k && x.k.length > 8)) ? " wide" : "")), right = mkEl("div");
+          right.append(mkEl("div", "rv-ro", (x.r || x.a).join(" / ")), mkEl("div", "rv-en", x.t || ""));
+          const jp = mkEl("div", "rv-jp", x.c); if (x.k) jp.append(mkEl("span", "rv-k", x.k)); row.append(jp, right);
+          box.append(row);
+        });
+        d.append(box);
+      }
+      reviewBody.append(d);
+    }
+  }
+}
+function setReview(open) {
+  reviewBox.hidden = !open;
+  reviewToggle.textContent = open ? "Close review" : "Open review";
+}
+function applyReviewMode() {
+  const on = isReview();
+  document.querySelector(".app").classList.toggle("review", on);
+  reviewToggle.hidden = !on;
+  if (on) { buildReview(); setReview(true); } else reviewBox.hidden = true;
+}
 
 /* ---------- ELEMENTS ---------- */
 const $ = id => document.getElementById(id);
@@ -604,6 +857,7 @@ const charEl = $("character"), ansEl = $("correctAnswer"), transEl = $("translat
 const answer = $("answer"), startBtn = $("startButton"), timeEl = $("time"), scoreEl = $("score");
 const bar = $("bar"), hint = $("hint"), card = $("card"), pauseBtn = $("pauseButton");
 const HINT = hint.textContent;
+const reviewBox = $("reviewBox"), reviewBody = $("reviewBody"), reviewToggle = $("reviewToggle");
 
 /* ---------- STATE ---------- */
 let running = false, waiting = false, paused = false, pauseAt = 0, step = null;
@@ -612,7 +866,11 @@ let charTimer, fbTimer, stopTimer, tick;
 let startTime = 0, correct = 0, total = 0;
 let missed = new Map();
 
-const isTyping = () => modeEl.value === "Typing";
+const isReview = () => modeEl.value === "Full Review";
+const isTyping = () => modeEl.value.startsWith("Typing");
+const isReverse = () => modeEl.value === "Typing (English → Romaji)";
+// English -> romaji applies to every set except Particles (its prompt is the sentence with a blank)
+const eng = () => isReverse() && typeEl.value !== "Particles";
 const getList = () => LISTS[typeEl.value] || hiragana;
 const defaultSpeed = () => { const t = typeEl.value, sn = LONG.has(t), md = MID.has(t); return isTyping() ? (sn ? 25 : md ? 12 : 8) : (sn ? 6 : md ? 5 : 3); };
 const fit = () => { const n = charEl.textContent.length; charEl.style.fontSize = n > 12 ? "30px" : n > 6 ? "42px" : ""; };
@@ -629,6 +887,12 @@ const normalize = s => s.toLowerCase()
   .replace(/ō/g, "oo").replace(/ū/g, "uu")
   .replace(/[^a-z]/g, "")
   .replace(/ou/g, "oo").replace(/ei/g, "ee").replace(/wo/g, "o");
+
+// English -> romaji: cards with an English meaning show it; kana cards without one show the character.
+const promptOf = x => x.t || x.c;
+const keyOf = x => promptOf(x).toLowerCase();
+// accepts the romaji of any card that shares the same prompt (e.g. two words that both mean "yes")
+const matchesRomaji = val => { const n = normalize(val), k = keyOf(current); return getList().some(x => keyOf(x) === k && x.a.some(y => normalize(y) === n)); };
 
 /* ---------- DECK (shuffled, no repeats until all seen) ---------- */
 function draw() {
@@ -728,7 +992,7 @@ function showNext() {
   waiting = false; hint.hidden = true;
 
   current = draw(); previous = current;
-  charEl.textContent = current.c; fit();
+  charEl.textContent = eng() ? promptOf(current) : current.c; fit();
   ansEl.textContent = ""; transEl.textContent = "";
   answer.value = ""; answer.className = "";
 
@@ -749,7 +1013,7 @@ function showNext() {
 function showFlashingAnswer() {
   if (!running) return;
   total++; updateScore();
-  ansEl.textContent = current.a[0];
+  ansEl.textContent = shown(current);
   transEl.textContent = current.t || "";
   resetBar();
   schedule(() => running && showNext(), LONG.has(typeEl.value) ? 1500 : 900);
@@ -761,8 +1025,7 @@ function checkAnswer() {
   if (!val) return;
   clearTimeout(charTimer);
   total++;
-  const n = normalize(val);
-  reveal(current.a.some(x => normalize(x) === n));
+  reveal(eng() ? matchesRomaji(val) : current.a.some(x => normalize(x) === normalize(val)));
 }
 
 function reveal(ok) {
@@ -775,8 +1038,8 @@ function reveal(ok) {
     // bring it back in a few cards
     deck.splice(Math.max(0, deck.length - 3 - Math.floor(Math.random() * 3)), 0, current);
   }
-  ansEl.textContent = current.a[0];
-  transEl.textContent = current.t || "";
+  ansEl.textContent = shown(current);
+  transEl.textContent = eng() ? current.c : (current.t || "");
   hint.hidden = false;
   updateScore();
 }
@@ -803,6 +1066,7 @@ function save() {
 }
 
 function syncUI() {
+  applyReviewMode();
   timerEl.disabled = isTyping();
   charEl.textContent = getList()[0].c; fit();
   ansEl.textContent = ""; transEl.textContent = "";
@@ -840,12 +1104,18 @@ card.addEventListener("click", () => {
   else togglePause();
 });
 pauseBtn.addEventListener("click", togglePause);
-document.addEventListener("keydown", e => { if (e.key === "Escape" && running) stop(); });
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (running) stop(); else if (isReview() && !reviewBox.hidden) setReview(false);
+});
+reviewToggle.addEventListener("click", () => setReview(reviewBox.hidden));
+$("rvExpand").addEventListener("click", () => reviewBody.querySelectorAll("details").forEach(d => d.open = true));
+$("rvCollapse").addEventListener("click", () => reviewBody.querySelectorAll("details").forEach(d => d.open = false));
 
 /* ---------- INIT ---------- */
 try {
   const s = JSON.parse(localStorage.getItem("jp-practice") || "null");
-  if (s) { if (s.m === "Flashing Text" || s.m === "Typing") modeEl.value = s.m; typeEl.value = s.t; speedEl.value = s.s; timerEl.value = s.r; }
+  if (s) { if (["Flashing Text", "Typing", "Typing (English → Romaji)", "Full Review"].includes(s.m)) modeEl.value = s.m; typeEl.value = s.t; speedEl.value = s.s; timerEl.value = s.r; }
 } catch (e) {}
 if (!LISTS[typeEl.value]) typeEl.value = "All Alphabets";
 syncUI();
