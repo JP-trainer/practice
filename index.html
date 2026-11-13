@@ -57,6 +57,8 @@ details.rv>summary .n{font-weight:400;font-size:13px;color:var(--mute)}
 .rv-row{display:grid;grid-template-columns:minmax(90px,38%) 1fr;gap:2px 10px;align-items:baseline;padding:7px 0;border-top:1px solid var(--line)}
 .rv-row.wide{grid-template-columns:1fr}
 .rv-jp{font-family:"Klee One","UD Digi Kyokasho N-R",system-ui,"Hiragino Sans","Noto Sans JP",sans-serif;font-size:20px;font-weight:600;overflow-wrap:anywhere}
+.rv-star{margin-left:2px;font-size:.5em;vertical-align:top;color:var(--accent);font-weight:700}
+.star{margin-left:3px;font-size:.3em;vertical-align:top;color:var(--accent);font-weight:700}
 .rv-k{margin-left:8px;font-size:15px;font-weight:400;color:var(--mute)}
 .rv-ro{font-weight:600;color:var(--ok)}
 .rv-en{font-size:14px;color:var(--mute)}
@@ -116,27 +118,28 @@ const ROM = "a i u e o ka ki ku ke ko sa shi/si su se so ta chi/ti tsu/tu te to 
 const kana = s => [...s].map((c, i) => ({ c, a: ROM[i].split("/") }));
 const vocab = s => { let g = ""; return s.trim().split("\n").flatMap(l => {
   if (l.startsWith("#")) { g = l.slice(1).trim(); return []; }   // "# School" = sub-category heading
-  const [c, a, t, k, r] = l.split("|"); return [{ c, a: a.split("/"), t, g, k, r: r ? r.split("/") : null }];
+  const star = l.startsWith("*"); if (star) l = l.slice(1);          // "*だいがく|..." = starred in the textbook
+  const [c, a, t, k, r] = l.split("|"); return [{ c, a: a.split("/"), t, g, k, r: r ? r.split("/") : null, star }];
 }); };
 
 const hiragana = kana(HIRA), katakana = kana(KATA);
 
 const vocab1 = vocab(`
 # School
-だいがく|daigaku|college; university
+*だいがく|daigaku|college; university
 こうこう|kookoo|high school
-がくせい|gakusee|student
+*がくせい|gakusee|student
 だいがくせい|daigakusee|college student
-りゅうがくせい|ryuugakusee|international student
+*りゅうがくせい|ryuugakusee|international student
 せんせい|sensee|teacher; Professor...
-〜ねんせい|nensee|...year student
+*〜ねんせい|nensee|...year student
 いちねんせい|ichinensee|first-year student
-せんこう|senkoo|major
+*せんこう|senkoo|major
 # Person
 わたし|watashi|I
 ともだち|tomodachi|friend
 〜さん|san|Mr./Ms....
-〜じん|jin|...people
+*〜じん|jin|...people
 にほんじん|nihonjin|Japanese people
 # Time
 いま|ima|now
@@ -147,22 +150,22 @@ const vocab1 = vocab(`
 はん|han|half
 にじはん|niji han|half past two
 # Others
-にほん|Nihon|Japan
+*にほん|Nihon|Japan
 アメリカ|Amerika|U.S.A.
-〜ご|go|...language
+*〜ご|go|...language
 にほんご|nihongo|Japanese language
-〜さい|sai|...years old
+*〜さい|sai|...years old
 でんわ|denwa|telephone
 〜ばん|ban|number...
 ばんごう|bangoo|number
 なまえ|namae|name
-なん|nan|what
-なに|nani|what
+*なん|nan|what
+*なに|nani|what
 # Expressions
-あのう|anoo|um...
+*あのう|anoo|um...
 はい|hai|yes
 そうです|soo desu|That's right.
-そうですか|soo desu ka|I see.; Is that so?
+*そうですか|soo desu ka|I see.; Is that so?
 # Additional Vocabulary · Countries (くに kuni)
 イギリス|Igirisu|Britain
 オーストラリア|Oosutoraria|Australia
@@ -201,37 +204,37 @@ const vocab1 = vocab(`
 
 const vocab2 = vocab(`
 # Words That Point
-これ|kore|this one
-それ|sore|that one
-あれ|are|that one (over there)
-どれ|dore|which one
+*これ|kore|this one
+*それ|sore|that one
+*あれ|are|that one (over there)
+*どれ|dore|which one
 この|kono|this...
-その|sono|that...
-あの|ano|that... (over there)
+*その|sono|that...
+*あの|ano|that... (over there)
 どの|dono|which...
 ここ|koko|here
 そこ|soko|there
-あそこ|asoko|over there
-どこ|doko|where
-だれ|dare|who
+*あそこ|asoko|over there
+*どこ|doko|where
+*だれ|dare|who
 # Food
-おいしい|oishii|delicious
-さかな|sakana|fish
-とんかつ|tonkatsu|pork cutlet
-にく|niku|meat
-メニュー|menyuu|menu
+*おいしい|oishii|delicious
+*さかな|sakana|fish
+*とんかつ|tonkatsu|pork cutlet
+*にく|niku|meat
+*メニュー|menyuu|menu
 やさい|yasai|vegetable
 # Things
 かさ|kasa|umbrella
 かばん|kaban|bag
 くつ|kutsu|shoes
-さいふ|saifu|wallet
+*さいふ|saifu|wallet
 ジーンズ|jiinzu|jeans
 じてんしゃ|jitensha|bicycle
 しんぶん|shinbun|newspaper
 スマホ|sumaho|smartphone; mobile
 Tシャツ|tiishatsu/teishatsu/Tshatsu|T-shirt
-とけい|tokee|watch; clock
+*とけい|tokee|watch; clock
 ノート|nooto|notebook
 ペン|pen|pen
 ぼうし|booshi|hat; cap
@@ -239,7 +242,7 @@ Tシャツ|tiishatsu/teishatsu/Tshatsu|T-shirt
 # Places
 ぎんこう|ginkoo|bank
 コンビニ|konbini|convenience store
-トイレ|toire|toilet; restroom
+*トイレ|toire|toilet; restroom
 としょかん|toshokan|library
 ゆうびんきょく|yuubinkyoku|post office
 # Countries
@@ -256,20 +259,20 @@ Tシャツ|tiishatsu/teishatsu/Tshatsu|T-shirt
 おかあさん|okaasan|mother
 おとうさん|otoosan|father
 # Money Matters
-いくら|ikura|how much
-〜えん|en|...yen
-たかい|takai|expensive; high
+*いくら|ikura|how much
+*〜えん|en|...yen
+*たかい|takai|expensive; high
 # Expressions
-いらっしゃいませ|irasshaimase|Welcome (to our store).
-（〜を）おねがいします|onegaishimasu/o onegaishimasu|..., please.
-（〜を）ください|kudasai/o kudasai|Please give me...
-じゃあ|jaa|then...; if that is the case,...
-どうぞ|doozo|Please.; Here it is.
-どうも|doomo|Thank you.`);
+*いらっしゃいませ|irasshaimase|Welcome (to our store).
+*（〜を）おねがいします|onegaishimasu/o onegaishimasu|..., please.
+*（〜を）ください|kudasai/o kudasai|Please give me...
+*じゃあ|jaa|then...; if that is the case,...
+*どうぞ|doozo|Please.; Here it is.
+*どうも|doomo|Thank you.`);
 
 const vocab3 = vocab(`
 # Nouns · Entertainment and Sports
-えいが|eiga|movie|映画
+*えいが|eiga|movie|映画
 おんがく|ongaku|music|音楽
 ざっし|zasshi|magazine|雑誌
 スポーツ|supootsu|sports
@@ -285,55 +288,55 @@ const vocab3 = vocab(`
 みず|mizu|water|水
 あさごはん|asagohan|breakfast|朝ご飯
 ひるごはん|hirugohan|lunch|昼ご飯
-ばんごはん|bangohan|dinner|晩ご飯
+*ばんごはん|bangohan|dinner|晩ご飯
 # Nouns · Places
 いえ|ie|home; house|家
-うち|uchi|home; house; my place
+*うち|uchi|home; house; my place
 がっこう|gakkoo|school|学校
 カフェ|kafe|cafe
 # Nouns · Time
 あした|ashita|tomorrow|明日
-きょう|kyoo|today|今日
+*きょう|kyoo|today|今日
 あさ|asa|morning|朝
 こんばん|konban|tonight|今晩
 まいにち|mainichi|every day|毎日
 まいばん|maiban|every night|毎晩
-しゅうまつ|shuumatsu|weekend|週末
-どようび|doyoobi|Saturday|土曜日
-にちようび|nichiyoobi|Sunday|日曜日
+*しゅうまつ|shuumatsu|weekend|週末
+*どようび|doyoobi|Saturday|土曜日
+*にちようび|nichiyoobi|Sunday|日曜日
 いつ|itsu|when
-〜ごろ|goro|at about...
+*〜ごろ|goro|at about...
 # U-verbs
-いく|iku|to go (destination に/へ)|行く
-かえる|kaeru|to go back; to return (destination に/へ)|帰る
+*いく|iku|to go (destination に/へ)|行く
+*かえる|kaeru|to go back; to return (destination に/へ)|帰る
 きく|kiku|to listen; to hear (〜を)|聞く
 のむ|nomu|to drink (〜を)|飲む
 はなす|hanasu|to speak; to talk (language を/で)|話す
 よむ|yomu|to read (〜を)|読む
 # Ru-verbs
 おきる|okiru|to get up|起きる
-たべる|taberu|to eat (〜を)|食べる
+*たべる|taberu|to eat (〜を)|食べる
 ねる|neru|to sleep; to go to sleep|寝る
-みる|miru|to see; to look at; to watch (〜を)|見る
+*みる|miru|to see; to look at; to watch (〜を)|見る
 # Irregular Verbs
 くる|kuru|to come (destination に/へ)|来る
-する|suru|to do (〜を)
-べんきょうする|benkyoo suru|to study (〜を)|勉強する
+*する|suru|to do (〜を)
+*べんきょうする|benkyoo suru|to study (〜を)|勉強する
 # Adjectives
-いい|ii|good
-はやい|hayai|early|早い
+*いい|ii|good
+*はやい|hayai|early|早い
 # Adverbs
 あまり + negative|amari|not much
 ぜんぜん + negative|zenzen|not at all|全然
-たいてい|taitei|usually
-ちょっと|chotto|a little
-ときどき|tokidoki|sometimes|時々
+*たいてい|taitei|usually
+*ちょっと|chotto|a little
+*ときどき|tokidoki|sometimes|時々
 よく|yoku|often; much
 # Expressions
-そうですね|soo desu ne|That's right.; Let me see.
-でも|demo|but
-どうですか|doo desu ka|How about...?; How is...?
-ええ|ee|yes`);
+*そうですね|soo desu ne|That's right.; Let me see.
+*でも|demo|but
+*どうですか|doo desu ka|How about...?; How is...?
+*ええ|ee|yes`);
 
 const vocab4 = vocab(`
 # Nouns · Activities
@@ -344,29 +347,29 @@ const vocab4 = vocab(`
 # Nouns · People and Things
 いぬ|inu|dog|犬
 ねこ|neko|cat|猫
-ひと|hito|person|人
+*ひと|hito|person|人
 こども|kodomo|child|子供
 あなた|anata|you
 いす|isu|chair
 つくえ|tsukue/tukue|desk|机
-しゃしん|shashin|picture; photograph|写真
+*しゃしん|shashin|picture; photograph|写真
 はな|hana|flower|花
 レポート|repooto|(term) paper
 ごはん|gohan|rice; meal|ご飯
 パン|pan|bread
 # Nouns · Places
-おてら|otera|temple|お寺
-こうえん|kooen|park|公園
+*おてら|otera|temple|お寺
+*こうえん|kooen|park|公園
 スーパー|suupaa|supermarket
 バスてい|basutei|bus stop|バス停
 びょういん|byooin|hospital|病院
-ホテル|hoteru|hotel
-ほんや|honya|bookstore|本屋
+*ホテル|hoteru|hotel
+*ほんや|honya|bookstore|本屋
 まち|machi|town; city|町
 レストラン|resutoran|restaurant
 # Nouns · Time
 きのう|kinoo|yesterday|昨日
-〜じかん|jikan|...hours|〜時間
+*〜じかん|jikan|...hours|〜時間
 いちじかん|ichijikan|one hour|一時間
 せんしゅう|senshuu|last week|先週
 とき|toki|when...; at the time of... (〜の)|時
@@ -377,28 +380,28 @@ const vocab4 = vocab(`
 きんようび|kinyoobi|Friday|金曜日
 # U-verbs
 あう|au|to meet; to see (a person) (person に)|会う
-ある|aru|there is... (place に thing が)
+*ある|aru|there is... (place に thing が)
 かう|kau|to buy (〜を)|買う
 かく|kaku|to write (person に thing を)|書く
-とる|toru|to take (a picture) (〜を)|撮る
-まつ|matsu|to wait (〜を)|待つ
-わかる|wakaru|to understand (〜が)
+*とる|toru|to take (a picture) (〜を)|撮る
+*まつ|matsu|to wait (〜を)|待つ
+*わかる|wakaru|to understand (〜が)
 # Ru-verb
-いる|iru|(a person) is in...; stays at... (place に person が)
+*いる|iru|(a person) is in...; stays at... (place に person が)
 # Adverbs and Other Expressions
 〜ぐらい|gurai|about (approximate measurement)
-ごめんなさい|gomennasai|I'm sorry.
+*ごめんなさい|gomennasai|I'm sorry.
 それから|sorekara|and then
-だから|dakara|so; therefore
-たくさん|takusan|many; a lot
-〜と|to|together with (a person); and
-どうして|dooshite|why
-ひとりで|hitoride|alone|一人で
-もしもし|moshimoshi|Hello? (used on the phone)
+*だから|dakara|so; therefore
+*たくさん|takusan|many; a lot
+*〜と|to|together with (a person); and
+*どうして|dooshite|why
+*ひとりで|hitoride|alone|一人で
+*もしもし|moshimoshi|Hello? (used on the phone)
 # Location Words
 みぎ|migi|right (〜の)|右
 ひだり|hidari|left (〜の)|左
-まえ|mae|front (〜の)|前
+*まえ|mae|front (〜の)|前
 うしろ|ushiro|back (〜の)|後ろ
 なか|naka|inside (〜の)|中
 うえ|ue|on (〜の)|上
@@ -413,22 +416,22 @@ const vocab5 = vocab(`
 のみもの|nomimono|drink|飲み物
 くだもの|kudamono|fruit|果物
 やすみ|yasumi|holiday; day off; absence|休み
-りょこう|ryokoo|travel|旅行
-うみ|umi|sea|海
-サーフィン|saafin|surfing
-おみやげ|omiyage|souvenir|お土産
+*りょこう|ryokoo|travel|旅行
+*うみ|umi|sea|海
+*サーフィン|saafin|surfing
+*おみやげ|omiyage|souvenir|お土産
 バス|basu|bus
-てんき|tenki|weather|天気
+*てんき|tenki|weather|天気
 しゅくだい|shukudai|homework|宿題
 テスト|tesuto|test
 たんじょうび|tanjoobi|birthday|誕生日
 へや|heya|room|部屋
-ぼく|boku|I (used by men)|僕
-Lサイズ（エルサイズ）|erusaizu/Lsaizu|size L
+*ぼく|boku|I (used by men)|僕
+*Lサイズ（エルサイズ）|erusaizu/Lsaizu|size L
 # い-adjectives
 あたらしい|atarashii|new|新しい
 ふるい|furui|old (thing—not used for people)|古い
-あつい|atsui|hot (weather)|暑い
+*あつい|atsui|hot (weather)|暑い
 さむい|samui|cold (weather—not used for things)|寒い
 あつい|atsui|hot (thing)|熱い
 いそがしい|isogashii|busy (people/days)|忙しい
@@ -437,44 +440,44 @@ Lサイズ（エルサイズ）|erusaizu/Lsaizu|size L
 おもしろい|omoshiroi|interesting; funny|面白い
 つまらない|tsumaranai|boring
 やさしい|yasashii|easy (problem); kind (person)
-むずかしい|muzukashii|difficult|難しい
+*むずかしい|muzukashii|difficult|難しい
 かっこいい|kakkoii|good-looking (conjugates like いい)
 こわい|kowai|frightening|怖い
-たのしい|tanoshii|fun|楽しい
+*たのしい|tanoshii|fun|楽しい
 やすい|yasui|inexpensive; cheap (thing)|安い
 # な-adjectives
-すき（な）|suki|fond of; to like (〜が)|好き
+*すき（な）|suki|fond of; to like (〜が)|好き
 きらい（な）|kirai|disgusted with; to dislike (〜が)|嫌い
-だいすき（な）|daisuki|very fond of; to love (〜が)|大好き
+*だいすき（な）|daisuki|very fond of; to love (〜が)|大好き
 だいきらい（な）|daikirai|to hate (〜が)|大嫌い
-きれい（な）|kirei|beautiful; clean
+*きれい（な）|kirei|beautiful; clean
 げんき（な）|genki|healthy; energetic|元気
 しずか（な）|shizuka|quiet|静か
 にぎやか（な）|nigiyaka|lively
 ひま（な）|hima|not busy; free (time)|暇
 # U-verbs
-およぐ|oyogu|to swim|泳ぐ
+*およぐ|oyogu|to swim|泳ぐ
 きく|kiku|to ask (person に)|聞く
 のる|noru|to ride; to board (〜に)|乗る
-やる|yaru|to do; to perform (〜を)
+*やる|yaru|to do; to perform (〜を)
 # Ru-verb
 でかける|dekakeru|to go out|出かける
 # Adverbs and Other Expressions
-いっしょに|issho ni|together|一緒に
-すごく|sugoku|extremely
-だいじょうぶ|daijoobu|It's okay.; Not to worry.; Everything is under control.|大丈夫
+*いっしょに|issho ni|together|一緒に
+*すごく|sugoku|extremely
+*だいじょうぶ|daijoobu|It's okay.; Not to worry.; Everything is under control.|大丈夫
 とても|totemo|very
-どんな|donna|what kind of...
-〜まい|mai|[counter for flat objects]|〜枚`);
+*どんな|donna|what kind of...
+*〜まい|mai|[counter for flat objects]|〜枚`);
 
 const vocab6 = vocab(`
 # Nouns
 かんじ|kanji|kanji; Chinese character|漢字
-きょうかしょ|kyookasho|textbook|教科書
-ページ|peeji|page
-つぎ|tsugi|next|次
+*きょうかしょ|kyookasho|textbook|教科書
+*ページ|peeji|page
+*つぎ|tsugi|next|次
 おかね|okane|money|お金
-にもつ|nimotsu|baggage|荷物
+*にもつ|nimotsu|baggage|荷物
 パソコン|pasokon|personal computer
 シャワー|shawaa|shower
 エアコン|eakon|air conditioner
@@ -487,40 +490,40 @@ const vocab6 = vocab(`
 らいねん|rainen|next year|来年
 よる|yoru|night|夜
 # な-adjective
-たいへん（な）|taihen|tough (situation)|大変
+*たいへん（な）|taihen|tough (situation)|大変
 # U-verbs
 あそぶ|asobu|to play; to spend time pleasantly|遊ぶ
 いそぐ|isogu|to hurry|急ぐ
-かえす|kaesu|to return (a thing) (person に thing を)|返す
+*かえす|kaesu|to return (a thing) (person に thing を)|返す
 けす|kesu|to turn off; to erase (〜を)|消す
 しぬ|shinu|to die|死ぬ
-すわる|suwaru|to sit down (seat に)|座る
+*すわる|suwaru|to sit down (seat に)|座る
 たつ|tatsu|to stand up|立つ
 たばこをすう|tabako o suu|to smoke|たばこを吸う
-つかう|tsukau|to use (〜を)|使う
+*つかう|tsukau|to use (〜を)|使う
 てつだう|tetsudau|to help (person/task を)|手伝う
 はいる|hairu|to enter (〜に)|入る
-もつ|motsu|to carry; to hold (〜を)|持つ
-やすむ|yasumu|(1) to be absent (from...) (2) to rest (〜を)|休む
+*もつ|motsu|to carry; to hold (〜を)|持つ
+*やすむ|yasumu|(1) to be absent (from...) (2) to rest (〜を)|休む
 # Ru-verbs
 あける|akeru|to open (something) (〜を)|開ける
 しめる|shimeru|to close (something) (〜を)|閉める
 おしえる|oshieru|to teach; to instruct (person に thing を)|教える
-わすれる|wasureru|to forget; to leave behind (〜を)|忘れる
-おりる|oriru|to get off (〜を)|降りる
-かりる|kariru|to borrow (person に thing を)|借りる
+*わすれる|wasureru|to forget; to leave behind (〜を)|忘れる
+*おりる|oriru|to get off (〜を)|降りる
+*かりる|kariru|to borrow (person に thing を)|借りる
 シャワーをあびる|shawaa o abiru|to take a shower|シャワーを浴びる
 つける|tsukeru|to turn on (〜を)
 # Irregular Verbs
 でんわする|denwa suru|to call (〜に)|電話する
 つれてくる|tsurete kuru|to bring (a person) (〜を)|連れてくる
-もってくる|motte kuru|to bring (a thing) (〜を)|持ってくる
+*もってくる|motte kuru|to bring (a thing) (〜を)|持ってくる
 # Adverbs and Other Expressions
-あとで|atode|later on|後で
-すぐ|sugu|right away
+*あとで|atode|later on|後で
+*すぐ|sugu|right away
 ゆっくり|yukkuri|slowly; leisurely; unhurriedly
-けっこうです|kekkoo desu|That would be fine.; That wouldn't be necessary.|結構です
-ほんとうですか|hontoo desu ka|Really?|本当ですか`);
+*けっこうです|kekkoo desu|That would be fine.; That wouldn't be necessary.|結構です
+*ほんとうですか|hontoo desu ka|Really?|本当ですか`);
 
 const numbers = vocab(`
 ゼロ|zero/rei|0
@@ -813,6 +816,7 @@ let reviewBuilt = false;
 function buildReview() {
   if (reviewBuilt) return;
   reviewBuilt = true;
+  reviewBody.append(mkEl("div", "rv-en", "＊ = the word appears in the textbook dialogue (as marked on the Lesson 1-6 vocabulary pages)"));
   for (const [cat, sets] of REVIEW) {
     reviewBody.append(mkEl("div", "rv-cat", cat));
     for (const [name, list, tiles] of sets) {
@@ -830,7 +834,7 @@ function buildReview() {
           if (x.g && x.g !== lastG) { box.append(mkEl("div", "rv-group", x.g)); lastG = x.g; }
           const row = mkEl("div", "rv-row" + ((x.c.length > 8 || (x.k && x.k.length > 8)) ? " wide" : "")), right = mkEl("div");
           right.append(mkEl("div", "rv-ro", (x.r || x.a).join(" / ")), mkEl("div", "rv-en", x.t || ""));
-          const jp = mkEl("div", "rv-jp", x.c); if (x.k) jp.append(mkEl("span", "rv-k", x.k)); row.append(jp, right);
+          const jp = mkEl("div", "rv-jp"); jp.append(document.createTextNode(x.c)); if (x.star) jp.append(mkEl("span", "rv-star", "＊")); if (x.k) jp.append(mkEl("span", "rv-k", x.k)); row.append(jp, right);
           box.append(row);
         });
         d.append(box);
@@ -873,7 +877,7 @@ const isReverse = () => modeEl.value === "Typing (English → Romaji)";
 const eng = () => isReverse() && typeEl.value !== "Particles";
 const getList = () => LISTS[typeEl.value] || hiragana;
 const defaultSpeed = () => { const t = typeEl.value, sn = LONG.has(t), md = MID.has(t); return isTyping() ? (sn ? 25 : md ? 12 : 8) : (sn ? 6 : md ? 5 : 3); };
-const fit = () => { const n = charEl.textContent.length; charEl.style.fontSize = n > 12 ? "30px" : n > 6 ? "42px" : ""; };
+const fit = () => { const n = charEl.firstChild ? charEl.firstChild.textContent.length : 0; charEl.style.fontSize = n > 12 ? "30px" : n > 6 ? "42px" : ""; };
 
 function getSpeed() {
   let s = parseFloat(speedEl.value);
@@ -890,6 +894,11 @@ const normalize = s => s.toLowerCase()
 
 // English -> romaji: cards with an English meaning show it; kana cards without one show the character.
 const promptOf = x => x.t || x.c;
+// show a word with a small raised ＊ after it when the textbook marked it (it appears in the dialogue)
+function setWord(el, x) {
+  el.textContent = x.c;
+  if (x.star) { const m = document.createElement("span"); m.className = "star"; m.textContent = "＊"; el.append(m); }
+}
 const keyOf = x => promptOf(x).toLowerCase();
 // accepts the romaji of any card that shares the same prompt (e.g. two words that both mean "yes")
 const matchesRomaji = val => { const n = normalize(val), k = keyOf(current); return getList().some(x => keyOf(x) === k && x.a.some(y => normalize(y) === n)); };
@@ -992,7 +1001,7 @@ function showNext() {
   waiting = false; hint.hidden = true;
 
   current = draw(); previous = current;
-  charEl.textContent = eng() ? promptOf(current) : current.c; fit();
+  if (eng()) charEl.textContent = promptOf(current); else setWord(charEl, current); fit();
   ansEl.textContent = ""; transEl.textContent = "";
   answer.value = ""; answer.className = "";
 
@@ -1039,7 +1048,7 @@ function reveal(ok) {
     deck.splice(Math.max(0, deck.length - 3 - Math.floor(Math.random() * 3)), 0, current);
   }
   ansEl.textContent = shown(current);
-  transEl.textContent = eng() ? current.c : (current.t || "");
+  if (eng()) setWord(transEl, current); else transEl.textContent = current.t || "";
   hint.hidden = false;
   updateScore();
 }
@@ -1068,7 +1077,7 @@ function save() {
 function syncUI() {
   applyReviewMode();
   timerEl.disabled = isTyping();
-  charEl.textContent = getList()[0].c; fit();
+  setWord(charEl, getList()[0]); fit();
   ansEl.textContent = ""; transEl.textContent = "";
   answer.hidden = true; answer.value = ""; answer.className = "";
   timeEl.textContent = isTyping() ? "∞" : "0";
