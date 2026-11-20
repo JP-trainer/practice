@@ -76,7 +76,7 @@ details.rv>summary .n{font-weight:400;font-size:13px;color:var(--mute)}
     <div><label for="mode">Mode</label>
       <select id="mode"><option>Flashing Text</option><option>Typing</option><option>Typing (English → Romaji)</option><option>Full Review</option></select></div>
     <div><label for="type">Type</label>
-      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Numbers (Kanji)</option><option>Kanji</option><option>Midterm Katakana</option><option>Misc vocab</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>Vocab 5</option><option>Vocab 6</option><option>All Vocabs</option><option>Particles</option></select></div>
+      <select id="type"><option>All Alphabets</option><option>Hiragana</option><option>Katakana</option><option>Numbers</option><option>Numbers (Kanji)</option><option>Kanji</option><option>Midterm Katakana</option><option>Misc vocab</option><option>Sentences</option><option>Vocab 1</option><option>Vocab 2</option><option>Vocab 3</option><option>Vocab 4</option><option>Vocab 5</option><option>Vocab 6</option><option>Vocab 7</option><option>All Vocabs</option><option>Particles</option></select></div>
     <div><label for="speed">Seconds per card</label>
       <input id="speed" type="number" value="3" min="0.5" step="0.5"></div>
     <div><label for="timer">Session timer (s)</label>
@@ -525,6 +525,71 @@ const vocab6 = vocab(`
 *けっこうです|kekkoo desu|That would be fine.; That wouldn't be necessary.|結構です
 *ほんとうですか|hontoo desu ka|Really?|本当ですか`);
 
+const vocab7 = vocab(`
+# Nouns
+*かぞく|kazoku|family|家族
+おじいさん|ojiisan|grandfather; old man
+おばあさん|obaasan|grandmother; old woman
+おにいさん|oniisan|older brother|お兄さん
+*おねえさん|oneesan|older sister|お姉さん
+*ちち|chichi|(my) father|父
+はは|haha|(my) mother|母
+あに|ani|(my) older brother|兄
+*あね|ane|(my) older sister|姉
+いもうと|imooto|younger sister|妹
+おとうと|otooto|younger brother|弟
+きょうだい|kyoodai|brothers and sisters|兄弟
+おとこのひと|otoko no hito|man|男の人
+おんなのひと|onna no hito|woman|女の人
+*かいしゃ|kaisha|company|会社
+しょくどう|shokudoo|cafeteria; dining commons|食堂
+デパート|depaato|department store
+かみ|kami|hair|髪
+くち|kuchi|mouth|口
+め|me|eye|目
+*めがね|megane|glasses|眼鏡
+うた|uta|song|歌
+サークル|saakuru|club activity
+くるま|kuruma|car|車
+# い-adjectives
+ながい|nagai|long|長い
+みじかい|mijikai|short (length)|短い
+はやい|hayai|fast|速い
+*せがたかい|se ga takai|tall (stature)|背が高い
+せがひくい|se ga hikui|short (stature)|背が低い
+あたまがいい|atama ga ii|bright; smart; clever (conjugates like いい)|頭がいい
+*かわいい|kawaii|cute
+# な-adjectives
+しんせつ（な）|shinsetsu|kind|親切
+べんり（な）|benri|convenient|便利
+# U-verbs
+うたう|utau|to sing (〜を)|歌う
+かぶる|kaburu|to put on (a hat) (〜を)
+はく|haku|to put on (items below your waist) (〜を)
+しる|shiru|to get to know (〜を)|知る
+しっています|shitte imasu|I know|知っています
+しりません|shirimasen|I do not know|知りません
+*すむ|sumu|to live (〜にすんでいます)|住む
+*はたらく|hataraku|to work|働く
+*ふとる|futoru|to gain weight|太る
+ふとっています|futotte imasu|to be on the heavy side; overweight|太っています
+# Ru-verbs
+*（めがねを）かける|kakeru/megane o kakeru|to put on (glasses)
+きる|kiru|to put on (clothes above your waist) (〜を)|着る
+やせる|yaseru|to lose weight
+やせています|yasete imasu|to be thin
+# Irregular Verb
+*けっこんする|kekkon suru|to get married (〜と)|結婚する
+# Adverbs and Other Expressions
+〜が|ga|..., but
+*なにも + negative|nanimo|not... anything|何も
+〜にん|nin|[counter for people]|〜人
+*ひとり|hitori|one person|一人
+ふたり|futari|two people|二人
+*べつに + negative|betsu ni|nothing in particular|別に
+*もちろん|mochiron|of course
+*よかったら|yokattara|if you like`);
+
 const numbers = vocab(`
 ゼロ|zero/rei|0
 いち|ichi|1
@@ -627,6 +692,23 @@ const kanji4 = vocab(`
 行|kou/gyou/i|to go|▶ こう ぎょう  ▷ い
 食|shoku/ta|to eat|▶ しょく  ▷ た
 飲|in/no|to drink|▶ いん  ▷ の
+# More Kanji (2)
+東|tou/higashi|east|▶ とう  ▷ ひがし
+西|sei/sai/nishi|west|▶ せい さい  ▷ にし
+南|nan/minami|south|▶ なん  ▷ みなみ
+北|hoku/kita|north|▶ ほく ほっ  ▷ きた
+口|kou/guchi/kuchi|mouth|▶ こう  ▷ ぐち くち
+出|shutsu/de/da|to exit|▶ しゅっ しゅつ  ▷ で だ
+右|u/yuu/migi|right|▶ う ゆう  ▷ みぎ
+左|sa/hidari|left|▶ さ  ▷ ひだり
+# More Kanji (3)
+分|fun/pun/bun/wa|minute; to divide|▶ ふん ぷん ぶん  ▷ わ
+先|sen/saki|ahead|▶ せん  ▷ さき
+生|sei/shou/u|birth|▶ せい しょう  ▷ う
+大|dai/tai/oo|big|▶ だい たい  ▷ おお
+学|gaku/mana|learning|▶ がく がっ  ▷ まな
+外|gai/soto|outside|▶ がい  ▷ そと
+国|koku/goku/kuni|country|▶ こく ごく こっ  ▷ くに
 # Days of the week
 月曜日|getsuyoubi|Monday
 火曜日|kayoubi|Tuesday
@@ -679,7 +761,6 @@ const midtermKatakana = vocab(`
 ラーメン|raamen/ramen|ramen noodles`);
 
 const misc = vocab(`
-くるま|kuruma|car
 しつもん|shitsumon|question
 こいびと|koibito|lover
 れいぞうこ|reizouko/reizoko|refrigerator; fridge
@@ -783,7 +864,7 @@ const particles = vocab(`
 へや（ ）ねます。|de|で · I sleep in the room.`);
 
 const seen = new Set();
-const allVocabs = [...vocab1, ...vocab2, ...vocab3, ...vocab4, ...vocab5, ...vocab6].filter(x => {
+const allVocabs = [...vocab1, ...vocab2, ...vocab3, ...vocab4, ...vocab5, ...vocab6, ...vocab7].filter(x => {
   const k = x.c + x.t.toLowerCase();
   return seen.has(k) ? false : seen.add(k);
 });
@@ -791,7 +872,7 @@ const allVocabs = [...vocab1, ...vocab2, ...vocab3, ...vocab4, ...vocab5, ...voc
 const LISTS = {
   "All Alphabets": [...hiragana, ...katakana],
   "Hiragana": hiragana, "Katakana": katakana, "Numbers": numbers, "Numbers (Kanji)": numbersKanji, "Kanji": kanji4, "Midterm Katakana": midtermKatakana, "Misc vocab": misc, "Sentences": sentences,
-  "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3, "Vocab 4": vocab4, "Vocab 5": vocab5, "Vocab 6": vocab6,
+  "Vocab 1": vocab1, "Vocab 2": vocab2, "Vocab 3": vocab3, "Vocab 4": vocab4, "Vocab 5": vocab5, "Vocab 6": vocab6, "Vocab 7": vocab7,
   "All Vocabs": allVocabs,
   "Particles": particles
 };
@@ -804,7 +885,7 @@ const shown = x => SHOW_ALL.has(typeEl.value) ? x.a.join(" / ") : x.a[0];
 const REVIEW = [
   ["Alphabets", [["Hiragana", hiragana, true], ["Katakana", katakana, true]]],
   ["Numbers", [["Numbers", numbers], ["Numbers (Kanji)", numbersKanji]]],
-  ["Vocabulary", [["Lesson 1 Vocabulary", vocab1], ["Lesson 2 Vocabulary", vocab2], ["Lesson 3 Vocabulary", vocab3], ["Lesson 4 Vocabulary", vocab4], ["Lesson 5 Vocabulary", vocab5], ["Lesson 6 Vocabulary", vocab6]]],
+  ["Vocabulary", [["Lesson 1 Vocabulary", vocab1], ["Lesson 2 Vocabulary", vocab2], ["Lesson 3 Vocabulary", vocab3], ["Lesson 4 Vocabulary", vocab4], ["Lesson 5 Vocabulary", vocab5], ["Lesson 6 Vocabulary", vocab6], ["Lesson 7 Vocabulary", vocab7]]],
   ["Kanji", [["Kanji", kanji4]]],
   ["Katakana", [["Midterm Katakana", midtermKatakana]]],
   ["Misc vocab", [["Misc vocab", misc]]],
